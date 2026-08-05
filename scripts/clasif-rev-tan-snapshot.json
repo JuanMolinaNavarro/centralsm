@@ -1,0 +1,2084 @@
+[
+  {
+    "id": "cmsg5983m00q967qs44lj7mxk",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 248,
+    "codigoSku": "#REV-TAN-0248"
+  },
+  {
+    "id": "cmsg5983m00q767qsqg51lv5j",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 57,
+    "codigoSku": "#REV-TAN-0057"
+  },
+  {
+    "id": "cmsg5983m00q867qsk5ftnpht",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 380,
+    "codigoSku": "#REV-TAN-0380"
+  },
+  {
+    "id": "cmsg5983m00q467qsyz7i0ipw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 90,
+    "codigoSku": "#REV-TAN-0090"
+  },
+  {
+    "id": "cmsg5983m00q367qsh7cuax6m",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 287,
+    "codigoSku": "#REV-TAN-0287"
+  },
+  {
+    "id": "cmsg5983m00qa67qsp51ivxhb",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 245,
+    "codigoSku": "#REV-TAN-0245"
+  },
+  {
+    "id": "cmsg5983m00q267qs992kgsjy",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 244,
+    "codigoSku": "#REV-TAN-0244"
+  },
+  {
+    "id": "cmsg5983m00pv67qs7ufe9rcj",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 285,
+    "codigoSku": "#REV-TAN-0285"
+  },
+  {
+    "id": "cmsg5983m00ng67qs4byp6tu1",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 45,
+    "codigoSku": "#REV-TAN-0045"
+  },
+  {
+    "id": "cmsg598m901iz67qsi27h0yj7",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 401,
+    "codigoSku": "#REV-TAN-0401"
+  },
+  {
+    "id": "cmsg598m901ir67qs9v0v57r9",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 209,
+    "codigoSku": "#REV-TAN-0209"
+  },
+  {
+    "id": "cmsg598m901iy67qsp890nam7",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 400,
+    "codigoSku": "#REV-TAN-0400"
+  },
+  {
+    "id": "cmsg5995k01z267qsgtafvipd",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 270,
+    "codigoSku": "#REV-TAN-0270"
+  },
+  {
+    "id": "cmsg5983l00n367qsqlko1jxt",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 162,
+    "codigoSku": "#REV-TAN-0162"
+  },
+  {
+    "id": "cmsg5983l00n267qsgcb8mg97",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 164,
+    "codigoSku": "#REV-TAN-0164"
+  },
+  {
+    "id": "cmsg5983l00me67qsvmhl2eih",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 169,
+    "codigoSku": "#REV-TAN-0169"
+  },
+  {
+    "id": "cmsg598m801cq67qsbdrennba",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 165,
+    "codigoSku": "#REV-TAN-0165"
+  },
+  {
+    "id": "cmsg598m6017667qs9fxea262",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 343,
+    "codigoSku": "#REV-TAN-0343"
+  },
+  {
+    "id": "cmsg598m701bs67qsj8v9ertw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 515,
+    "codigoSku": "#REV-TAN-0515"
+  },
+  {
+    "id": "cmsg5983m00qp67qsxydwcskv",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 498,
+    "codigoSku": "#REV-TAN-0498"
+  },
+  {
+    "id": "cmsg5983l00n567qsd40u8hg8",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 113,
+    "codigoSku": "#REV-TAN-0113"
+  },
+  {
+    "id": "cmsg598m901i967qs6ude9txs",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 122,
+    "codigoSku": "#REV-TAN-0122"
+  },
+  {
+    "id": "cmsg598m801cd67qsqwpxjrtg",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 311,
+    "codigoSku": "#REV-TAN-0311"
+  },
+  {
+    "id": "cmsg598m901is67qs1o4x19sj",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 330,
+    "codigoSku": "#REV-TAN-0330"
+  },
+  {
+    "id": "cmsg5983l00my67qswv39hx62",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 339,
+    "codigoSku": "#REV-TAN-0339"
+  },
+  {
+    "id": "cmsg5983l00mj67qs6txg53ou",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 341,
+    "codigoSku": "#REV-TAN-0341"
+  },
+  {
+    "id": "cmsg598m901it67qsi9ecwqn9",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 342,
+    "codigoSku": "#REV-TAN-0342"
+  },
+  {
+    "id": "cmsg598m901iu67qsnumvrn9y",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 351,
+    "codigoSku": "#REV-TAN-0351"
+  },
+  {
+    "id": "cmsg597rs009t67qsuzqtd5a4",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 419,
+    "codigoSku": "#REV-TAN-0419"
+  },
+  {
+    "id": "cmsg597rs009w67qsqyhl7wpv",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 421,
+    "codigoSku": "#REV-TAN-0421"
+  },
+  {
+    "id": "cmsg597rt00cc67qs7rpqew9v",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 426,
+    "codigoSku": "#REV-TAN-0426"
+  },
+  {
+    "id": "cmsg597rs009x67qsfrjors7o",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 423,
+    "codigoSku": "#REV-TAN-0423"
+  },
+  {
+    "id": "cmsg597rt00ca67qsc002s61o",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 428,
+    "codigoSku": "#REV-TAN-0428"
+  },
+  {
+    "id": "cmsg598m901j067qstivpts0w",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 424,
+    "codigoSku": "#REV-TAN-0424"
+  },
+  {
+    "id": "cmsg597rs009b67qs5t6sp9qx",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 417,
+    "codigoSku": "#REV-TAN-0417"
+  },
+  {
+    "id": "cmsg598c100yh67qsi362dhss",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 391,
+    "codigoSku": "#REV-TAN-0391"
+  },
+  {
+    "id": "cmsg5983l00jm67qs96c8fej1",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 549,
+    "codigoSku": "#REV-TAN-0549"
+  },
+  {
+    "id": "cmsg598bz00v267qsdyq0gksv",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 548,
+    "codigoSku": "#REV-TAN-0548"
+  },
+  {
+    "id": "cmsg597ru00cn67qsen1raxns",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 385,
+    "codigoSku": "#REV-TAN-0385"
+  },
+  {
+    "id": "cmsg597rt00aw67qsej4ui99x",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 386,
+    "codigoSku": "#REV-TAN-0386"
+  },
+  {
+    "id": "cmsg597ru00cz67qsmt9hmzru",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 260,
+    "codigoSku": "#REV-TAN-0260"
+  },
+  {
+    "id": "cmsg598c6016d67qscenv8q52",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 261,
+    "codigoSku": "#REV-TAN-0261"
+  },
+  {
+    "id": "cmsg5990c01uv67qssvrp24k4",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 262,
+    "codigoSku": "#REV-TAN-0262"
+  },
+  {
+    "id": "cmsg5990c01w767qsnorkp3t4",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 48,
+    "codigoSku": "#REV-TAN-0048"
+  },
+  {
+    "id": "cmsg5983k00ir67qskjktjjqh",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 249,
+    "codigoSku": "#REV-TAN-0249"
+  },
+  {
+    "id": "cmsg598c000xz67qsvgbwtc5i",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 220,
+    "codigoSku": "#REV-TAN-0220"
+  },
+  {
+    "id": "cmsg5983l00ln67qs963x1eoj",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 221,
+    "codigoSku": "#REV-TAN-0221"
+  },
+  {
+    "id": "cmsg5990a01oj67qso5hpmxlg",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 222,
+    "codigoSku": "#REV-TAN-0222"
+  },
+  {
+    "id": "cmsg598c000xn67qsc0fmf7pl",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 20,
+    "codigoSku": "#REV-TAN-0020"
+  },
+  {
+    "id": "cmsg5983l00l567qsxoe0g97s",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 23,
+    "codigoSku": "#REV-TAN-0023"
+  },
+  {
+    "id": "cmsg5990a01q867qsh65yogc8",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 21,
+    "codigoSku": "#REV-TAN-0021"
+  },
+  {
+    "id": "cmsg598c000y667qsrrxmgr9o",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 303,
+    "codigoSku": "#REV-TAN-0303"
+  },
+  {
+    "id": "cmsg598by00t067qs2j06ay2r",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 69,
+    "codigoSku": "#REV-TAN-0069"
+  },
+  {
+    "id": "cmsg5990b01tm67qs1nbat4sf",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 409,
+    "codigoSku": "#REV-TAN-0409"
+  },
+  {
+    "id": "cmsg5983l00ka67qsrmi9xs93",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 415,
+    "codigoSku": "#REV-TAN-0415"
+  },
+  {
+    "id": "cmsg5990b01qi67qs2u4i9ns0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 414,
+    "codigoSku": "#REV-TAN-0414"
+  },
+  {
+    "id": "cmsg5990b01tr67qs34lecqd6",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 383,
+    "codigoSku": "#REV-TAN-0383"
+  },
+  {
+    "id": "cmsg598m801cb67qscysf615t",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 388,
+    "codigoSku": "#REV-TAN-0388"
+  },
+  {
+    "id": "cmsg5990c01tw67qsqof4yfiy",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 413,
+    "codigoSku": "#REV-TAN-0413"
+  },
+  {
+    "id": "cmsg5990d01yd67qs7bc57anf",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 129,
+    "codigoSku": "#REV-TAN-0129"
+  },
+  {
+    "id": "cmsg5990b01tv67qs0wdj0369",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 390,
+    "codigoSku": "#REV-TAN-0390"
+  },
+  {
+    "id": "cmsg597rq004x67qsm9hps6h2",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 577,
+    "codigoSku": "#REV-TAN-0577"
+  },
+  {
+    "id": "cmsg597rq004w67qsffcuytl0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 576,
+    "codigoSku": "#REV-TAN-0576"
+  },
+  {
+    "id": "cmsg598m801ch67qsqe3p2fl2",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 575,
+    "codigoSku": "#REV-TAN-0575"
+  },
+  {
+    "id": "cmsg598c100yd67qsnghlqxvl",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 387,
+    "codigoSku": "#REV-TAN-0387"
+  },
+  {
+    "id": "cmsg5995m023567qsupwrelug",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 404,
+    "codigoSku": "#REV-TAN-0404"
+  },
+  {
+    "id": "cmsg598c6016q67qsldtjg81h",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 509,
+    "codigoSku": "#REV-TAN-0509"
+  },
+  {
+    "id": "cmsg598c000xu67qsf9em3lx5",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 203,
+    "codigoSku": "#REV-TAN-0203"
+  },
+  {
+    "id": "cmsg598c5015n67qsca3cmztb",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 29,
+    "codigoSku": "#REV-TAN-0029"
+  },
+  {
+    "id": "cmsg598c5015y67qspt7ywyuh",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 310,
+    "codigoSku": "#REV-TAN-0310"
+  },
+  {
+    "id": "cmsg5990c01vd67qs7y3l3tf0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 295,
+    "codigoSku": "#REV-TAN-0295"
+  },
+  {
+    "id": "cmsg5990b01t167qstg44oku0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 315,
+    "codigoSku": "#REV-TAN-0315"
+  },
+  {
+    "id": "cmsg5990b01r467qs4h62f7jo",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 200,
+    "codigoSku": "#REV-TAN-0200"
+  },
+  {
+    "id": "cmsg5990b01r767qssq7k5t4u",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 201,
+    "codigoSku": "#REV-TAN-0201"
+  },
+  {
+    "id": "cmsg598c2010k67qs0zk2mmpb",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 307,
+    "codigoSku": "#REV-TAN-0307"
+  },
+  {
+    "id": "cmsg5983l00lk67qsob9oqus9",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 40,
+    "codigoSku": "#REV-TAN-0040"
+  },
+  {
+    "id": "cmsg5983l00li67qslb2jt1c5",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 393,
+    "codigoSku": "#REV-TAN-0393"
+  },
+  {
+    "id": "cmsg597rr007i67qskp34aqfy",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 78,
+    "codigoSku": "#REV-TAN-0078"
+  },
+  {
+    "id": "cmsg597rq005d67qs0m5qg45f",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 77,
+    "codigoSku": "#REV-TAN-0077"
+  },
+  {
+    "id": "cmsg5990a01oi67qseff7wg7c",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 79,
+    "codigoSku": "#REV-TAN-0079"
+  },
+  {
+    "id": "cmsg597ru00cp67qswnnj1y9f",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 74,
+    "codigoSku": "#REV-TAN-0074"
+  },
+  {
+    "id": "cmsg5983l00js67qs2c2ydozt",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 7,
+    "codigoSku": "#REV-TAN-0007"
+  },
+  {
+    "id": "cmsg597rq004v67qsexwqaw8o",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 598,
+    "codigoSku": "#REV-TAN-0598"
+  },
+  {
+    "id": "cmsg597rs008a67qs3zzol95n",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 538,
+    "codigoSku": "#REV-TAN-0538"
+  },
+  {
+    "id": "cmsg597rs008b67qsfl7q1qbb",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 537,
+    "codigoSku": "#REV-TAN-0537"
+  },
+  {
+    "id": "cmsg5990a01om67qsslekijbg",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 569,
+    "codigoSku": "#REV-TAN-0569"
+  },
+  {
+    "id": "cmsg5990a01ol67qst793gykh",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 571,
+    "codigoSku": "#REV-TAN-0571"
+  },
+  {
+    "id": "cmsg5990a01ok67qsn7gxp8ik",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 570,
+    "codigoSku": "#REV-TAN-0570"
+  },
+  {
+    "id": "cmsg598c5015967qssu6vjtbw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 572,
+    "codigoSku": "#REV-TAN-0572"
+  },
+  {
+    "id": "cmsg5995m023r67qs6mc3pohp",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 10,
+    "codigoSku": "#REV-TAN-0010"
+  },
+  {
+    "id": "cmsg5983l00kn67qsx7ptdkwe",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 11,
+    "codigoSku": "#REV-TAN-0011"
+  },
+  {
+    "id": "cmsg5983l00le67qslsduwe4s",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 491,
+    "codigoSku": "#REV-TAN-0491"
+  },
+  {
+    "id": "cmsg598c2010f67qsab7wfl3c",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 466,
+    "codigoSku": "#REV-TAN-0466"
+  },
+  {
+    "id": "cmsg5990c01u567qs92hw2yxq",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 60,
+    "codigoSku": "#REV-TAN-0060"
+  },
+  {
+    "id": "cmsg5983l00la67qs34tsb5o9",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 290,
+    "codigoSku": "#REV-TAN-0290"
+  },
+  {
+    "id": "cmsg5983l00kl67qsri1bgvbe",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 24,
+    "codigoSku": "#REV-TAN-0024"
+  },
+  {
+    "id": "cmsg5990b01r267qsqh7lc15s",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 37,
+    "codigoSku": "#REV-TAN-0037"
+  },
+  {
+    "id": "cmsg597ru00cq67qshxhpxsxg",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 410,
+    "codigoSku": "#REV-TAN-0410"
+  },
+  {
+    "id": "cmsg5990c01x867qsib1r9p4e",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 584,
+    "codigoSku": "#REV-TAN-0584"
+  },
+  {
+    "id": "cmsg5990901mg67qswnepiaxv",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 27,
+    "codigoSku": "#REV-TAN-0027"
+  },
+  {
+    "id": "cmsg5995l021a67qsnj1kji5x",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 197,
+    "codigoSku": "#REV-TAN-0197"
+  },
+  {
+    "id": "cmsg598by00uc67qs5u719e4s",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 263,
+    "codigoSku": "#REV-TAN-0263"
+  },
+  {
+    "id": "cmsg598c5015m67qsvux6gmar",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 217,
+    "codigoSku": "#REV-TAN-0217"
+  },
+  {
+    "id": "cmsg598c5015v67qsvx6d5zyk",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 146,
+    "codigoSku": "#REV-TAN-0146"
+  },
+  {
+    "id": "cmsg598c6016n67qs2mtiuqeh",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 229,
+    "codigoSku": "#REV-TAN-0229"
+  },
+  {
+    "id": "cmsg598c6016m67qsvchyqps4",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 140,
+    "codigoSku": "#REV-TAN-0140"
+  },
+  {
+    "id": "cmsg5983l00ls67qsrcrdutgd",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 555,
+    "codigoSku": "#REV-TAN-0555"
+  },
+  {
+    "id": "cmsg598c6016p67qs5e690a4e",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 470,
+    "codigoSku": "#REV-TAN-0470"
+  },
+  {
+    "id": "cmsg5983n00rn67qs6l5tuc9e",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 98,
+    "codigoSku": "#REV-TAN-0098"
+  },
+  {
+    "id": "cmsg5995l020n67qsoyfohfzp",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 96,
+    "codigoSku": "#REV-TAN-0096"
+  },
+  {
+    "id": "cmsg5990c01wa67qsyv9t8wdd",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 100,
+    "codigoSku": "#REV-TAN-0100"
+  },
+  {
+    "id": "cmsg5990a01q567qsdci7351z",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 101,
+    "codigoSku": "#REV-TAN-0101"
+  },
+  {
+    "id": "cmsg5995l021l67qsevf4yvcy",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 94,
+    "codigoSku": "#REV-TAN-0094"
+  },
+  {
+    "id": "cmsg597ru00e167qs55avoi38",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 86,
+    "codigoSku": "#REV-TAN-0086"
+  },
+  {
+    "id": "cmsg5983l00m767qsdxpahcck",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 85,
+    "codigoSku": "#REV-TAN-0085"
+  },
+  {
+    "id": "cmsg5990b01t667qscs1ioax8",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 13,
+    "codigoSku": "#REV-TAN-0013"
+  },
+  {
+    "id": "cmsg5990b01t767qs1qch1cho",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 14,
+    "codigoSku": "#REV-TAN-0014"
+  },
+  {
+    "id": "cmsg5983l00ks67qsnkdieber",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 334,
+    "codigoSku": "#REV-TAN-0334"
+  },
+  {
+    "id": "cmsg5990b01rd67qsdpr4dl5q",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 332,
+    "codigoSku": "#REV-TAN-0332"
+  },
+  {
+    "id": "cmsg598m801c667qsif4xkgiv",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 513,
+    "codigoSku": "#REV-TAN-0513"
+  },
+  {
+    "id": "cmsg5990c01v067qssb6skcop",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 480,
+    "codigoSku": "#REV-TAN-0480"
+  },
+  {
+    "id": "cmsg5995k01z567qsj668fkoz",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 291,
+    "codigoSku": "#REV-TAN-0291"
+  },
+  {
+    "id": "cmsg598m6017367qsf2fdobn8",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 293,
+    "codigoSku": "#REV-TAN-0293"
+  },
+  {
+    "id": "cmsg5995m024e67qsjqifaks7",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 271,
+    "codigoSku": "#REV-TAN-0271"
+  },
+  {
+    "id": "cmsg5990901lz67qs75h206ms",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 272,
+    "codigoSku": "#REV-TAN-0272"
+  },
+  {
+    "id": "cmsg5990901m067qsvutnik0j",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 485,
+    "codigoSku": "#REV-TAN-0485"
+  },
+  {
+    "id": "cmsg5995l01zo67qsn01lj6vg",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 312,
+    "codigoSku": "#REV-TAN-0312"
+  },
+  {
+    "id": "cmsg5983l00lo67qsuujgk4bf",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 49,
+    "codigoSku": "#REV-TAN-0049"
+  },
+  {
+    "id": "cmsg5995l022267qst6sse9ic",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 110,
+    "codigoSku": "#REV-TAN-0110"
+  },
+  {
+    "id": "cmsg5983n00rb67qstg5z3me6",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 268,
+    "codigoSku": "#REV-TAN-0268"
+  },
+  {
+    "id": "cmsg598m901j167qswlpd6r7z",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 456,
+    "codigoSku": "#REV-TAN-0456"
+  },
+  {
+    "id": "cmsg5995l022n67qsdkmc20x1",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 12,
+    "codigoSku": "#REV-TAN-0012"
+  },
+  {
+    "id": "cmsg598by00u467qs5ucsyrej",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 483,
+    "codigoSku": "#REV-TAN-0483"
+  },
+  {
+    "id": "cmsg598m801fa67qsts4r1m0h",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 241,
+    "codigoSku": "#REV-TAN-0241"
+  },
+  {
+    "id": "cmsg5990b01qz67qspypcbr8k",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 592,
+    "codigoSku": "#REV-TAN-0592"
+  },
+  {
+    "id": "cmsg5990c01vi67qs5hc15tjc",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 126,
+    "codigoSku": "#REV-TAN-0126"
+  },
+  {
+    "id": "cmsg5990c01v767qs6jr604hv",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 127,
+    "codigoSku": "#REV-TAN-0127"
+  },
+  {
+    "id": "cmsg5990c01vj67qsrglgcord",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 210,
+    "codigoSku": "#REV-TAN-0210"
+  },
+  {
+    "id": "cmsg5990c01vk67qsub334ra7",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 395,
+    "codigoSku": "#REV-TAN-0395"
+  },
+  {
+    "id": "cmsg5990b01rw67qs7ebzm7ln",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 148,
+    "codigoSku": "#REV-TAN-0148"
+  },
+  {
+    "id": "cmsg5990901lb67qsj4rxl71o",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 554,
+    "codigoSku": "#REV-TAN-0554"
+  },
+  {
+    "id": "cmsg5990901lc67qsgk5lpz39",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 553,
+    "codigoSku": "#REV-TAN-0553"
+  },
+  {
+    "id": "cmsg5990b01t067qsr0id92ph",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 552,
+    "codigoSku": "#REV-TAN-0552"
+  },
+  {
+    "id": "cmsg5995m024d67qsfscwmyey",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 51,
+    "codigoSku": "#REV-TAN-0051"
+  },
+  {
+    "id": "cmsg598m901h867qs504196ck",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 255,
+    "codigoSku": "#REV-TAN-0255"
+  },
+  {
+    "id": "cmsg5990901ld67qscu7u3o7y",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 254,
+    "codigoSku": "#REV-TAN-0254"
+  },
+  {
+    "id": "cmsg5990901m767qsp97c2tsl",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 5,
+    "codigoSku": "#REV-TAN-0005"
+  },
+  {
+    "id": "cmsg597ru00e067qs1sfctgpj",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 4,
+    "codigoSku": "#REV-TAN-0004"
+  },
+  {
+    "id": "cmsg5990901m267qsgnl6x9qp",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 238,
+    "codigoSku": "#REV-TAN-0238"
+  },
+  {
+    "id": "cmsg5990c01uq67qs52vzl9xw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 356,
+    "codigoSku": "#REV-TAN-0356"
+  },
+  {
+    "id": "cmsg5990c01x467qsjdo7bbcs",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 159,
+    "codigoSku": "#REV-TAN-0159"
+  },
+  {
+    "id": "cmsg5990c01wk67qsjzc2b0az",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 288,
+    "codigoSku": "#REV-TAN-0288"
+  },
+  {
+    "id": "cmsg598m6018667qs6yzh26ib",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 223,
+    "codigoSku": "#REV-TAN-0223"
+  },
+  {
+    "id": "cmsg598c3011367qsxo640207",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 589,
+    "codigoSku": "#REV-TAN-0589"
+  },
+  {
+    "id": "cmsg598c3011467qssl6pxahs",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 457,
+    "codigoSku": "#REV-TAN-0457"
+  },
+  {
+    "id": "cmsg5983k00i267qs62e474su",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 278,
+    "codigoSku": "#REV-TAN-0278"
+  },
+  {
+    "id": "cmsg598c2010567qsckv4jxi5",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 500,
+    "codigoSku": "#REV-TAN-0500"
+  },
+  {
+    "id": "cmsg598c3010z67qsgj9lvqjw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 277,
+    "codigoSku": "#REV-TAN-0277"
+  },
+  {
+    "id": "cmsg5983n00rf67qs4dt0mzvb",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 92,
+    "codigoSku": "#REV-TAN-0092"
+  },
+  {
+    "id": "cmsg5983n00rg67qsikrcyk9h",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 93,
+    "codigoSku": "#REV-TAN-0093"
+  },
+  {
+    "id": "cmsg598m801ca67qs0vegw7zo",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 91,
+    "codigoSku": "#REV-TAN-0091"
+  },
+  {
+    "id": "cmsg598m901hw67qs8teb1psg",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 80,
+    "codigoSku": "#REV-TAN-0080"
+  },
+  {
+    "id": "cmsg598m801cc67qs1wjwhepp",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 83,
+    "codigoSku": "#REV-TAN-0083"
+  },
+  {
+    "id": "cmsg598ma01jl67qsxj0t7njs",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 81,
+    "codigoSku": "#REV-TAN-0081"
+  },
+  {
+    "id": "cmsg5983l00mp67qsvnpsosmw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 207,
+    "codigoSku": "#REV-TAN-0207"
+  },
+  {
+    "id": "cmsg5990b01r167qs9trk2tw8",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 107,
+    "codigoSku": "#REV-TAN-0107"
+  },
+  {
+    "id": "cmsg598c5015067qs9kmgnozw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 105,
+    "codigoSku": "#REV-TAN-0105"
+  },
+  {
+    "id": "cmsg598c5015167qsgv01jhml",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 104,
+    "codigoSku": "#REV-TAN-0104"
+  },
+  {
+    "id": "cmsg5990c01x667qs8mc0vi8l",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 106,
+    "codigoSku": "#REV-TAN-0106"
+  },
+  {
+    "id": "cmsg5990c01vr67qsjtw6eoja",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 70,
+    "codigoSku": "#REV-TAN-0070"
+  },
+  {
+    "id": "cmsg598by00u867qs7l1k4x4w",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 73,
+    "codigoSku": "#REV-TAN-0073"
+  },
+  {
+    "id": "cmsg5983l00mq67qsormgcppy",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 309,
+    "codigoSku": "#REV-TAN-0309"
+  },
+  {
+    "id": "cmsg598m801c867qs8nbfokth",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 174,
+    "codigoSku": "#REV-TAN-0174"
+  },
+  {
+    "id": "cmsg598m801c767qsujyjitjg",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 479,
+    "codigoSku": "#REV-TAN-0479"
+  },
+  {
+    "id": "cmsg5990901m567qslfatt7km",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 471,
+    "codigoSku": "#REV-TAN-0471"
+  },
+  {
+    "id": "cmsg5990c01vs67qsjsucaovp",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 472,
+    "codigoSku": "#REV-TAN-0472"
+  },
+  {
+    "id": "cmsg5990c01vo67qsizvoepn9",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 476,
+    "codigoSku": "#REV-TAN-0476"
+  },
+  {
+    "id": "cmsg5990b01tb67qs1k2ucfo4",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 377,
+    "codigoSku": "#REV-TAN-0377"
+  },
+  {
+    "id": "cmsg5983l00ma67qsv5ek7twj",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 474,
+    "codigoSku": "#REV-TAN-0474"
+  },
+  {
+    "id": "cmsg5990b01su67qstvbf1ip7",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 450,
+    "codigoSku": "#REV-TAN-0450"
+  },
+  {
+    "id": "cmsg598m801cl67qsz6w420og",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 211,
+    "codigoSku": "#REV-TAN-0211"
+  },
+  {
+    "id": "cmsg598c000wh67qssmnog60v",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 445,
+    "codigoSku": "#REV-TAN-0445"
+  },
+  {
+    "id": "cmsg598bz00ux67qsyx06qe38",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 230,
+    "codigoSku": "#REV-TAN-0230"
+  },
+  {
+    "id": "cmsg598bz00ur67qsfthoqtyd",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 503,
+    "codigoSku": "#REV-TAN-0503"
+  },
+  {
+    "id": "cmsg598bz00va67qsekvae13i",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 596,
+    "codigoSku": "#REV-TAN-0596"
+  },
+  {
+    "id": "cmsg5990c01wx67qsas8igosk",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 31,
+    "codigoSku": "#REV-TAN-0031"
+  },
+  {
+    "id": "cmsg5990c01vv67qs6pc7d7si",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 382,
+    "codigoSku": "#REV-TAN-0382"
+  },
+  {
+    "id": "cmsg5995k01z167qstd1bdr5u",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 305,
+    "codigoSku": "#REV-TAN-0305"
+  },
+  {
+    "id": "cmsg598m901hn67qsy2lr6gox",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 300,
+    "codigoSku": "#REV-TAN-0300"
+  },
+  {
+    "id": "cmsg5995l01zp67qsvuy3a92r",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 560,
+    "codigoSku": "#REV-TAN-0560"
+  },
+  {
+    "id": "cmsg598m901gn67qscyda3ny0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 564,
+    "codigoSku": "#REV-TAN-0564"
+  },
+  {
+    "id": "cmsg598m901gq67qsgqicodze",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 561,
+    "codigoSku": "#REV-TAN-0561"
+  },
+  {
+    "id": "cmsg598m901go67qsso5kfg4d",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 562,
+    "codigoSku": "#REV-TAN-0562"
+  },
+  {
+    "id": "cmsg598m901gp67qs0rc9ykpo",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 563,
+    "codigoSku": "#REV-TAN-0563"
+  },
+  {
+    "id": "cmsg5990a01n267qsv2atgnv9",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 216,
+    "codigoSku": "#REV-TAN-0216"
+  },
+  {
+    "id": "cmsg598c000xm67qs95mufq3t",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 19,
+    "codigoSku": "#REV-TAN-0019"
+  },
+  {
+    "id": "cmsg598bz00w967qs9mf4ha5i",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 18,
+    "codigoSku": "#REV-TAN-0018"
+  },
+  {
+    "id": "cmsg5983k00hr67qsjcv2188x",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 181,
+    "codigoSku": "#REV-TAN-0181"
+  },
+  {
+    "id": "cmsg598c4013y67qshb71sozy",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 180,
+    "codigoSku": "#REV-TAN-0180"
+  },
+  {
+    "id": "cmsg5990d01y567qs00ju4r4f",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 179,
+    "codigoSku": "#REV-TAN-0179"
+  },
+  {
+    "id": "cmsg598c4013z67qs5e4pfzn6",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 520,
+    "codigoSku": "#REV-TAN-0520"
+  },
+  {
+    "id": "cmsg598c000x967qspln0gam3",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 521,
+    "codigoSku": "#REV-TAN-0521"
+  },
+  {
+    "id": "cmsg598m6017s67qsrk30ki4y",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 353,
+    "codigoSku": "#REV-TAN-0353"
+  },
+  {
+    "id": "cmsg598c200zf67qs3x5n7vzb",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 557,
+    "codigoSku": "#REV-TAN-0557"
+  },
+  {
+    "id": "cmsg598c100y967qsndfxpvlx",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 349,
+    "codigoSku": "#REV-TAN-0349"
+  },
+  {
+    "id": "cmsg5990b01qn67qs90hmi8gs",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 237,
+    "codigoSku": "#REV-TAN-0237"
+  },
+  {
+    "id": "cmsg598c100y767qspimytmxy",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 313,
+    "codigoSku": "#REV-TAN-0313"
+  },
+  {
+    "id": "cmsg598c100y867qsacpp51o2",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 314,
+    "codigoSku": "#REV-TAN-0314"
+  },
+  {
+    "id": "cmsg5995m023z67qshf81kkcu",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 323,
+    "codigoSku": "#REV-TAN-0323"
+  },
+  {
+    "id": "cmsg5995m023y67qse3sc1w45",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 324,
+    "codigoSku": "#REV-TAN-0324"
+  },
+  {
+    "id": "cmsg5995l022q67qswmip5ikl",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 357,
+    "codigoSku": "#REV-TAN-0357"
+  },
+  {
+    "id": "cmsg5983k00ho67qsama61uhu",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 528,
+    "codigoSku": "#REV-TAN-0528"
+  },
+  {
+    "id": "cmsg5983j00gh67qsmnh93qjr",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 399,
+    "codigoSku": "#REV-TAN-0399"
+  },
+  {
+    "id": "cmsg5990b01qq67qsk7zfw6my",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 204,
+    "codigoSku": "#REV-TAN-0204"
+  },
+  {
+    "id": "cmsg5995l020i67qsuowox0cz",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 298,
+    "codigoSku": "#REV-TAN-0298"
+  },
+  {
+    "id": "cmsg5995m023m67qs2k1gtkpn",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 355,
+    "codigoSku": "#REV-TAN-0355"
+  },
+  {
+    "id": "cmsg598c000xy67qsmziusfeu",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 205,
+    "codigoSku": "#REV-TAN-0205"
+  },
+  {
+    "id": "cmsg5983j00fb67qs03uyzhk6",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 601,
+    "codigoSku": "#REV-TAN-0601"
+  },
+  {
+    "id": "cmsg5983j00fc67qsnw59bx3e",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 443,
+    "codigoSku": "#REV-TAN-0443"
+  },
+  {
+    "id": "cmsg5983n00ry67qsfxjuy9v5",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 484,
+    "codigoSku": "#REV-TAN-0484"
+  },
+  {
+    "id": "cmsg598c100yi67qstnqzrbcs",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 394,
+    "codigoSku": "#REV-TAN-0394"
+  },
+  {
+    "id": "cmsg598c3011267qsbkhxgp3g",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 501,
+    "codigoSku": "#REV-TAN-0501"
+  },
+  {
+    "id": "cmsg5983j00fm67qskwpbwk5u",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 448,
+    "codigoSku": "#REV-TAN-0448"
+  },
+  {
+    "id": "cmsg5983n00rc67qsfhhhnl3e",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 604,
+    "codigoSku": "#REV-TAN-0604"
+  },
+  {
+    "id": "cmsg598c3010y67qspk55q9tf",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 47,
+    "codigoSku": "#REV-TAN-0047"
+  },
+  {
+    "id": "cmsg598c3011167qs1ufdaoxw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 360,
+    "codigoSku": "#REV-TAN-0360"
+  },
+  {
+    "id": "cmsg5983k00i367qsoj7sxtc7",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 68,
+    "codigoSku": "#REV-TAN-0068"
+  },
+  {
+    "id": "cmsg5995l020z67qs0p6pc9ys",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 176,
+    "codigoSku": "#REV-TAN-0176"
+  },
+  {
+    "id": "cmsg5983j00fx67qsan3eq4un",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 600,
+    "codigoSku": "#REV-TAN-0600"
+  },
+  {
+    "id": "cmsg598m701ba67qs4g6zjc1r",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 376,
+    "codigoSku": "#REV-TAN-0376"
+  },
+  {
+    "id": "cmsg5990b01sc67qse6xlzya0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 35,
+    "codigoSku": "#REV-TAN-0035"
+  },
+  {
+    "id": "cmsg5990901l967qsyp3e1kd7",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 53,
+    "codigoSku": "#REV-TAN-0053"
+  },
+  {
+    "id": "cmsg598m801df67qs81jka123",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 276,
+    "codigoSku": "#REV-TAN-0276"
+  },
+  {
+    "id": "cmsg5983j00gg67qsm3n36z8f",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 32,
+    "codigoSku": "#REV-TAN-0032"
+  },
+  {
+    "id": "cmsg598m901gv67qsk83b3gcj",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 202,
+    "codigoSku": "#REV-TAN-0202"
+  },
+  {
+    "id": "cmsg598m801ea67qs4d5npsii",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 594,
+    "codigoSku": "#REV-TAN-0594"
+  },
+  {
+    "id": "cmsg598m801eb67qsro2ml5ai",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 595,
+    "codigoSku": "#REV-TAN-0595"
+  },
+  {
+    "id": "cmsg5990b01sa67qso8p6kl49",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 227,
+    "codigoSku": "#REV-TAN-0227"
+  },
+  {
+    "id": "cmsg5990b01s667qsqpop1gw6",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 226,
+    "codigoSku": "#REV-TAN-0226"
+  },
+  {
+    "id": "cmsg5990b01s567qskv27bh9e",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 225,
+    "codigoSku": "#REV-TAN-0225"
+  },
+  {
+    "id": "cmsg5990b01s467qsvxpdnmhh",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 224,
+    "codigoSku": "#REV-TAN-0224"
+  },
+  {
+    "id": "cmsg5990901lk67qsb4prbn98",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 372,
+    "codigoSku": "#REV-TAN-0372"
+  },
+  {
+    "id": "cmsg5990b01sb67qs4k3ywnvm",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 54,
+    "codigoSku": "#REV-TAN-0054"
+  },
+  {
+    "id": "cmsg5983k00hp67qs7szqabjw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 156,
+    "codigoSku": "#REV-TAN-0156"
+  },
+  {
+    "id": "cmsg598m801de67qs56fbu2z1",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 34,
+    "codigoSku": "#REV-TAN-0034"
+  },
+  {
+    "id": "cmsg5990c01xf67qsb7axdw95",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 573,
+    "codigoSku": "#REV-TAN-0573"
+  },
+  {
+    "id": "cmsg598m901hg67qsvvpr15pi",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 567,
+    "codigoSku": "#REV-TAN-0567"
+  },
+  {
+    "id": "cmsg5990a01pl67qsey862umq",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 566,
+    "codigoSku": "#REV-TAN-0566"
+  },
+  {
+    "id": "cmsg598ma01jt67qs9uv1mog0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 517,
+    "codigoSku": "#REV-TAN-0517"
+  },
+  {
+    "id": "cmsg5990c01wp67qs18nzpoj2",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 590,
+    "codigoSku": "#REV-TAN-0590"
+  },
+  {
+    "id": "cmsg598m701ax67qsyovzdsu3",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 442,
+    "codigoSku": "#REV-TAN-0442"
+  },
+  {
+    "id": "cmsg598ma01k767qswsq6igx0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 259,
+    "codigoSku": "#REV-TAN-0259"
+  },
+  {
+    "id": "cmsg5990c01wo67qswl5n2gn1",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 258,
+    "codigoSku": "#REV-TAN-0258"
+  },
+  {
+    "id": "cmsg598m801f767qs6ap2xzcq",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 240,
+    "codigoSku": "#REV-TAN-0240"
+  },
+  {
+    "id": "cmsg5990901lf67qs1qcvtdgi",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 435,
+    "codigoSku": "#REV-TAN-0435"
+  },
+  {
+    "id": "cmsg5983k00hq67qs6u2vujd7",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 214,
+    "codigoSku": "#REV-TAN-0214"
+  },
+  {
+    "id": "cmsg5995l020367qsm3xm8g7s",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 322,
+    "codigoSku": "#REV-TAN-0322"
+  },
+  {
+    "id": "cmsg5995l021w67qs0cvfkyy2",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 269,
+    "codigoSku": "#REV-TAN-0269"
+  },
+  {
+    "id": "cmsg598m901ha67qskmx2o6xo",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 137,
+    "codigoSku": "#REV-TAN-0137"
+  },
+  {
+    "id": "cmsg598m901h967qshzdeos43",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 136,
+    "codigoSku": "#REV-TAN-0136"
+  },
+  {
+    "id": "cmsg598m801f667qspdb5vc35",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 135,
+    "codigoSku": "#REV-TAN-0135"
+  },
+  {
+    "id": "cmsg5990901kq67qs03b5zwln",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 138,
+    "codigoSku": "#REV-TAN-0138"
+  },
+  {
+    "id": "cmsg5990c01v267qsn38w7zl3",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 133,
+    "codigoSku": "#REV-TAN-0133"
+  },
+  {
+    "id": "cmsg598m901gd67qs55yjv8po",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 481,
+    "codigoSku": "#REV-TAN-0481"
+  },
+  {
+    "id": "cmsg5990901kx67qs1c97c7vv",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 392,
+    "codigoSku": "#REV-TAN-0392"
+  },
+  {
+    "id": "cmsg5990901mq67qsc7q3zoje",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 191,
+    "codigoSku": "#REV-TAN-0191"
+  },
+  {
+    "id": "cmsg5990b01ts67qsete5er69",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 370,
+    "codigoSku": "#REV-TAN-0370"
+  },
+  {
+    "id": "cmsg5990c01w667qsqrs8pp57",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 371,
+    "codigoSku": "#REV-TAN-0371"
+  },
+  {
+    "id": "cmsg5990b01qh67qssey8r6e1",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 463,
+    "codigoSku": "#REV-TAN-0463"
+  },
+  {
+    "id": "cmsg598m901gr67qsc0qiy971",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 464,
+    "codigoSku": "#REV-TAN-0464"
+  },
+  {
+    "id": "cmsg5990b01sf67qs8wi1f5xg",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 8,
+    "codigoSku": "#REV-TAN-0008"
+  },
+  {
+    "id": "cmsg5990b01sg67qs4mje10af",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 9,
+    "codigoSku": "#REV-TAN-0009"
+  },
+  {
+    "id": "cmsg5990a01ni67qsg4ckhlqf",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 36,
+    "codigoSku": "#REV-TAN-0036"
+  },
+  {
+    "id": "cmsg598m901gs67qszw5sk3se",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 559,
+    "codigoSku": "#REV-TAN-0559"
+  },
+  {
+    "id": "cmsg5995l021y67qspagzjq2q",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 318,
+    "codigoSku": "#REV-TAN-0318"
+  },
+  {
+    "id": "cmsg598m801ey67qsz0p6c9zw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 172,
+    "codigoSku": "#REV-TAN-0172"
+  },
+  {
+    "id": "cmsg5990c01vg67qswnuicpn5",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 533,
+    "codigoSku": "#REV-TAN-0533"
+  },
+  {
+    "id": "cmsg5990901mf67qs9k7g1rv5",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 534,
+    "codigoSku": "#REV-TAN-0534"
+  },
+  {
+    "id": "cmsg5995l021s67qs166p9w27",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 446,
+    "codigoSku": "#REV-TAN-0446"
+  },
+  {
+    "id": "cmsg598m801eu67qsopi0rrdx",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 460,
+    "codigoSku": "#REV-TAN-0460"
+  },
+  {
+    "id": "cmsg598m801ev67qspudho5iv",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 462,
+    "codigoSku": "#REV-TAN-0462"
+  },
+  {
+    "id": "cmsg5990c01wn67qsvzw8y0a6",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 141,
+    "codigoSku": "#REV-TAN-0141"
+  },
+  {
+    "id": "cmsg5995l020j67qs1lx66nfl",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 347,
+    "codigoSku": "#REV-TAN-0347"
+  },
+  {
+    "id": "cmsg598m901he67qswb3zskf5",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 348,
+    "codigoSku": "#REV-TAN-0348"
+  },
+  {
+    "id": "cmsg5995l022l67qsb9a3ki3a",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 358,
+    "codigoSku": "#REV-TAN-0358"
+  },
+  {
+    "id": "cmsg598m901j767qsblsl64mx",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 359,
+    "codigoSku": "#REV-TAN-0359"
+  },
+  {
+    "id": "cmsg5990901mc67qs6rcld8l8",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 585,
+    "codigoSku": "#REV-TAN-0585"
+  },
+  {
+    "id": "cmsg5990b01tq67qsip6yteu4",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 373,
+    "codigoSku": "#REV-TAN-0373"
+  },
+  {
+    "id": "cmsg5995l020v67qsl3yktksl",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 547,
+    "codigoSku": "#REV-TAN-0547"
+  },
+  {
+    "id": "cmsg5990b01re67qsth0dw0p2",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 374,
+    "codigoSku": "#REV-TAN-0374"
+  },
+  {
+    "id": "cmsg598m801em67qs973qpgq2",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 59,
+    "codigoSku": "#REV-TAN-0059"
+  },
+  {
+    "id": "cmsg5990d01xu67qs3v51y8uo",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 412,
+    "codigoSku": "#REV-TAN-0412"
+  },
+  {
+    "id": "cmsg5990b01qk67qs8pxlmvih",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 321,
+    "codigoSku": "#REV-TAN-0321"
+  },
+  {
+    "id": "cmsg598m901fv67qscdf3fvot",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 264,
+    "codigoSku": "#REV-TAN-0264"
+  },
+  {
+    "id": "cmsg598m901fu67qsbzrxi28g",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 265,
+    "codigoSku": "#REV-TAN-0265"
+  },
+  {
+    "id": "cmsg598m901fw67qsx9kblhln",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 540,
+    "codigoSku": "#REV-TAN-0540"
+  },
+  {
+    "id": "cmsg5990c01ua67qssmqtzdzw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 539,
+    "codigoSku": "#REV-TAN-0539"
+  },
+  {
+    "id": "cmsg5990901mp67qsnbeyb4u7",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 522,
+    "codigoSku": "#REV-TAN-0522"
+  },
+  {
+    "id": "cmsg5990c01ur67qsxkd36559",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 527,
+    "codigoSku": "#REV-TAN-0527"
+  },
+  {
+    "id": "cmsg598c200zz67qsnqg0dgqo",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 336,
+    "codigoSku": "#REV-TAN-0336"
+  },
+  {
+    "id": "cmsg598m901fx67qsf3edknoq",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 337,
+    "codigoSku": "#REV-TAN-0337"
+  },
+  {
+    "id": "cmsg5990c01ty67qsphyffnkw",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 384,
+    "codigoSku": "#REV-TAN-0384"
+  },
+  {
+    "id": "cmsg5990d01y467qs6rramdw0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 532,
+    "codigoSku": "#REV-TAN-0532"
+  },
+  {
+    "id": "cmsg5990d01y367qst1mpw5ll",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 282,
+    "codigoSku": "#REV-TAN-0282"
+  },
+  {
+    "id": "cmsg598m901hs67qsm0athi49",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 175,
+    "codigoSku": "#REV-TAN-0175"
+  },
+  {
+    "id": "cmsg5990c01u167qs7i2offt8",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 514,
+    "codigoSku": "#REV-TAN-0514"
+  },
+  {
+    "id": "cmsg598m901hr67qs1vvqxqki",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 490,
+    "codigoSku": "#REV-TAN-0490"
+  },
+  {
+    "id": "cmsg598m801fp67qsloeif4wp",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 177,
+    "codigoSku": "#REV-TAN-0177"
+  },
+  {
+    "id": "cmsg598m801fo67qsl9alx3l0",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 178,
+    "codigoSku": "#REV-TAN-0178"
+  },
+  {
+    "id": "cmsg5990c01tz67qsyext81r8",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 131,
+    "codigoSku": "#REV-TAN-0131"
+  },
+  {
+    "id": "cmsg5990901mj67qsutc28x92",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 38,
+    "codigoSku": "#REV-TAN-0038"
+  },
+  {
+    "id": "cmsg598m901g767qsr7nalb1s",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 109,
+    "codigoSku": "#REV-TAN-0109"
+  },
+  {
+    "id": "cmsg5990b01t867qsqtbhqbd3",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 61,
+    "codigoSku": "#REV-TAN-0061"
+  },
+  {
+    "id": "cmsg598m901fz67qsgl4gh29l",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 62,
+    "codigoSku": "#REV-TAN-0062"
+  },
+  {
+    "id": "cmsg5990b01t567qs8l4zdn0d",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 150,
+    "codigoSku": "#REV-TAN-0150"
+  },
+  {
+    "id": "cmsg598c200zx67qskf7nrsu4",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 1,
+    "codigoSku": "#REV-TAN-0001"
+  },
+  {
+    "id": "cmsg598m901ht67qs25elmz0w",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 452,
+    "codigoSku": "#REV-TAN-0452"
+  },
+  {
+    "id": "cmsg5990901li67qswqk5cw3n",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 556,
+    "codigoSku": "#REV-TAN-0556"
+  },
+  {
+    "id": "cmsg598m901fy67qsd8xcrx7n",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 283,
+    "codigoSku": "#REV-TAN-0283"
+  },
+  {
+    "id": "cmsg5990c01u867qsl7xtyi3o",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 447,
+    "codigoSku": "#REV-TAN-0447"
+  },
+  {
+    "id": "cmsg598m901fq67qsjb5ukrc3",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 367,
+    "codigoSku": "#REV-TAN-0367"
+  },
+  {
+    "id": "cmsg598m901fr67qsn9cf16rs",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 364,
+    "codigoSku": "#REV-TAN-0364"
+  },
+  {
+    "id": "cmsg598m901fs67qs1z8jg1is",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 365,
+    "codigoSku": "#REV-TAN-0365"
+  },
+  {
+    "id": "cmsg598m901ft67qsudg44pkr",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 366,
+    "codigoSku": "#REV-TAN-0366"
+  },
+  {
+    "id": "cmsg5990a01n767qs4mmor8sj",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 362,
+    "codigoSku": "#REV-TAN-0362"
+  },
+  {
+    "id": "cmsg598c3011767qsjhdbmuoq",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 363,
+    "codigoSku": "#REV-TAN-0363"
+  },
+  {
+    "id": "cmsg5990901lj67qs58n0sbjq",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 52,
+    "codigoSku": "#REV-TAN-0052"
+  },
+  {
+    "id": "cmsg5990c01u967qs895u4npp",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 565,
+    "codigoSku": "#REV-TAN-0565"
+  },
+  {
+    "id": "cmsg5990c01u367qsnb6f9a46",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 128,
+    "codigoSku": "#REV-TAN-0128"
+  },
+  {
+    "id": "cmsg5990901mi67qslvmmojm9",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 512,
+    "codigoSku": "#REV-TAN-0512"
+  },
+  {
+    "id": "cmsg598c3011667qs8okmo2rf",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 345,
+    "codigoSku": "#REV-TAN-0345"
+  },
+  {
+    "id": "cmsg598bz00up67qsscj9zq7z",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 544,
+    "codigoSku": "#REV-TAN-0544"
+  },
+  {
+    "id": "cmsg598m6017967qs36efvbsc",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 545,
+    "codigoSku": "#REV-TAN-0545"
+  },
+  {
+    "id": "cmsg598bz00vg67qsr6smp50l",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 535,
+    "codigoSku": "#REV-TAN-0535"
+  },
+  {
+    "id": "cmsg598m6017267qshye46h0z",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 233,
+    "codigoSku": "#REV-TAN-0233"
+  },
+  {
+    "id": "cmsg598m6017167qsfdndbowj",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 232,
+    "codigoSku": "#REV-TAN-0232"
+  },
+  {
+    "id": "cmsg598m6017467qs4k06pwjo",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 234,
+    "codigoSku": "#REV-TAN-0234"
+  },
+  {
+    "id": "cmsg598c6016567qsb0cwxpwy",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 603,
+    "codigoSku": "#REV-TAN-0603"
+  },
+  {
+    "id": "cmsg598m801ci67qszizocy5u",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 551,
+    "codigoSku": "#REV-TAN-0551"
+  },
+  {
+    "id": "cmsg598m901ic67qsbqj07j73",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 299,
+    "codigoSku": "#REV-TAN-0299"
+  },
+  {
+    "id": "cmsg5990901mo67qsuhnaszb4",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 581,
+    "codigoSku": "#REV-TAN-0581"
+  },
+  {
+    "id": "cmsg598m901il67qs5hphdncz",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 580,
+    "codigoSku": "#REV-TAN-0580"
+  },
+  {
+    "id": "cmsg598m701br67qsjotf1nao",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 218,
+    "codigoSku": "#REV-TAN-0218"
+  },
+  {
+    "id": "cmsg5990b01ry67qs0gy85rrg",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 519,
+    "codigoSku": "#REV-TAN-0519"
+  },
+  {
+    "id": "cmsg5990c01wr67qsvhehsboe",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 160,
+    "codigoSku": "#REV-TAN-0160"
+  },
+  {
+    "id": "cmsg598m6017767qs3niis3lm",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 602,
+    "codigoSku": "#REV-TAN-0602"
+  },
+  {
+    "id": "cmsg5990b01tc67qso83t2tr5",
+    "categoriaId": "cmsg5aec0000095qssg6k7h6r",
+    "secuencia": 30,
+    "codigoSku": "#REV-TAN-0030"
+  }
+]

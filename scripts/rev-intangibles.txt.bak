@@ -1,0 +1,167 @@
+# IDs (Producto.id) de #REV clasificados como INTANGIBLE. El resto de #REV -> TANGIBLE.
+# Criterio: no es un bien físico inventariable (servicios, conectividad/IP, financiero/
+# contable, impuestos/tasas, licencias/software, honorarios, placeholders de proforma).
+# El "?" marca ítems dudosos/placeholder que conviene que revises a mano.
+# Formato: <id>   # NOMBRE   (el parser toma el primer token; ignora comentarios y vacías)
+
+# --- Conectividad / IP / servicios de red ---
+cmraotwda00w3jwkupcrvzl08   # AccesoToncal IP
+cmraotwda00vmjwkuxbup4z5b   # Central Acceso Extremo Adicionales
+cmraotwda00vjjwku6rm4heuw   # Acceso Dinamico - Capital Federal CPA
+cmraotwda00vljwkuknbo6v3d   # Acceso Dinamico - Cordoba CPA
+cmraotwda00vkjwku9y3q0oxl   # Acceso Dinamico - Rosario CPA
+cmraotvzu001ljwkuwvlewx2u   # Apertura de Puerto
+cmraotwd900ugjwku4ivfpyll   # DIRECCIONES IP
+cmraotvzu001jjwkue9h8yqbi   # LAN TO LAN
+cmraotwkk01i6jwkuapq8b4zd   # LAN2LAN
+cmraotw6x00r2jwku1eb1hnqv   # TRANSITO IP
+cmraotw6x00r3jwku6d3qpy76   # VPN/ L2L
+cmraotwd900uhjwkujc5xi7wr   # DETECCION Y MITIGACION DE DDOS
+cmraotwd900utjwkusjmpbl5s   # MITIGACION 1067843 CORRAL DE BUSTOS
+cmraotwki01b1jwku75dx35jv   # MITIGACION 1238277
+cmraotw6w00ozjwkub49p36lg   # MITIGACION 952097 SALTA
+cmraotw6w00p0jwku7wmqc1fi   # MITIGACION 952098 CATAM-PERU
+cmraotw6w00p1jwkur1657tm5   # MITIGACION 952102 P.GARCIA 175
+cmraotwda00w5jwku9st6hi74   # CONFIGURACION AP
+cmraotwkj01cxjwku1dncgxy6   # PORTAL CAUTIVO
+cmraotwkh017zjwkuizd2r630   # VIRTUALIZACION
+
+# --- TV / señales / plataformas / contenidos / software ---
+cmraotwqt01nnjwkuketnop2r   # ACTUALIZACION DE CONTENIDOS WEB
+cmraotwvg021xjwkuvdjbr0et   # APLICACION TV
+cmraotwqu01nqjwku9hnkvxzm   # BUSCADOR DE PROGRAMACION WEB
+cmraotwdd014yjwkuo3qldujx   # PAQUETE CODIFICADO FUTBOL
+cmraotwqu01npjwkuwya9c7m2   # METADATA PLATAFORMA CCC GO
+cmraotwqu01nojwku355i0jig   # METADATA RED DE CABLE
+cmraotwqt01nbjwkuh8f9zylq   # PLATAFORMA CCC GO
+cmraotvzz00bljwku7jo02gr6   # Plataforma gestion de video
+cmraotw6s00gmjwku9dbirn6b   # PROGRAMACION MENSUAL
+cmraotw6s00gkjwkup2gu030z   # PROGRAMACION SEÑALES BASICAS
+cmraotwde015ijwkunata2k9e   # SCA - Servicios de Comunicacion Audiovisual
+cmraotwdd014zjwkup8v25uee   # SERVICIO DE CABLE
+cmraotvzu001hjwkusn4zn9fx   # Servicio de Cable
+cmraotvzz00bpjwku8d53vjfc   # SERVICIO MENSUAL
+cmraotwvf01zvjwku2c36ns3r   # Servicio Mensual Stick
+cmraotw6s00gjjwku9cnh05o5   # SEÑALES DEPORTIVAS
+cmraotw6s00gljwkudfh9j8uo   # SEÑALES PREMIUM
+cmraotw0000dxjwkux2np2cjt   # SERVICIO
+cmraotwqx01xejwkuliz33aji   # Licenciamiento de modulos para app Go Tv
+cmraotwqx01yajwku22tkz3om   # LICENCIAS Y DATOS PARA KIT DE MICRO EMBARCADO
+cmraotwkj01dujwkutz02oo6j   # SOFTWARE Y LICENCIAS 21%
+
+# --- Servicios / mano de obra / honorarios / mantenimiento / legales ---
+cmraotw6x00r9jwkuzymxaam8   # COSTO REINSTALACION
+cmraotwkh017ojwkuyjp1rfe6   # ASISTENCIA
+cmraotwqu01ogjwku1ii96m93   # AVISOS PUBLICITARIOS
+cmraotvzz00bwjwku2vyfps9m   # PUBLICIDAD
+cmraotwkj01cyjwkujkk4v4b3   # cargo por asesoramiento tecnico
+cmraotwd900ttjwkugwxyk9ml   # Constataciones
+cmraotwd900t6jwkue5h6qjpe   # FUMIGACION
+cmraotwda00wcjwkurzry3xxc   # FUSIONES DE F.O.
+cmraotwdb010mjwkujtl91zr2   # Honorario por Gerenciamiento y Asesoramiento Legal, Fiscal y Contable
+cmraotwqu01odjwkutzd9m6b9   # INST DE EQUIPO DE GPS EN MOVILES
+cmraotw6w00pojwkutivpfnfi   # MANTENIMIENTOS VARIOS
+cmraotwqw01wljwku6lpqutco   # MEDICINA LABORAL
+cmraotwkk01iijwkurm3iwoiw   # Examenes preocupacionales
+cmraotwqt01mrjwkucqcalk9l   # PERSONAL 3ROS
+cmraotwda00w4jwkurulj76sp   # Servicios Tecnicos de Terceros
+cmraotw6x00rtjwkucwmhc5hg   # Servicio de Gerenciamiento, Asesoria legal y contable
+cmraotwqt01n5jwkurez2jf3o   # SERV DE DISTRIBUCION DE FC Y REVISTAS
+cmraotwki01arjwkuap9t1p23   # SEGURIDAD PRIVADA
+cmraotwqt01mvjwkui9auij8x   # AREA PROTEGIDA
+cmraotw6x00qvjwkuinp83f92   # Reparacion de piel de vidrio
+cmraotwdc011fjwkujg0qyx8y   # TRABAJO DE REFACCION Y REACONDICIONAMIENTO
+cmraotwd900uljwkutoh48l0n   # CAMBIO DE EQUIPO
+cmraotwda00vqjwkuux7htgqo   # SISTEMA CAPACITACIONES Y CONSULTAS
+cmraotwdb010njwkuer09fgyk   # Gasnor - Sat
+cmraotwd900twjwkundjk627m   # Envio Carta Documento
+cmraotwd900txjwkuk9wl9u6s   # Envio Documentacion en General
+cmraotwd900tvjwku89e8skx8   # Legalizacion
+cmraotwd900trjwku4b3qtnme   # Poder General
+cmraotwd900tsjwkuxkywjxjr   # Estatuto
+cmraotwd900tujwkuss8wum6k   # Distractos
+cmraotwd900tzjwkuszw4nzrr   # Transferencia Automotor
+cmraotwd900tyjwku9gt3y4ll   # Cedula Azul
+cmraotwqw01vnjwkumb4a99l4   # Certificaciones Bces
+cmraotw6x00r8jwkuj78f9crq   # CERTIFICADO
+
+# --- Financiero / contable / impuestos / tasas ---
+cmraotwvg021ujwku9hw9g9f7   # ACCIONES CON COTIZACION
+cmraotwvg023ijwkugj726ut8   # ARANCELES ACCIONES CON COTIZACION
+cmraotwvg023hjwkuui6f4ugl   # RENDIMIENTO ACCIONES CON COTIZACION
+cmraotwkh017njwku3jima7dl   # BIENES PERSONALES ACCIONES Y PARTICIPACION SOCIETARIA
+cmraotwqt01lxjwkulgyjfih9   # ANTICIPOS AL PERSONAL
+cmraotwqt01lyjwkuqf0ohcrd   # PRESTAMOS AL PERSONAL
+cmraotw6x00qrjwkuiz3osljk   # CAPITAL PRESTAMOS
+cmraotw6x00qtjwkuw73jfkdu   # Cargos Financieros
+cmraotwda00vzjwku5exbbkvv   # Cargos Financieros Impositivo
+cmraotw6x00qcjwkugz3k5wfo   # COM. BANCARIAS POR IMPORTACION
+cmraotw6x00sbjwkuvf74470f   # COMISIONES BANCARIAS GRAV
+cmraotw6x00scjwkuzma1kj7w   # COMISIONES BANCARIAS NO GRAV
+cmraotwki01b5jwku6ettnnfg   # COMISIONES COBRANZAS NO GRAVADAS
+cmraotwki01aqjwkuiz6v0srd   # COMISIONES POR COBRANZA
+cmraotwda00vyjwkuqi16z56z   # CONVENIO / IIBB
+cmraotwda00w7jwkudi4t10e5   # Costos no deducibles
+cmraotw6x00qujwkur18a5vj0   # Credito por Imp.Deb y Cred Bancario
+cmraotwqt01lrjwkusomo712x   # DESCUENTOS
+cmraotwqv01rfjwku62bgmm3q   # Deudores por Venta CCC
+cmraotwda00xkjwku268aynpd   # Deudores por Venta Columbo
+cmraotwkk01hxjwkuf71yergf   # Cuenta particular G.Olarte
+cmraotwkk01ijjwkuwc650yj4   # Cuenta particular J Diez
+cmraotwkk01hyjwkurn3lr1wg   # Cuenta particular L.Ritzer
+cmraotwdb00zojwku467a8lwp   # Cuenta particular P.Olarte
+cmraotwve01zjjwkuj89vrijt   # FACTURAS TC A RECIBIR
+cmraotwdb00zljwku5eufbrsl   # GO deudas fiscales
+cmraotwkj01dvjwku5by9ycr3   # INTERESES FISCALES
+cmraotwdd013ljwkue94urrf1   # mercaderia a recibir
+cmraotwdd013mjwkuqiumz7g3   # mercaderia a recibir 10.5
+cmraotwqt01njjwkud24hixar   # OTROS COSTOS OPERATIVOS
+cmraotwd900tajwkuhsov15z7   # Pago por subrogacion
+cmraotwki01asjwkupfqgmmo7   # RECARGO BILLETES BAJA NOMINACION
+cmraotwqw01vtjwkunuu6wpt9   # RECARGO POR MORA
+cmraotw6x00s4jwkuwgd0axwh   # Recaudacion
+cmraotw6x00r7jwkultjbc9bn   # Refrigerios Administracion IVA10.5%
+cmraotwkj01cvjwkualo79hnp   # Reinstatement Fees
+cmraotw6x00s6jwkuf6l4et9o   # SALDO INICIAL PROVIDERS TANGO
+cmraotw6x00rmjwkunglny8dg   # SALDO INICIAL TANGO
+cmraotw6x00qdjwkux8uo02bh   # SALDO TECNICO A FAVOR DE AFIP
+cmraotwd900ufjwku8yz5qa5l   # SICORE-GANANCIAS
+cmraotwd900u0jwkuv1nllc8h   # Tasa F.1924
+cmraotwqt01krjwkun155ltfg   # TASA MUNICIPAL TENDIDO RED TV
+cmraotwqt01ksjwkubvnyxdix   # Tasa por Inspeccion Seguridad Salubridad e Higiene
+cmraotwd900u1jwkunmdak5i4   # Tasas Municipales (Legales)
+cmraotwda00xfjwkuuny91rhp   # VENTA BIEN DE USO
+cmraotwda00x3jwkuq9t59lle   # Venta Bienes de Uso
+cmraotw6x00s5jwku007di4x3   # Solicitud de Fondos
+cmraotwda00v1jwku97q4w8jd   # Sello Bancario
+cmraotwdb00zkjwku69zf213y   # Cheque Rechazado
+cmraotwve01z4jwku3okxdpa7   # expensas JC
+cmraotwki01aujwkucv07bkge   # OSDE FLIA OLARTE
+cmraotwdb00zgjwkuyelclvol   # Sindicato
+cmraotwda00w2jwkux56lrx25   # CANON ENACOM
+cmraotwvg023ljwkugc0rgn5k   # PARTICIPACION BORDERAUX SHOW FUTTURA, HIPODROMO DE TUCUMAN
+
+# --- Placeholders de proforma / genericos (REVISAR: '?') ---
+cmraotwda00vtjwkud375d9i6   # BLOQUE I ?
+cmraotwda00vujwkur916fp86   # BLOQUE II ?
+cmraotwda00vvjwku7ih8my7n   # BLOQUE III ?
+cmraotwda00vwjwkupqix4drn   # BLOQUE IV ?
+cmraotwda00vxjwku5ujeojku   # BLOQUE V ?
+cmraotw6u00k4jwkuzbldchz7   # ITEM 1.1 ?
+cmraotw6u00k5jwkuazwrjjjs   # ITEM 1.2 ?
+cmraotw6u00k6jwkurddk1zr6   # ITEM 1.3 ?
+cmraotwkh0180jwkubpobl77a   # MATERIAL X (codigo EJEMPLO) ?
+cmraotwd900u6jwkudepmt1fz   # MATERIALES AL 10.5 ?
+cmraotwd900u7jwkuavi0ha95   # MATERIALES AL 21 ?
+cmraotwdb010ajwkum950mmdg   # EQUIPOS (10.5) ?
+cmraotw6x00qbjwkuxequ0fc5   # EQUIPOS DE COMPUTACION 10,5% ?
+cmraotw6x00qsjwkupodo3ba0   # EQUIPOS DE COMPUTACION 21% ?
+cmraotvzv003xjwkuck2ebxuh   # ELEMENTOS DE SEGURIDAD 21% ?
+cmraotwd900u2jwkududrc3le   # Muebles y Utiles ?
+cmraotwqw01w1jwkuecvtkuz6   # LIBROS SOCIETARIOS ?
+cmraotw6x00rljwku9vxcx2oz   # CISI ?
+cmraotwda00vnjwkum5ucaxke   # Parque Autoctono ?
+cmraotw6x00rxjwkufy0e5thl   # Puesto de Trabajo - Centro de Monitoreo ?
+cmraotwkj01cujwkuyxjm39tu   # R-SW-AOS-PRO PRD ?
+cmraotwda00wkjwkufj27d37p   # DETALLE EQUIPOS : ?
+cmraotw6x00qhjwkud359t4lv   # MES ?

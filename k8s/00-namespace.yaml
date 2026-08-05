@@ -1,0 +1,7 @@
+# Namespace: una "carpeta lógica" dentro del cluster. Todo lo de CentralSM va
+# acá adentro, así no se mezcla con otras cosas y se puede borrar todo junto
+# con `kubectl delete namespace centralsm`.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: centralsm

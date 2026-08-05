@@ -1,0 +1,23 @@
+# Service: nombre DNS + IP estable delante de los pods de la app. Los pods
+# nacen y mueren con IPs distintas; el Service (via el selector de labels)
+# siempre apunta a los que estén Ready (según la readinessProbe).
+#
+# type LoadBalancer: en la nube crea un balanceador real; en Docker Desktop
+# publica el puerto en localhost — así la app del cluster queda en
+# http://localhost:3300. (El otro camino, sin tocar el Service, es
+# `kubectl -n centralsm port-forward svc/centralsm-app 3300:3000`.)
+#
+# Usamos 3300 para no chocar con la app de compose en 3100.
+apiVersion: v1
+kind: Service
+metadata:
+  name: centralsm-app
+  namespace: centralsm
+spec:
+  type: LoadBalancer
+  selector:
+    app: centralsm-app
+  ports:
+    - name: http
+      port: 3300 # puerto del Service (y de localhost en Docker Desktop)
+      targetPort: 3000 # puerto del contenedor

@@ -1,0 +1,165 @@
+# Compose de PRODUCCIÓN: imágenes compiladas (next build standalone), sin bind
+# mounts ni hot reload. Comparte los volúmenes pgdata/uploads con el compose de
+# dev (mismos datos); no corras ambos a la vez (chocan nombres y puertos).
+#
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# Los scripts manuales (sync, clasificación) se corren en el contenedor cron,
+# que lleva el código completo:  docker exec centralsm-cron npx tsx scripts/...
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: centralsm-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-centralsm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}
+      POSTGRES_DB: ${POSTGRES_DB:-centralsm}
+    ports:
+      # Solo loopback: la DB nunca se expone a la red.
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-centralsm} -d ${POSTGRES_DB:-centralsm}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Migraciones como paso previo (one-shot). Usa la imagen del worker porque ya
+  # trae prisma CLI + schema; la imagen standalone de la app no los incluye.
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    image: centralsm-worker:prod
+    container_name: centralsm-migrate
+    restart: "no"
+    command: ["npx", "prisma", "migrate", "deploy"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-centralsm}:${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}@db:5432/${POSTGRES_DB:-centralsm}?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    build:
+      context: .
+      target: production
+    image: centralsm-app:prod
+    container_name: centralsm-app
+    restart: always
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-centralsm}:${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}@db:5432/${POSTGRES_DB:-centralsm}?schema=public
+      UPLOADS_DIR: /app/uploads
+      TEAMPLACE_BASE_URL: ${TEAMPLACE_BASE_URL:-https://api.finneg.com/api}
+      TEAMPLACE_TOKEN_URL: ${TEAMPLACE_TOKEN_URL:-https://api.teamplace.finneg.com/api/oauth/token}
+      TEAMPLACE_CLIENT_ID: ${TEAMPLACE_CLIENT_ID:-}
+      TEAMPLACE_CLIENT_SECRET: ${TEAMPLACE_CLIENT_SECRET:-}
+      AUTH_PASSWORD: ${AUTH_PASSWORD:?definir AUTH_PASSWORD en .env}
+      AUTH_SECRET: ${AUTH_SECRET:?definir AUTH_SECRET en .env}
+    ports:
+      - "3100:3000"
+    volumes:
+      - uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  # Worker Finnegans: imagen autocontenida (Dockerfile.worker, sin bind mounts).
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    image: centralsm-worker:prod
+    container_name: centralsm-worker
+    restart: always
+    environment:
+      NODE_ENV: production
+      TZ: America/Argentina/Buenos_Aires
+      DATABASE_URL: postgresql://${POSTGRES_USER:-centralsm}:${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}@db:5432/${POSTGRES_DB:-centralsm}?schema=public
+      FINNEGANS_USER: ${FINNEGANS_USER:-}
+      FINNEGANS_PASSWORD: ${FINNEGANS_PASSWORD:-}
+      FINNEGANS_WORKSPACE: ${FINNEGANS_WORKSPACE:-}
+      FINNEGANS_LANG: ${FINNEGANS_LANG:-Español}
+      FINNEGANS_PRODUCTOS_URL: ${FINNEGANS_PRODUCTOS_URL:-https://go.finneg.com/mas/vista?viewID=104}
+      FINNEGANS_PUSH_HEADLESS: "true"
+    volumes:
+      # Sesión del bot + capturas de error (efímero pero conviene persistirlo).
+      - worker_data:/data
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  # Scheduler del sync diario. Usa la imagen dev (lleva el código completo y
+  # tsx) pero SIN bind mounts: el código queda congelado en la imagen.
+  cron:
+    build:
+      context: .
+      target: dev
+    image: centralsm-cron:prod
+    container_name: centralsm-cron
+    restart: always
+    command: sh -c "npx prisma generate && exec npx tsx scripts/cron.ts"
+    environment:
+      NODE_ENV: production
+      TZ: America/Argentina/Buenos_Aires
+      DATABASE_URL: postgresql://${POSTGRES_USER:-centralsm}:${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}@db:5432/${POSTGRES_DB:-centralsm}?schema=public
+      CRON_SCHEDULE: ${CRON_SCHEDULE:-0 2 * * *}
+      TEAMPLACE_BASE_URL: ${TEAMPLACE_BASE_URL:-https://api.finneg.com/api}
+      TEAMPLACE_TOKEN_URL: ${TEAMPLACE_TOKEN_URL:-https://api.teamplace.finneg.com/api/oauth/token}
+      TEAMPLACE_CLIENT_ID: ${TEAMPLACE_CLIENT_ID:-}
+      TEAMPLACE_CLIENT_SECRET: ${TEAMPLACE_CLIENT_SECRET:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  # Backup diario a ./backups (OneDrive → copia offsite). Igual que en dev.
+  backup:
+    image: postgres:17-alpine
+    container_name: centralsm-backup
+    restart: always
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}
+      PGUSER: ${POSTGRES_USER:-centralsm}
+      PGDATABASE: ${POSTGRES_DB:-centralsm}
+      TZ: America/Argentina/Buenos_Aires
+    volumes:
+      - ./backups:/backups
+      - uploads:/uploads:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        while true; do
+          ts=$$(date +%Y%m%d-%H%M%S)
+          if pg_dump -h db -F c -f /backups/db-$$ts.dump; then
+            echo "backup OK: db-$$ts.dump"
+          else
+            echo "backup FALLO: db-$$ts"
+          fi
+          tar czf /backups/uploads-$$ts.tgz -C /uploads . 2>/dev/null || echo "backup uploads FALLO: $$ts"
+          ls -1t /backups/db-*.dump 2>/dev/null | tail -n +15 | xargs -r rm -f
+          ls -1t /backups/uploads-*.tgz 2>/dev/null | tail -n +15 | xargs -r rm -f
+          sleep 86400
+        done
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  uploads:
+  worker_data:

@@ -1,0 +1,23 @@
+node_modules
+.next
+.git
+.gitignore
+npm-debug.log*
+Dockerfile
+Dockerfile.worker
+.dockerignore
+docker-compose*.yml
+k8s
+.env
+.env.*
+!.env.example
+README.md
+coverage
+*.tsbuildinfo
+src/generated/prisma
+uploads
+backups
+# sesión cacheada del bot (cookies del ERP) y capturas: jamás dentro de la imagen
+scripts/playwright/.auth
+scripts/playwright/resultados
+scripts/playwright/selectores-descubiertos.*

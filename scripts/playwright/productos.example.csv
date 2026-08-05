@@ -1,0 +1,4 @@
+codigo,nombre,descripcion,unidad
+DEMO-001,Producto de prueba 1,Alta automatizada de ejemplo,UNI
+DEMO-002,Producto de prueba 2,"Descripción con, coma y ""comillas""",UNI
+DEMO-003,Producto de prueba 3,,UNI

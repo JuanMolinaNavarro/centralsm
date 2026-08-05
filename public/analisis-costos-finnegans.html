@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Análisis de costos — API Finnegans / Teamplace · CentralSM</title>
+<style>
+  :root {
+    --bg: #f7f8fa; --surface: #ffffff; --surface-2: #f0f2f5; --border: #e2e5ea;
+    --ink: #14171f; --ink-2: #4a5160; --ink-3: #8b93a3;
+    --accent: #2f6df6; --accent-soft: #e7efff;
+    --pago: #c02b3a; --pago-soft: #fdecee; --gratis: #1f9254; --gratis-soft: #e6f5ec;
+    --warn: #b7791f; --warn-soft: #fbf1de;
+    --radius: 14px; --maxw: 1060px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d0f14; --surface: #161a22; --surface-2: #1e232d; --border: #2a303c;
+      --ink: #eef1f6; --ink-2: #b3bccb; --ink-3: #78808f;
+      --accent: #5a8bff; --accent-soft: #17233f;
+      --pago: #ff6b7a; --pago-soft: #2a1418; --gratis: #4ad991; --gratis-soft: #10241a;
+      --warn: #e6b25e; --warn-soft: #2a2110;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font);
+    line-height: 1.6; font-size: 16px;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+  header.hero {
+    background: linear-gradient(180deg, var(--surface), var(--bg));
+    border-bottom: 1px solid var(--border); padding: 40px 0 28px;
+  }
+  .eyebrow { color: var(--accent); font-weight: 600; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+  h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.15; margin: 8px 0 10px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 40px 0 6px; letter-spacing: -0.01em; scroll-margin-top: 20px; }
+  h3 { font-size: 16px; margin: 22px 0 8px; }
+  p { color: var(--ink-2); margin: 8px 0; }
+  .lead { font-size: 18px; color: var(--ink-2); max-width: 70ch; }
+  .muted { color: var(--ink-3); font-size: 13px; }
+  section { padding: 6px 0; }
+  a { color: var(--accent); }
+  code, .mono { font-family: var(--mono); font-size: .9em; }
+
+  /* KPI tiles */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 14px; margin: 22px 0; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+  .tile .k { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-3); font-weight: 600; }
+  .tile .v { font-size: 26px; font-weight: 700; margin-top: 4px; letter-spacing: -0.02em; }
+  .tile .s { font-size: 13px; color: var(--ink-2); margin-top: 2px; }
+  .tile.good { border-left: 3px solid var(--gratis); }
+  .tile.pay  { border-left: 3px solid var(--pago); }
+  .tile.acc  { border-left: 3px solid var(--accent); }
+
+  /* Cards / callouts */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin: 16px 0; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; margin: 16px 0; }
+  .callout.warn { border-color: var(--warn); background: var(--warn-soft); }
+
+  /* Tables */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); margin: 14px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  thead th { background: var(--surface-2); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-3); }
+  tbody tr:last-child td { border-bottom: none; }
+  tr.hl { background: var(--accent-soft); }
+  tr.hl td { font-weight: 600; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .b-pago { color: var(--pago); background: var(--pago-soft); }
+  .b-gratis { color: var(--gratis); background: var(--gratis-soft); }
+  .b-warn { color: var(--warn); background: var(--warn-soft); }
+
+  /* Calculator */
+  .calc { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 760px) { .calc { grid-template-columns: 1fr; } }
+  .field { margin: 12px 0; }
+  .field label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 4px; }
+  .field .hint { font-size: 12px; color: var(--ink-3); font-weight: 400; }
+  input[type=number], select {
+    width: 100%; padding: 8px 10px; font-size: 15px; font-family: var(--font);
+    background: var(--surface-2); color: var(--ink); border: 1px solid var(--border); border-radius: 9px;
+  }
+  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .presets { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 8px; }
+  .presets button {
+    font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; padding: 6px 12px; border-radius: 999px;
+    background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--border);
+  }
+  .presets button:hover { border-color: var(--accent); color: var(--accent); }
+
+  .result { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+  .result .big { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+  .result .big small { font-size: 15px; font-weight: 600; color: var(--ink-3); }
+  .result .row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+  .result .row:last-child { border-bottom: none; }
+  .result .row b { font-variant-numeric: tabular-nums; }
+
+  /* Tier ladder */
+  .ladder { display: grid; gap: 8px; margin: 14px 0; }
+  .rung { display: grid; grid-template-columns: 130px 1fr 74px; align-items: center; gap: 12px; font-size: 13px; }
+  .rung .bar { height: 22px; border-radius: 6px 6px 6px 6px; background: var(--surface-2); border: 1px solid var(--border); position: relative; }
+  .rung .bar > span { position: absolute; inset: 0; border-radius: inherit; background: var(--accent); opacity: .28; }
+  .rung.active .bar > span { opacity: 1; }
+  .rung.active { font-weight: 700; }
+  .rung .price { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Scenario bars */
+  .scen { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 16px 0; }
+  @media (max-width: 640px){ .scen { grid-template-columns: 1fr; } }
+  .scen .col { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; text-align: center; }
+  .scen .plot { height: 120px; display: flex; align-items: flex-end; justify-content: center; margin: 8px 0; }
+  .scen .barv { width: 46px; background: var(--accent); border-radius: 5px 5px 0 0; opacity: .85; }
+  .scen .name { font-weight: 700; font-size: 15px; }
+  .scen .cost { font-size: 22px; font-weight: 800; margin-top: 6px; letter-spacing: -.02em; }
+  .scen .det { font-size: 12px; color: var(--ink-3); }
+
+  ul.clean { padding-left: 18px; } ul.clean li { margin: 6px 0; color: var(--ink-2); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 34px 0; }
+  footer { color: var(--ink-3); font-size: 13px; padding: 30px 0 60px; }
+  .toc { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 14px 0 4px; font-size: 14px; }
+  .toc a { color: var(--ink-2); text-decoration: none; } .toc a:hover { color: var(--accent); }
+</style>
+</head>
+<body data-palette="#2f6df6">
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">CentralSM · Integración Teamplace</div>
+    <h1>¿Cuánto nos costaría la API de Finnegans y conviene contratarla?</h1>
+    <p class="lead">Todo el catálogo de productos ya se sincroniza <strong>gratis</strong>. La única parte que se paga es el <strong>stock</strong>. Este informe modela cuánto gastaríamos y en qué paquete convendría caer.</p>
+    <div class="toc">
+      <a href="#resumen">Resumen</a> <a href="#modelo">Cómo cobran</a>
+      <a href="#endpoints">Endpoints de stock</a> <a href="#calc">Calculadora</a>
+      <a href="#escenarios">Escenarios</a> <a href="#justifica">¿Se justifica?</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- RESUMEN -->
+  <section id="resumen">
+    <h2>Resumen ejecutivo</h2>
+    <div class="tiles">
+      <div class="tile good"><div class="k">Catálogo de productos</div><div class="v">GRATIS</div><div class="s">Maestros (GET/POST). Ya lo usamos.</div></div>
+      <div class="tile pay"><div class="k">Lo único pago</div><div class="v">Stock</div><div class="s">Reportes de stock + ajustes (POST)</div></div>
+      <div class="tile acc"><div class="k">Paquete recomendado</div><div class="v">US$65–160<small>/mes</small></div><div class="s">según volumen real (calculadora abajo)</div></div>
+      <div class="tile good"><div class="k">Franja gratis</div><div class="v">100<small> int./mes</small></div><div class="s">las primeras 100 interacciones = $0</div></div>
+    </div>
+    <div class="callout">
+      <strong>Conclusión.</strong> El gasto es <strong>bajo y acotado</strong>: entre <strong>US$0 y US$160 por mes</strong> para un uso realista de stock (US$780–1.920/año). Como el catálogo ya es gratis, la pregunta no es “¿es caro?”, sino <strong>“¿necesitamos stock en vivo compartido con Teamplace?”</strong>. Si la respuesta es sí, el paquete de <strong>US$65/mes (hasta 1.000 interacciones)</strong> es el punto de entrada; US$160/mes (hasta 5.000) es el número de planificación seguro.
+    </div>
+  </section>
+
+  <!-- MODELO -->
+  <section id="modelo">
+    <h2>Cómo cobra Finnegans</h2>
+    <p>Se factura por <strong>“interacción”</strong> (una llamada a la API). No todas las llamadas cuentan: depende de la <strong>categoría</strong> del endpoint y del <strong>método</strong>.</p>
+
+    <h3>Qué cuenta como interacción facturable</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Categoría de API</th><th>GET (consulta)</th><th>POST / PUT / DELETE (escritura)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Maestros</strong> (productos, depósitos…)</td><td><span class="badge b-gratis">Gratis</span></td><td><span class="badge b-gratis">Gratis</span></td></tr>
+          <tr><td><strong>Transacciones</strong> (ajustes, pedidos…)</td><td><span class="badge b-gratis">Gratis</span></td><td><span class="badge b-pago">Paga</span> — <em>aunque falle</em></td></tr>
+          <tr><td><strong>Reportes</strong> (<code>/reports/*</code>)</td><td><span class="badge b-pago">Paga</span></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">⚠️ Regla clave: un <strong>POST/PUT de transacción se cobra incluso si la operación falla</strong> (ej. un ajuste rechazado). Por eso conviene validar antes de escribir.</p>
+
+    <h3>Modelo de facturación: paquetes mensuales (auto-ajustados)</h3>
+    <p>El costo real es por <strong>paquete mensual con tarifa plana</strong>, según cuántas interacciones facturables hagas en el mes. Si te pasás del tope (o no tenés paquete), <em>“el contrato se actualiza automáticamente al paquete que corresponda”</em>.</p>
+    <div class="tablewrap">
+      <table id="tierTable">
+        <thead><tr><th>Interacciones / mes</th><th class="num">Costo del paquete (USD)</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr data-cap="100"><td>hasta 100</td><td class="num">US$0</td><td><span class="badge b-gratis">Gratis</span></td></tr>
+          <tr data-cap="200"><td>hasta 200</td><td class="num">US$50</td><td></td></tr>
+          <tr data-cap="1000"><td>hasta 1.000</td><td class="num">US$65</td><td></td></tr>
+          <tr data-cap="5000"><td>hasta 5.000</td><td class="num">US$160</td><td></td></tr>
+          <tr data-cap="25000"><td>hasta 25.000</td><td class="num">US$295</td><td></td></tr>
+          <tr data-cap="100000"><td>hasta 100.000</td><td class="num">US$375</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">Escalón importante: pasar de <strong>100 a 101</strong> interacciones salta de <strong>$0 a $50</strong> el mes. Es tarifa plana por tramo, no lineal.</p>
+
+    <h3>Precio por interacción (referencia / excedente)</h3>
+    <p>Existe además una escala unitaria que sirve de referencia y para el excedente por encima de 100.000:</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Volumen</th><th class="num">USD por interacción</th></tr></thead>
+        <tbody>
+          <tr><td>hasta 10.000</td><td class="num">US$0,05</td></tr>
+          <tr><td>10.001 – 50.000</td><td class="num">US$0,04</td></tr>
+          <tr><td>50.001 – 100.000</td><td class="num">US$0,0375</td></tr>
+          <tr><td>más de 100.000</td><td class="num">US$0,00375</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">Exención: solo aplica a <em>“clientes, apps o servicios evaluados y seleccionados por Finnegans”</em> — se gestiona con ellos, no es automática.</p>
+  </section>
+
+  <!-- ENDPOINTS -->
+  <section id="endpoints">
+    <h2>Endpoints que usaríamos para el stock</h2>
+    <p>Para <strong>manejar stock</strong> hay que <strong>leer existencias</strong> (reportes) y <strong>modificarlas</strong> (ajustes). Ambos son <strong>pagos</strong>. El maestro de productos (contexto) es gratis.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Para qué</th><th>Endpoint</th><th>Método</th><th>Categoría</th><th>¿Paga?</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Leer stock por depósito</strong> (detallado)</td>
+            <td class="mono">/reports/stockDeposito</td><td>GET</td><td>Reporte</td>
+            <td><span class="badge b-pago">Paga</span></td>
+          </tr>
+          <tr><td>Stock por empresa</td><td class="mono">/reports/stockEmpresa</td><td>GET</td><td>Reporte</td><td><span class="badge b-pago">Paga</span></td></tr>
+          <tr><td>Resúmenes de stock</td><td class="mono">/reports/resumenStockPor…, /reports/RESUMENSTOCK</td><td>GET</td><td>Reporte</td><td><span class="badge b-pago">Paga</span></td></tr>
+          <tr><td>Stock valorizado con lista de precios</td><td class="mono">/reports/stockDepositoPrecio</td><td>GET</td><td>Reporte</td><td><span class="badge b-pago">Paga</span></td></tr>
+          <tr>
+            <td><strong>Ajustar / mover stock</strong> (ingreso, egreso, ajuste, transferencia)</td>
+            <td class="mono">/AjusteStock</td><td>POST</td><td>Transacción</td>
+            <td><span class="badge b-pago">Paga</span> <span class="badge b-warn">aunque falle</span></td>
+          </tr>
+          <tr><td>Editar / borrar un ajuste</td><td class="mono">/AjusteStock/{codigo}</td><td>PUT · DELETE</td><td>Transacción</td><td><span class="badge b-pago">Paga</span></td></tr>
+          <tr><td>Consultar un ajuste puntual</td><td class="mono">/AjusteStock/{codigo}</td><td>GET</td><td>Transacción</td><td><span class="badge b-gratis">Gratis</span></td></tr>
+          <tr><td>Leer productos (catálogo)</td><td class="mono">/producto/list · /producto/{codigo}</td><td>GET</td><td>Maestro</td><td><span class="badge b-gratis">Gratis</span></td></tr>
+          <tr><td>Crear / editar productos</td><td class="mono">/producto</td><td>POST · PUT</td><td>Maestro</td><td><span class="badge b-gratis">Gratis</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn">
+      <strong>No existe forma gratuita de leer existencias.</strong> El stock “en vivo” solo sale de un <code>/reports/*</code>, que siempre es pago. Los maestros traen la <em>configuración</em> del depósito (mín/máx, punto de reposición) pero <strong>no las cantidades</strong>.
+    </div>
+  </section>
+
+  <!-- CALCULADORA -->
+  <section id="calc">
+    <h2>Calculadora de costo mensual</h2>
+    <p>Ajustá los números a tu operación y mirá en qué paquete caemos. Solo cuentan las <strong>interacciones facturables</strong> (reportes de stock + ajustes POST); el sync de catálogo no suma.</p>
+    <div class="presets">
+      <span class="muted" style="align-self:center">Presets:</span>
+      <button data-preset="cons">Conservador</button>
+      <button data-preset="esp">Esperado</button>
+      <button data-preset="int">Intensivo</button>
+    </div>
+    <div class="calc">
+      <div class="card">
+        <div class="field">
+          <label>Depósitos <span class="hint">— sucursales/almacenes con stock</span></label>
+          <input type="number" id="depositos" min="1" value="3" />
+        </div>
+        <div class="field">
+          <label>Lectura de stock</label>
+          <select id="modo">
+            <option value="1">1 llamada masiva (trae todos los depósitos)</option>
+            <option value="D">1 llamada por depósito</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Refrescos de stock por día <span class="hint">— cada refresco = 1 reporte (× depósitos si es por depósito)</span></label>
+          <input type="number" id="refrescos" min="0" value="1" />
+        </div>
+        <div class="field">
+          <label>Consultas de stock “a demanda” por día <span class="hint">— cada consulta sin cache = 1 reporte pago</span></label>
+          <input type="number" id="ondemand" min="0" value="10" />
+        </div>
+        <div class="field">
+          <label>Movimientos de stock por día <span class="hint">— ingresos/egresos/ajustes → 1 POST c/u</span></label>
+          <input type="number" id="movimientos" min="0" value="25" />
+        </div>
+        <div class="field">
+          <label>% de POST fallidos <span class="hint">— se cobran igual</span></label>
+          <input type="number" id="fallidos" min="0" max="100" value="5" />
+        </div>
+      </div>
+
+      <div>
+        <div class="result">
+          <div class="muted">Interacciones facturables / mes</div>
+          <div class="big" id="rTotal">—</div>
+          <div style="height:10px"></div>
+          <div class="row"><span>Reportes de stock (lecturas)</span><b id="rReads">—</b></div>
+          <div class="row"><span>Ajustes de stock (POST)</span><b id="rWrites">—</b></div>
+          <div class="row"><span>Paquete recomendado</span><b id="rTier">—</b></div>
+          <div class="row"><span>Costo mensual</span><b id="rCost">—</b></div>
+          <div class="row"><span>Costo anual estimado</span><b id="rYear">—</b></div>
+          <div class="row"><span>Costo efectivo por interacción</span><b id="rUnit">—</b></div>
+        </div>
+        <div class="ladder" id="ladder" aria-label="Escala de paquetes"></div>
+      </div>
+    </div>
+    <p class="muted">La tabla de paquetes de arriba resalta el tramo recomendado según estos números.</p>
+  </section>
+
+  <!-- ESCENARIOS -->
+  <section id="escenarios">
+    <h2>Tres escenarios de referencia</h2>
+    <p>Para dimensionar sin adivinar, estos son tres perfiles típicos de una operación ISP con integración de stock:</p>
+    <div class="scen" id="scenBars"></div>
+    <ul class="clean">
+      <li><strong>Conservador</strong> — stock solo de lectura, 1 refresco masivo diario, casi todo cacheado, pocos movimientos. Cae en el tramo de <strong>US$50 (≤200)</strong>.</li>
+      <li><strong>Esperado</strong> — refresco diario + consultas a demanda + movimientos moderados de instalación/reparación. Cae en <strong>US$65–160 (≤1.000–5.000)</strong>.</li>
+      <li><strong>Intensivo</strong> — varios refrescos por depósito, muchas consultas y alto volumen de ajustes. Cae en <strong>US$160–295 (≤5.000–25.000)</strong>.</li>
+    </ul>
+  </section>
+
+  <!-- JUSTIFICA -->
+  <section id="justifica">
+    <h2>¿Se justifica el gasto?</h2>
+    <div class="card">
+      <h3 style="margin-top:0">La decisión real</h3>
+      <p>El <strong>catálogo ya es gratis</strong> y lo tenemos andando. Lo pago es <strong>solo compartir stock en vivo con Teamplace</strong>. Entonces:</p>
+      <ul class="clean">
+        <li><strong>Se justifica</strong> si evitamos <strong>doble carga</strong> de stock (que el depósito se registre una sola vez y se refleje en el ERP) y necesitamos existencias reales en CentralSM. A US$65–160/mes, si ahorra aunque sea unas horas de trabajo administrativo, se paga solo.</li>
+        <li><strong>No se justifica (todavía)</strong> si CentralSM va a ser el <em>dueño</em> del stock y Teamplace no necesita esas cantidades en tiempo real. En ese caso, gestionamos stock local (gratis) y no llamamos a los reportes pagos.</li>
+      </ul>
+    </div>
+    <h3>Cómo minimizar el gasto (y quizás vivir gratis o casi)</h3>
+    <ul class="clean">
+      <li><strong>1 refresco masivo por día</strong> con <code>/reports/stockDeposito</code> sin filtro: trae todo en <strong>1 sola interacción</strong> (el tamaño de la respuesta no cambia el costo). ~30/mes.</li>
+      <li><strong>Cachear</strong> ese resultado en CentralSM y servir las consultas de pantalla desde la cache → las “consultas a demanda” dejan de ser pagas.</li>
+      <li><strong>Agrupar movimientos</strong>: menos POSTs (y validar antes, porque los fallidos se cobran).</li>
+      <li>Con esa disciplina, un ISP chico puede quedar por debajo de <strong>100–200 interacciones/mes</strong> → <strong>US$0–50/mes</strong>.</li>
+      <li><strong>Preguntar por la exención</strong> a Finnegans: si califica, el costo podría ser cero.</li>
+    </ul>
+    <div class="callout">
+      <strong>Recomendación.</strong> Arrancar con el paquete de <strong>US$65/mes (hasta 1.000 interacciones)</strong>, aplicando la estrategia de <em>1 refresco diario + cache + movimientos agrupados</em>. Con el auto-ajuste de Finnegans, si algún mes crecemos, sube solo a US$160 (≤5.000) sin cortar el servicio. Presupuestar el año en el rango <strong>US$780–1.920</strong> y revisar el consumo real a los 2–3 meses.
+    </div>
+  </section>
+
+  <hr />
+  <footer>
+    <p><strong>Fuentes:</strong> Política de uso de APIs de Finnegans (bc.finneg.com/t/politica-de-uso-de-apis) · tabla de paquetes “FG Deals” · documentación de la API de Teamplace (productos y stock, <code>docs/API-Teamplace-Finnegans.md</code>).</p>
+    <p><strong>Aclaraciones:</strong> valores en USD sin impuestos. Las estimaciones dependen de supuestos de uso; la calculadora es orientativa. El monto exacto y la disponibilidad de exención se confirman con el área comercial de Finnegans. Documento generado para CentralSM — Julio 2026.</p>
+  </footer>
+</div>
+
+<script>
+  const TIERS = [
+    { cap: 100, price: 0, label: "hasta 100" },
+    { cap: 200, price: 50, label: "hasta 200" },
+    { cap: 1000, price: 65, label: "hasta 1.000" },
+    { cap: 5000, price: 160, label: "hasta 5.000" },
+    { cap: 25000, price: 295, label: "hasta 25.000" },
+    { cap: 100000, price: 375, label: "hasta 100.000" },
+  ];
+  const fmtUSD = (n) => "US$" + n.toLocaleString("es-AR", { maximumFractionDigits: n < 10 ? 3 : 0 });
+  const fmtN = (n) => Math.round(n).toLocaleString("es-AR");
+
+  function tierFor(monthly) {
+    for (const t of TIERS) if (monthly <= t.cap) return { ...t, over: false };
+    const price = 375 + (monthly - 100000) * 0.00375;
+    return { cap: Infinity, price, label: "más de 100.000", over: true };
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const inputs = ["depositos", "modo", "refrescos", "ondemand", "movimientos", "fallidos"];
+
+  const PRESETS = {
+    cons: { depositos: 2, modo: "1", refrescos: 1, ondemand: 0, movimientos: 5, fallidos: 5 },
+    esp:  { depositos: 3, modo: "1", refrescos: 1, ondemand: 12, movimientos: 30, fallidos: 5 },
+    int:  { depositos: 5, modo: "D", refrescos: 2, ondemand: 50, movimientos: 120, fallidos: 8 },
+  };
+
+  function compute(v) {
+    const readsDay = v.refrescos * (v.modo === "D" ? v.depositos : 1) + v.ondemand;
+    const writesDay = v.movimientos * (1 + v.fallidos / 100);
+    const readsMo = readsDay * 30, writesMo = writesDay * 30;
+    const total = readsMo + writesMo;
+    return { readsMo, writesMo, total, tier: tierFor(total) };
+  }
+
+  function readInputs() {
+    return {
+      depositos: Math.max(1, +$("depositos").value || 1),
+      modo: $("modo").value,
+      refrescos: Math.max(0, +$("refrescos").value || 0),
+      ondemand: Math.max(0, +$("ondemand").value || 0),
+      movimientos: Math.max(0, +$("movimientos").value || 0),
+      fallidos: Math.min(100, Math.max(0, +$("fallidos").value || 0)),
+    };
+  }
+
+  function renderLadder(activeCap) {
+    const max = 100000;
+    $("ladder").innerHTML = TIERS.map((t) => {
+      const w = Math.max(6, (Math.log10(t.cap) / Math.log10(max)) * 100);
+      const active = t.cap === activeCap;
+      return `<div class="rung ${active ? "active" : ""}">
+        <span>${t.label}</span>
+        <span class="bar"><span style="width:${w}%"></span></span>
+        <span class="price">${t.price === 0 ? "gratis" : fmtUSD(t.price)}</span>
+      </div>`;
+    }).join("");
+  }
+
+  function highlightTierTable(activeCap) {
+    document.querySelectorAll("#tierTable tbody tr").forEach((tr) => {
+      tr.classList.toggle("hl", +tr.dataset.cap === activeCap);
+    });
+  }
+
+  function update() {
+    const v = readInputs();
+    const r = compute(v);
+    $("rTotal").innerHTML = fmtN(r.total) + ' <small>int./mes</small>';
+    $("rReads").textContent = fmtN(r.readsMo);
+    $("rWrites").textContent = fmtN(r.writesMo);
+    $("rTier").textContent = r.tier.label + (r.tier.over ? " (excedente)" : "");
+    $("rCost").textContent = fmtUSD(r.tier.price) + "/mes";
+    $("rYear").textContent = fmtUSD(r.tier.price * 12);
+    $("rUnit").textContent = r.total > 0 ? fmtUSD(r.tier.price / r.total) : "—";
+    renderLadder(r.tier.cap);
+    highlightTierTable(r.tier.cap);
+  }
+
+  function applyPreset(key) {
+    const p = PRESETS[key];
+    for (const k in p) $(k).value = p[k];
+    update();
+  }
+
+  inputs.forEach((id) => $(id).addEventListener("input", update));
+  document.querySelectorAll(".presets button").forEach((b) =>
+    b.addEventListener("click", () => applyPreset(b.dataset.preset))
+  );
+
+  // Escenarios (barras)
+  function renderScenarios() {
+    const order = [["cons", "Conservador"], ["esp", "Esperado"], ["int", "Intensivo"]];
+    const data = order.map(([k, name]) => {
+      const r = compute({ ...PRESETS[k] });
+      return { name, cost: r.tier.price, total: r.total };
+    });
+    const maxCost = Math.max(...data.map((d) => d.cost), 1);
+    $("scenBars").innerHTML = data.map((d) => `
+      <div class="col">
+        <div class="name">${d.name}</div>
+        <div class="plot"><div class="barv" style="height:${Math.max(8,(d.cost/maxCost)*110)}px"></div></div>
+        <div class="cost">${fmtUSD(d.cost)}<span style="font-size:13px;color:var(--ink-3)">/mes</span></div>
+        <div class="det">${fmtN(d.total)} interacciones/mes</div>
+      </div>`).join("");
+  }
+
+  update();
+  renderScenarios();
+</script>
+</body>
+</html>

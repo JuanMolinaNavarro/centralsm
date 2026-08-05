@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +40,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma
+
+# imágenes subidas (catálogo) cuando se corre en el host
+/uploads
+
+# backups locales de Postgres/uploads (los genera el servicio "backup" del compose)
+/backups
+
+# bot Playwright: sesión cacheada (cookies = sensible), reportes y capturas del inspector
+/scripts/playwright/.auth
+/scripts/playwright/resultados
+/scripts/playwright/selectores-descubiertos.*
+/playwright-report
+/.playwright-mcp

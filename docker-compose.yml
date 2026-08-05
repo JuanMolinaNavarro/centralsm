@@ -1,0 +1,165 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: centralsm-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-centralsm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}
+      POSTGRES_DB: ${POSTGRES_DB:-centralsm}
+    ports:
+      # Host 5433 -> contenedor 5432 (evita chocar con otro Postgres en 5432).
+      # Solo loopback: la DB no debe ser accesible desde la red. Ojo: los pods
+      # de k8s (host.docker.internal) dejan de llegar; si retomás ese entorno,
+      # volvé a "5433:5432" o dale a k8s su propio Postgres.
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-centralsm} -d ${POSTGRES_DB:-centralsm}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      target: dev
+    container_name: centralsm-app
+    restart: unless-stopped
+    # Genera el cliente de Prisma, aplica migraciones existentes y levanta el
+    # dev server. migrate deploy es un no-op si todavía no hay migraciones.
+    command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run dev:docker"
+    environment:
+      NODE_ENV: development
+      # Dentro de la red de Compose, Postgres es accesible como "db".
+      DATABASE_URL: postgresql://${POSTGRES_USER:-centralsm}:${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}@db:5432/${POSTGRES_DB:-centralsm}?schema=public
+      # Polling: imprescindible para hot reload en bind-mounts de Windows.
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+      # Carpeta persistente para las imágenes subidas (catálogo).
+      UPLOADS_DIR: /app/uploads
+      # Integración Teamplace (se toman de .env por sustitución de Compose).
+      TEAMPLACE_BASE_URL: ${TEAMPLACE_BASE_URL:-https://api.finneg.com/api}
+      TEAMPLACE_TOKEN_URL: ${TEAMPLACE_TOKEN_URL:-https://api.teamplace.finneg.com/api/oauth/token}
+      TEAMPLACE_CLIENT_ID: ${TEAMPLACE_CLIENT_ID:-}
+      TEAMPLACE_CLIENT_SECRET: ${TEAMPLACE_CLIENT_SECRET:-}
+      # Login de la app (src/proxy.ts + /login).
+      AUTH_PASSWORD: ${AUTH_PASSWORD:?definir AUTH_PASSWORD en .env}
+      AUTH_SECRET: ${AUTH_SECRET:?definir AUTH_SECRET en .env}
+    ports:
+      # Host 3100 -> contenedor 3000 (3000/3001 ya ocupados por otros procesos).
+      - "3100:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - .:/app # código fuente (hot reload)
+      - /app/node_modules # preserva los node_modules del contenedor
+      - /app/.next # preserva la cache de build del contenedor
+      - uploads:/app/uploads # imágenes subidas (persisten entre rebuilds)
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Microservicio worker: da de alta productos nuevos en Finnegans Go.
+  # La app solo encola FinnegansPushJob (PENDIENTE) en Postgres; este servicio
+  # hace polling de la tabla y corre el bot de Playwright (worker/README.md).
+  # Es el ÚNICO contenedor que necesita Chromium y las credenciales del bot.
+  worker:
+    build:
+      context: .
+      target: dev
+      args:
+        INSTALL_PLAYWRIGHT: "true"
+    container_name: centralsm-worker
+    restart: unless-stopped
+    # El `exec` importa: hace que el worker sea PID 1 y reciba el SIGTERM de
+    # `docker stop` (sh no reenvía señales a sus hijos → sin exec, el apagado
+    # prolijo nunca corre y Docker termina matando con SIGKILL).
+    command: sh -c "npx prisma generate && exec node_modules/.bin/tsx worker/index.ts"
+    environment:
+      NODE_ENV: production
+      TZ: America/Argentina/Buenos_Aires
+      DATABASE_URL: postgresql://${POSTGRES_USER:-centralsm}:${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}@db:5432/${POSTGRES_DB:-centralsm}?schema=public
+      # Login web de Finnegans para el bot Playwright (docs/alta-productos-centralsm.md).
+      FINNEGANS_USER: ${FINNEGANS_USER:-}
+      FINNEGANS_PASSWORD: ${FINNEGANS_PASSWORD:-}
+      FINNEGANS_WORKSPACE: ${FINNEGANS_WORKSPACE:-}
+      FINNEGANS_LANG: ${FINNEGANS_LANG:-Español}
+      FINNEGANS_PRODUCTOS_URL: ${FINNEGANS_PRODUCTOS_URL:-https://go.finneg.com/mas/vista?viewID=104}
+      # En contenedor siempre headless (no hay display).
+      FINNEGANS_PUSH_HEADLESS: "true"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Scheduler: corre la sincronización diaria a las 2 AM (hora de Argentina).
+  cron:
+    build:
+      context: .
+      target: dev
+    container_name: centralsm-cron
+    restart: unless-stopped
+    command: sh -c "npx prisma generate && npm run cron"
+    environment:
+      NODE_ENV: production
+      TZ: America/Argentina/Buenos_Aires
+      DATABASE_URL: postgresql://${POSTGRES_USER:-centralsm}:${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}@db:5432/${POSTGRES_DB:-centralsm}?schema=public
+      # Horario del cron (formato cron). Por defecto 02:00 ART.
+      CRON_SCHEDULE: ${CRON_SCHEDULE:-0 2 * * *}
+      TEAMPLACE_BASE_URL: ${TEAMPLACE_BASE_URL:-https://finneg.com/}
+      TEAMPLACE_TOKEN_URL: ${TEAMPLACE_TOKEN_URL:-https://api.teamplace.finneg.com/api/oauth/token}
+      TEAMPLACE_CLIENT_ID: ${TEAMPLACE_CLIENT_ID:-}
+      TEAMPLACE_CLIENT_SECRET: ${TEAMPLACE_CLIENT_SECRET:-}
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Backup diario: pg_dump + tar de uploads a ./backups (bind mount en el host,
+  # dentro de OneDrive → copia offsite automática). Corre al arrancar y luego
+  # cada 24 h; retiene los últimos 14 de cada uno. Restaurar:
+  #   docker exec -i centralsm-db pg_restore -U centralsm -d centralsm --clean --if-exists /ruta/al/dump
+  backup:
+    image: postgres:17-alpine
+    container_name: centralsm-backup
+    restart: unless-stopped
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD en .env}
+      PGUSER: ${POSTGRES_USER:-centralsm}
+      PGDATABASE: ${POSTGRES_DB:-centralsm}
+      TZ: America/Argentina/Buenos_Aires
+    volumes:
+      - ./backups:/backups
+      - uploads:/uploads:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        while true; do
+          ts=$$(date +%Y%m%d-%H%M%S)
+          if pg_dump -h db -F c -f /backups/db-$$ts.dump; then
+            echo "backup OK: db-$$ts.dump"
+          else
+            echo "backup FALLO: db-$$ts"
+          fi
+          tar czf /backups/uploads-$$ts.tgz -C /uploads . 2>/dev/null || echo "backup uploads FALLO: $$ts"
+          ls -1t /backups/db-*.dump 2>/dev/null | tail -n +15 | xargs -r rm -f
+          ls -1t /backups/uploads-*.tgz 2>/dev/null | tail -n +15 | xargs -r rm -f
+          sleep 86400
+        done
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  uploads:

@@ -1,0 +1,23 @@
+# PersistentVolumeClaim: el pedido de disco persistente para las imágenes
+# subidas del catálogo. Es el equivalente al volumen nombrado `uploads` de
+# compose: los pods son efímeros (todo lo que escriben muere con ellos), así
+# que lo que debe sobrevivir va a un PVC.
+#
+# Vos pedís el "claim" (capacidad + modo de acceso) y el cluster lo satisface
+# con un PersistentVolume real usando la StorageClass por defecto — en Docker
+# Desktop es `hostpath` (un directorio dentro de la VM de Docker). Miralo con:
+#   kubectl get storageclass
+#   kubectl -n centralsm get pvc
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-uploads
+  namespace: centralsm
+spec:
+  # ReadWriteOnce = lo puede montar un solo NODO a la vez. Con el único nodo
+  # de Docker Desktop alcanza incluso si la app escala a varios pods.
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

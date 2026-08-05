@@ -1,0 +1,155 @@
+# REGENERADO desde rev-clasificacion.csv (recuperación post-pérdida de DB).
+# IDs (Producto.id) de #REV clasificados como INTANGIBLE. El resto de #REV -> TANGIBLE.
+# Formato: <id>   # NOMBRE
+cmsg5983n00r967qsp6gexr93   # COSTO REINSTALACION
+cmsg598bz00w367qslpf3jf6t   # 3814110750 AccesoToncal IP
+cmsg598bz00vm67qsxpi0z1md   # 440509:342578 Central Acceso Extremo Adicionales
+cmsg5995l021u67qs7wh5zk64   # ACCIONES CON COTIZACION
+cmsg5990a01nn67qsilacmm5q   # ACTUALIZACION DE CONTENIDOS WEB
+cmsg5990901lx67qs7cshjlna   # ANTICIPOS AL PERSONAL
+cmsg5995l021x67qsd7jbcxmm   # APLICACION TV
+cmsg5995m023i67qs53u98vmk   # ARANCELES ACCIONES CON COTIZACION
+cmsg5990a01mv67qsrg22xldv   # AREA PROTEGIDA
+cmsg598m6017o67qswnf1m6dk   # ASISTENCIA
+cmsg5990a01og67qsmbmvqfwq   # AVISOS PUBLICITARIOS
+cmsg598bz00vj67qsqb23vj31   # Acceso Dinamico 282622359 - Capital Federal CPA
+cmsg598bz00vl67qsvwxnu9g9   # Acceso Dinamico 282623796 - Cordoba CPA
+cmsg598bz00vk67qsqr8zxqrj   # Acceso Dinamico 282623943 Rosario CPA
+cmsg597rp001l67qsj292rav5   # Apertura de Puerto
+cmsg598m6017n67qsteeopieh   # BIENES PERSONALES ACCIONES Y PARTICIPACION SOCIETARIA
+cmsg598bz00vt67qskckzh0bn   # BLOQUE I
+cmsg598bz00vu67qs4ipixfjf   # BLOQUE II
+cmsg598bz00vv67qs59tqxsm4   # BLOQUE III
+cmsg598bz00vw67qs3prhj7dt   # BLOQUE IV
+cmsg598bz00vx67qs5useuze8   # BLOQUE V
+cmsg5990a01nq67qscx8degwk   # BUSCADOR DE PROGRAMACION WEB
+cmsg598bz00ul67qsgmurqymp   # CAMBIO DE EQUIPO
+cmsg598bz00w267qspz19wjlx   # CANON ENACOM
+cmsg5983m00qr67qsxirr3wot   # CAPITAL PRESTAMOS
+cmsg5983n00r867qsf8x71bj9   # CERTIFICADO
+cmsg5983n00rl67qs0vdu2lf9   # CISI
+cmsg5983m00qc67qs7bul0180   # COM. BANCARIAS POR IMPORTACION
+cmsg5983n00sb67qs040ap1do   # COMISIONES BANCARIAS GRAV
+cmsg5983n00sc67qsx6ju3wqs   # COMISIONES BANCARIAS NO GRAV
+cmsg598m701b567qsq8pkogi3   # COMISIONES COBRANZAS NO GRAVADAS
+cmsg598m701aq67qsa2bou6hg   # COMISIONES POR COBRANZA
+cmsg598bz00w567qsoxb7p0c6   # CONFIGURACION AP
+cmsg598bz00vy67qsw7xm60xm   # CONVENIO / IIBB
+cmsg5983m00qt67qsjjueaqs5   # Cargos Financieros
+cmsg598bz00vz67qshgdaftkh   # Cargos Financieros Impositivo
+cmsg598by00ty67qssc7dd8ia   # Cedula Azul
+cmsg5990c01vn67qs53sqziqd   # Certificaciones Bces
+cmsg598c200zk67qsn3bo8qit   # Cheque Rechazado
+cmsg598by00tt67qsbzg37xpa   # Constataciones
+cmsg598bz00w767qs87m7zq6t   # Costos no deducibles
+cmsg5983m00qu67qs28z331s4   # Credito por Imp.Deb y Cred Bancario
+cmsg598m901hx67qsnm0ek5d9   # Cuenta particular G.Olarte
+cmsg598m901ij67qsjlpbifmb   # Cuenta particular J Diez
+cmsg598m901hy67qs20srpakt   # Cuenta particular L.Ritzer
+cmsg598c200zo67qswtqdortw   # Cuenta particular P.Olarte
+cmsg5990901lr67qs7t4v2k17   # DESCUENTOS
+cmsg598c000wk67qs86vmwrow   # DETALLE EQUIPOS :
+cmsg598bz00uh67qsjle4kpa1   # DETECCION Y MITIGACION DE DDOS
+cmsg598by00ug67qs0z6s4glz   # DIRECCIONES IP
+cmsg5990b01rf67qsi34lr54k   # Deudores por Venta CCC
+cmsg598c000xk67qso0m5tl44   # Deudores por Venta Columbo
+cmsg598by00tu67qs58hi91a1   # Distractos
+cmsg597rq003x67qsskms6vuo   # ELEMENTOS DE SEGUIDAD 21%
+cmsg598c2010a67qsl94pujej   # EQUIPOS
+cmsg5983m00qb67qs54ihjsrp   # EQUIPOS DE COMPUTACION 10,5%
+cmsg5983m00qs67qslata5d1h   # EQUIPOS DE COMPUTACION 21%
+cmsg598by00tw67qstzlnmctz   # Envio Carta Documento
+cmsg598by00tx67qszfqtce3p   # Envio Documentación en General
+cmsg598by00ts67qsifl6zg40   # Estatuto
+cmsg598m901ii67qs2uytt2cz   # Examenes preocupacionales
+cmsg5995l01zj67qs9xxshaup   # FACTURAS TC A RECIBIR
+cmsg598by00t667qsqk5hzz3c   # FUMIGACION
+cmsg598bz00wc67qslfx3jynz   # FUSIONES DE F.O.
+cmsg598c200zl67qsbw7pilav   # GO deudas fiscales
+cmsg598c2010n67qsomyhegex   # Gasnor - Sat
+cmsg598c2010m67qscmkcx98x   # Honorario por Gerenciamiento y Asesoramiento Legal, Fiscal y Contable
+cmsg5990a01od67qsaevt89yj   # INST DE EQUIPO DE GPS EN MOVILES
+cmsg598m801dv67qsra2xtbdr   # INTERESES FISCALES
+cmsg5983l00k467qsf20od5af   # ITEM 1.1
+cmsg5983l00k567qsnmdrztoh   # ITEM 1.2
+cmsg5983l00k667qsfa7ii3ih   # ITEM 1.3
+cmsg597rp001j67qs95d6csl9   # LAN TO LAN
+cmsg598m901i667qsl6qa7niw   # LAN2LAN
+cmsg5990c01w167qsu8jk8n7l   # LIBROS SOCIETARIOS
+cmsg5990d01ya67qsyy2ffpt9   # LICENCIAS Y DATOS PARA KIT DE MICRO EMBARCADO
+cmsg598by00tv67qsh9l8f81c   # Legalización
+cmsg5990c01xe67qsol9efhk1   # Licenciamiento de módulos para app Go Tv
+cmsg5983m00po67qsxywquyfv   # MANTENIMIENTOS VARIOS
+cmsg598m6018067qson5h1ola   # MATERIAL X
+cmsg598by00u667qszx49l688   # MATERIALES AL 10.5
+cmsg598by00u767qsambbnort   # MATERIALES AL 21
+cmsg5990c01wl67qsz4mfaoeq   # MEDICINA LABORAL
+cmsg5983m00qh67qs3yui559f   # MES
+cmsg5990a01np67qs0xl7tbhc   # METADATA PLATAFORMA CCC GO
+cmsg5990a01no67qsw7zsurc6   # METADATA RED DE CABLE
+cmsg598bz00ut67qs45s2roh5   # MITIGACION 1067843 CORRAL DE BUSTOS
+cmsg598m701b167qsisapgy6d   # MITIGACION 1238277
+cmsg5983m00oz67qs5ecu6mow   # MITIGACION 952097 SALTA
+cmsg5983m00p067qsj7o8i088   # MITIGACION 952098 CATAM-PERU
+cmsg5983m00p167qsg1qbms1d   # MITIGACION 952102 P.GARCIA 175
+cmsg598by00u267qs3bisknoo   # Muebles y Utiles
+cmsg598m701au67qs0kfbvj7g   # OSDE FLIA OLARTE
+cmsg5990a01nj67qst639266v   # OTROS COSTOS OPERATIVOS
+cmsg598c5014y67qs509sq61k   # PAQUETE CODIFICADO FUTBOL
+cmsg5995m023l67qstqoettcv   # PARTICIPACION BORDERAUX SHOW FUTTURA, HIPODROMO DE TUCUMAN
+cmsg5990901mr67qsl2fme7ey   # PERSONAL 3ROS
+cmsg5990a01nb67qsmdik6miz   # PLATAFORMA CCC GO
+cmsg598m801cx67qshjxvhwim   # PORTAL CAUTIVO
+cmsg5990901ly67qszez84c55   # PRESTAMOS AL PERSONAL
+cmsg5983k00gm67qs90pkt66n   # PROGRAMACIÓN MENSUAL
+cmsg5983k00gk67qs9af4cpn2   # PROGRAMACIÓN SEÑALES BASICAS
+cmsg597rt00bw67qs6vu3wz14   # PUBLICIDAD
+cmsg598by00ta67qso3kjcr0f   # Pago por subrogación
+cmsg598bz00vn67qs69jp0h11   # Parque Autoctono
+cmsg597rt00bl67qso8x23lq2   # Plataforma gestión de video
+cmsg598by00tr67qsuu6bupi8   # Poder General
+cmsg5983n00rx67qsxpwr2ka5   # Puesto de Trabajo - Centro de Monitoreo
+cmsg598m801cu67qstzlzr6z0   # R-SW-AOS-PRO PRD
+cmsg598m701as67qsy8w3nugx   # RECARGO BILLETES BAJA NOMINACION
+cmsg5990c01vt67qsldqgi76v   # RECARGO POR MORA
+cmsg5995m023h67qsur8ky8rr   # RENDIMIENTO ACCIONES CON COTIZACION
+cmsg5983n00s467qskare5s84   # Recaudación
+cmsg5983n00r767qskh3e6v17   # Refrigerios Administración IVA10.5%
+cmsg598m801cv67qse574kh3d   # Reinstatement Fees
+cmsg5983n00qv67qsyxl2qxel   # Reparación de piel de vidrio
+cmsg5983n00s667qsuu0nrzie   # SALDO INICIAL PROVIDERS TANGO
+cmsg5983n00rm67qsn507a9c8   # SALDO INICIAL TANGO
+cmsg5983m00qd67qs0p29ujrg   # SALDO TECNICO A FAVOR DE AFIP
+cmsg598c5015i67qsex7g0mza   # SCA- Servicios de Comunicacion Audiovisual
+cmsg598m701ar67qslvn493c3   # SEGURIDAD PRIVADA
+cmsg5990a01n567qs22dwo5q3   # SERV DE DISTRIBUCION DE FC Y REVISTAS
+cmsg597ru00dx67qs0tjn6ki9   # SERVICIO
+cmsg598c5014z67qs2nfgj6p7   # SERVICIO DE CABLE
+cmsg597rt00bp67qsle6wwuce   # SERVICIO MENSUAL
+cmsg5983k00gj67qsx1vwtg96   # SEÑALES DEPORTIVAS
+cmsg5983k00gl67qsui44lc2n   # SEÑALES PREMIUM
+cmsg598by00uf67qslthyu37i   # SICORE-GANANCIAS
+cmsg598bz00vq67qshd8v9hzm   # SISTEMA CAPACITACIONES Y CONSULTAS
+cmsg598m801du67qsrcd30xrz   # SOFTWARE Y LICENCIAS 21%
+cmsg598bz00v167qsbiy6eaa2   # Sello Bancario
+cmsg5995l01zv67qspyp150r0   # Servicio Mensual Stick
+cmsg597rp001h67qsunse4zy2   # Servicio de Cable
+cmsg5983n00rt67qslskc7i1n   # Servicio de Gerenciamiento, Asesoria legal y contable
+cmsg598bz00w467qs0rza8r6u   # Servicios Tecnicos de Terceros
+cmsg598c200zg67qsmjdffsdm   # Sindicato
+cmsg5983n00s567qs7667050l   # Solicitud de Fondos
+cmsg5990901kr67qsgzysh5x3   # TASA MUNICIPAL TENDIDO RED TV
+cmsg598c3011f67qsclq74osa   # TRABAJO DE REFACCION Y REACONDICIONAMIENTO
+cmsg5983n00r267qs7q5mkqiu   # TRANSITO IP
+cmsg598by00u067qs6tdvotfp   # Tasa F.1924
+cmsg5990901ks67qswunzemhe   # Tasa por Inspección Seguridad Salubridad e Higiene
+cmsg598by00u167qszyjklqbp   # Tasas Municipales (Legales)
+cmsg598by00tz67qsmu0s0r8o   # Transferencia Automotor
+cmsg598c000xf67qs37mfeilt   # VENTA BIEN DE USO
+cmsg598m6017z67qsui2rsm1y   # VIRTUALIZACION
+cmsg5983n00r367qsyaawol8e   # VPN/ L2L
+cmsg598c000x367qs33f4rtmz   # Venta Bienes de Uso
+cmsg598m801cy67qsolaf8n28   # cargo por asesoramiento tecnico
+cmsg5995k01z467qs6u6vhjyr   # expensas JC
+cmsg598c4013l67qsjgi8xld1   # mercaderia a recibir
+cmsg598c4013m67qscvds8h1l   # mercaderia a recibir 10.5

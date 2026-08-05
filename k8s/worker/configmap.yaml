@@ -1,0 +1,14 @@
+# ConfigMap: configuración NO sensible, desacoplada de la imagen. La misma
+# imagen del worker puede correr en otro entorno cambiando solo esto.
+# El Deployment la inyecta como variables de entorno vía `envFrom`.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: worker-config
+  namespace: centralsm
+data:
+  TZ: America/Argentina/Buenos_Aires
+  FINNEGANS_LANG: Español
+  FINNEGANS_PRODUCTOS_URL: https://go.finneg.com/mas/vista?viewID=104
+  FINNEGANS_PUSH_HEADLESS: "true" # en un pod no hay display: siempre headless
+  WORKER_POLL_MS: "4000"

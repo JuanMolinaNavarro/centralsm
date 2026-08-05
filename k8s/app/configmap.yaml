@@ -1,0 +1,12 @@
+# Config no sensible de la app Next.js.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: centralsm
+data:
+  TZ: America/Argentina/Buenos_Aires
+  # Carpeta de imágenes subidas — apunta al PVC montado (ver deployment).
+  UPLOADS_DIR: /app/uploads
+  TEAMPLACE_BASE_URL: https://api.finneg.com/api
+  TEAMPLACE_TOKEN_URL: https://api.teamplace.finneg.com/api/oauth/token

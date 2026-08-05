@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CentralSM — Propuesta</title>
+<style>
+  :root {
+    --bg:#f7f8fa; --surface:#fff; --surface-2:#f0f2f5; --border:#e2e5ea;
+    --ink:#14171f; --ink-2:#4a5160; --ink-3:#8b93a3;
+    --accent:#2f6df6; --accent-soft:#e7efff;
+    --pago:#c02b3a; --pago-soft:#fdecee; --gratis:#1f9254; --gratis-soft:#e6f5ec;
+    --warn:#b7791f; --warn-soft:#fbf1de; --done:#1f9254;
+    --radius:14px; --maxw:1080px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0d0f14; --surface:#161a22; --surface-2:#1e232d; --border:#2a303c;
+      --ink:#eef1f6; --ink-2:#b3bccb; --ink-3:#78808f;
+      --accent:#5a8bff; --accent-soft:#17233f;
+      --pago:#ff6b7a; --pago-soft:#2a1418; --gratis:#4ad991; --gratis-soft:#10241a;
+      --warn:#e6b25e; --warn-soft:#2a2110; --done:#4ad991;
+    }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); line-height:1.62; font-size:16px; }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 22px; }
+  header.hero { background:linear-gradient(180deg,var(--surface),var(--bg)); border-bottom:1px solid var(--border); padding:46px 0 30px; }
+  .brandline { display:flex; align-items:center; gap:10px; color:var(--accent); font-weight:700; letter-spacing:.02em; }
+  .brandline .dot { width:26px; height:26px; border-radius:7px; background:var(--accent); display:inline-grid; place-items:center; color:#fff; font-size:15px; }
+  .eyebrow { color:var(--ink-3); font-weight:600; font-size:13px; letter-spacing:.05em; text-transform:uppercase; margin-top:18px; }
+  h1 { font-size:clamp(28px,4.4vw,42px); line-height:1.12; margin:6px 0 12px; letter-spacing:-0.025em; }
+  h2 { font-size:23px; margin:46px 0 6px; letter-spacing:-0.01em; }
+  h3 { font-size:16px; margin:20px 0 6px; }
+  p { color:var(--ink-2); margin:8px 0; }
+  .lead { font-size:18px; color:var(--ink-2); max-width:72ch; }
+  .muted { color:var(--ink-3); font-size:13px; }
+  a { color:var(--accent); }
+  code,.mono { font-family:var(--mono); font-size:.9em; }
+  section { padding:4px 0; }
+  .toc { display:flex; flex-wrap:wrap; gap:8px 18px; margin:18px 0 4px; font-size:14px; }
+  .toc a { color:var(--ink-2); text-decoration:none; } .toc a:hover { color:var(--accent); }
+
+  .tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:22px 0; }
+  .tile { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; }
+  .tile .k { font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3); font-weight:600; }
+  .tile .v { font-size:27px; font-weight:800; margin-top:4px; letter-spacing:-0.02em; }
+  .tile .s { font-size:13px; color:var(--ink-2); margin-top:2px; }
+  .tile.acc { border-left:3px solid var(--accent); } .tile.good { border-left:3px solid var(--gratis); } .tile.pay { border-left:3px solid var(--pago); }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px 22px; margin:16px 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; } @media (max-width:720px){ .grid2 { grid-template-columns:1fr; } }
+  .callout { border-left:3px solid var(--accent); background:var(--accent-soft); border-radius:10px; padding:14px 16px; margin:16px 0; }
+  .callout.warn { border-color:var(--warn); background:var(--warn-soft); }
+  .callout.good { border-color:var(--gratis); background:var(--gratis-soft); }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); margin:14px 0; }
+  table { border-collapse:collapse; width:100%; font-size:14px; min-width:520px; }
+  th,td { text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); }
+  thead th { background:var(--surface-2); font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-3); }
+  tbody tr:last-child td { border-bottom:none; }
+  .badge { display:inline-block; font-size:12px; font-weight:700; padding:2px 9px; border-radius:999px; white-space:nowrap; }
+  .b-pago { color:var(--pago); background:var(--pago-soft); } .b-gratis { color:var(--gratis); background:var(--gratis-soft); } .b-warn { color:var(--warn); background:var(--warn-soft); }
+
+  ul.feat { list-style:none; padding:0; margin:10px 0; } ul.feat li { position:relative; padding:5px 0 5px 28px; color:var(--ink-2); }
+  ul.feat li::before { content:"✓"; position:absolute; left:0; top:5px; width:18px; height:18px; border-radius:50%; background:var(--gratis-soft); color:var(--done); font-size:12px; font-weight:800; display:grid; place-items:center; }
+  ul.clean { padding-left:18px; } ul.clean li { margin:6px 0; color:var(--ink-2); }
+
+  /* diagram: boxes + arrows */
+  .flow { display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin:16px 0; }
+  .node { flex:1; min-width:180px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .node .t { font-weight:700; font-size:15px; } .node .d { font-size:13px; color:var(--ink-3); margin-top:2px; }
+  .node.hl { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft) inset; }
+  .arrow { align-self:center; padding:0 12px; color:var(--ink-3); font-weight:700; text-align:center; font-size:13px; min-width:120px; }
+  .arrow small { display:block; color:var(--ink-3); font-weight:500; font-size:11px; }
+  @media (max-width:720px){ .arrow { transform:rotate(90deg); padding:10px 0; min-width:auto; } }
+
+  /* daily cycle steps */
+  .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:16px 0; }
+  .step { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 14px; position:relative; }
+  .step .n { font-size:12px; font-weight:800; color:var(--accent); } .step .t { font-weight:700; font-size:14px; margin:2px 0; } .step .d { font-size:12px; color:var(--ink-3); }
+
+  /* phases */
+  .phase { display:grid; grid-template-columns:70px 1fr; gap:16px; padding:16px 0; border-bottom:1px solid var(--border); }
+  .phase:last-child { border-bottom:none; }
+  .phase .lbl { font-weight:800; font-size:14px; }
+  .phase .badges { margin-top:6px; display:flex; gap:6px; flex-wrap:wrap; }
+  .pill { font-size:12px; font-weight:700; padding:2px 10px; border-radius:999px; background:var(--surface-2); color:var(--ink-2); border:1px solid var(--border); }
+  .pill.now { background:var(--gratis-soft); color:var(--done); border-color:transparent; }
+  .pill.block { background:var(--warn-soft); color:var(--warn); border-color:transparent; }
+
+  hr { border:none; border-top:1px solid var(--border); margin:34px 0; }
+  footer { color:var(--ink-3); font-size:13px; padding:30px 0 60px; }
+  .stackrow { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+  .chip { font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; background:var(--surface-2); border:1px solid var(--border); color:var(--ink-2); }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="brandline"><span class="dot">◉</span> CentralSM</div>
+    <div class="eyebrow">Propuesta del Sistema · ISP</div>
+    <h1>Centralización de stock y operaciones, integrada con Teamplace</h1>
+    <p class="lead">Un sistema propio para gestionar el catálogo y el stock del depósito, sincronizado con el ERP Teamplace/Finnegans — con costo de API mínimo y sin descuadres.</p>
+    <div class="toc">
+      <a href="#resumen">Resumen</a><a href="#problema">Objetivo</a><a href="#estado">Estado actual</a>
+      <a href="#arquitectura">Arquitectura</a><a href="#stock">Modelo de stock</a><a href="#barcode">Códigos de barra</a>
+      <a href="#costos">Costos</a><a href="#roadmap">Roadmap</a><a href="#proximos">Próximos pasos</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section id="resumen">
+    <h2>Resumen ejecutivo</h2>
+    <p>CentralSM es una aplicación web a medida para <strong>centralizar la gestión de stock</strong> de la empresa, tomando a <strong>Teamplace como sistema madre</strong> del stock y evitando la doble carga de datos.</p>
+    <div class="tiles">
+      <div class="tile good"><div class="k">Catálogo</div><div class="v">2.710</div><div class="s">artículos cargados y vinculados a Teamplace</div></div>
+      <div class="tile acc"><div class="k">Estructura</div><div class="v">10 + 31</div><div class="s">macro-categorías + familias (SKU por capas)</div></div>
+      <div class="tile good"><div class="k">Integración</div><div class="v">GRATIS</div><div class="s">sync de productos desde Teamplace</div></div>
+      <div class="tile pay"><div class="k">Costo de stock</div><div class="v">~US$0–50<span style="font-size:15px">/mes</span></div><div class="s">con reconciliación diaria por lotes</div></div>
+    </div>
+    <div class="callout good"><strong>En una frase.</strong> El catálogo ya está operativo y sincronizado sin costo; falta habilitar el registro de movimientos de stock con empuje a Teamplace. Con el diseño elegido, el gasto de API queda en el tramo <strong>gratis/US$50 por mes</strong>.</div>
+  </section>
+
+  <section id="problema">
+    <h2>El objetivo</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">Problema</h3>
+        <ul class="clean">
+          <li>El stock y el catálogo viven en Teamplace, un ERP potente pero <strong>poco ágil</strong> para la operación diaria del depósito.</li>
+          <li>Riesgo de <strong>doble carga</strong> y de datos desactualizados entre lo que pasa en el depósito y lo que figura en el ERP.</li>
+          <li>Consultar/mover stock por API tiene <strong>costo</strong>: hay que usarla con criterio.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Solución</h3>
+        <ul class="feat">
+          <li>Una interfaz propia, rápida y clara para catálogo y stock.</li>
+          <li>Sincronizada con Teamplace, sin re-tipear datos.</li>
+          <li>Con un modelo de costos <strong>optimizado</strong> (lo gratis es gratis; lo pago, al mínimo).</li>
+          <li>Extensible a otras actividades de la empresa a futuro.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="estado">
+    <h2>Estado actual — lo ya construido</h2>
+    <p>El núcleo del sistema ya está funcionando en Docker (hot reload), con base de datos PostgreSQL y la integración de solo-lectura con Teamplace.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">📦 Catálogo de productos</h3>
+        <ul class="feat">
+          <li>Árbol de categorías; cada capa construye el <strong>SKU</strong> (ej. <span class="mono">#FO-CAB-0001</span>).</li>
+          <li>10 macro-categorías ISP + 31 familias (fibra, red, CATV, abonado, seguridad, energía, TI, herramientas, insumos).</li>
+          <li>2.710 artículos importados y vinculados por código de Teamplace.</li>
+          <li>Imágenes por artículo y categoría; ABM completo (crear/editar/eliminar).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">🔌 Integración Teamplace</h3>
+        <ul class="feat">
+          <li>Sync del maestro de productos <strong>gratis</strong> (<span class="mono">npm run teamplace:sync</span>).</li>
+          <li>Vínculo 1:1 por <span class="mono">teamplaceCodigo</span> (respeta la categorización local).</li>
+          <li>Explorador de productos y stock con aviso de costo antes de consultar.</li>
+          <li>Cliente con cache de token y reintentos.</li>
+        </ul>
+      </div>
+    </div>
+    <h3>Stack tecnológico</h3>
+    <div class="stackrow">
+      <span class="chip">Next.js 16</span><span class="chip">React 19</span><span class="chip">TypeScript</span>
+      <span class="chip">PostgreSQL 17</span><span class="chip">Prisma 7</span><span class="chip">shadcn/ui</span>
+      <span class="chip">Tailwind v4</span><span class="chip">Docker Compose</span>
+    </div>
+  </section>
+
+  <section id="arquitectura">
+    <h2>Arquitectura</h2>
+    <p>Teamplace es el <strong>dueño del stock</strong>. CentralSM es la capa operativa: espeja el catálogo, registra movimientos y los empuja al ERP.</p>
+    <div class="flow">
+      <div class="node">
+        <div class="t">Teamplace / Finnegans</div>
+        <div class="d">ERP · dueño del stock y de los productos</div>
+      </div>
+      <div class="arrow">⇄<small>productos (gratis)<br>stock (pago)</small></div>
+      <div class="node hl">
+        <div class="t">CentralSM</div>
+        <div class="d">Catálogo · movimientos · UI · Postgres</div>
+      </div>
+      <div class="arrow">⇄<small>registran<br>y consultan</small></div>
+      <div class="node">
+        <div class="t">3 operadores</div>
+        <div class="d">únicos que mueven stock — todos por CentralSM</div>
+      </div>
+    </div>
+    <div class="callout"><strong>Clave de consistencia.</strong> Como <strong>solo 3 personas</strong> tocan el stock y todas lo hacen por CentralSM, no hay movimientos “por fuera”. Eso hace que el modelo de reconciliación diaria sea seguro y barato.</div>
+  </section>
+
+  <section id="stock">
+    <h2>Modelo de stock — reconciliación diaria por lotes</h2>
+    <p>En vez de llamar (y pagar) a la API por cada movimiento, se trabaja el día en CentralSM y se sincroniza <strong>una vez</strong>, empujando el <strong>neto del día</strong> como ajuste relativo. Teamplace sigue siendo la verdad; CentralSM aporta agilidad.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1 · Mañana</div><div class="t">Stock inicial</div><div class="d">1 lectura a Teamplace (Stock_1) = base del día.</div></div>
+      <div class="step"><div class="n">2 · Durante el día</div><div class="t">Operación local</div><div class="d">Los 3 operadores registran movimientos en CentralSM (gratis). Stock_F = Stock_1 ± movimientos.</div></div>
+      <div class="step"><div class="n">3 · Cierre</div><div class="t">Diferencia</div><div class="d">Δ = Stock_F − Stock_1 (neto del día, por producto).</div></div>
+      <div class="step"><div class="n">4 · Empuje</div><div class="t">Ajuste a Teamplace</div><div class="d">1 POST /AjusteStock con todos los Δ (movimiento relativo).</div></div>
+      <div class="step"><div class="n">5 · Verificación</div><div class="t">Relectura</div><div class="d">GET de control (Stock_2) confirma y queda de base del día siguiente.</div></div>
+    </div>
+    <div class="grid2">
+      <div class="callout good" style="margin:6px 0"><strong>Por qué no genera descuadres.</strong> Se empuja un <strong>delta relativo</strong> (ingreso/egreso), que suma sobre lo que Teamplace tenga → compone bien aunque el ERP se mueva por su cuenta. La relectura de control detecta cualquier desvío sin costo.</div>
+      <div class="callout warn" style="margin:6px 0"><strong>Recaudos.</strong> Idempotencia en el POST de cierre (para no duplicar), validar antes de enviar (los POST fallidos se cobran), y saltar deltas en cero.</div>
+    </div>
+  </section>
+
+  <section id="barcode">
+    <h2>Códigos de barra</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">Situación</h3>
+        <p>La API de Teamplace <strong>sí expone</strong> el código de barras (campo <span class="mono">Codigo de Barras</span> del producto) y leerlo/escribirlo es <span class="badge b-gratis">Gratis</span> (Maestro). Pero al muestrear el catálogo, <strong>los productos hoy no tienen barcodes cargados</strong>.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Propuesta</h3>
+        <ul class="feat">
+          <li>Capturar los barcodes <strong>en CentralSM</strong> con lector (una vez por producto).</li>
+          <li>Escanear para <strong>identificar el producto</strong> al registrar movimientos → rápido y sin errores de tipeo.</li>
+          <li>Opcional: empujar esos barcodes a Teamplace (gratis) para tenerlos en ambos lados.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="costos">
+    <h2>Costos de la API</h2>
+    <p>El catálogo es gratis. Solo el <strong>stock</strong> se paga: <strong>leer</strong> existencias (reportes) y <strong>escribir</strong> ajustes (POST). Finnegans factura por paquete mensual según cantidad de interacciones.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Operación</th><th>Endpoint</th><th>¿Paga?</th></tr></thead>
+        <tbody>
+          <tr><td>Sincronizar catálogo / productos</td><td class="mono">/producto/*</td><td><span class="badge b-gratis">Gratis</span></td></tr>
+          <tr><td>Leer existencias (stock)</td><td class="mono">/reports/stockDeposito</td><td><span class="badge b-pago">Paga</span></td></tr>
+          <tr><td>Empujar ajuste / movimiento</td><td class="mono">POST /AjusteStock</td><td><span class="badge b-pago">Paga</span> <span class="badge b-warn">aunque falle</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><strong>Con reconciliación diaria</strong> (2 lecturas + 1 POST en lote por día) el consumo queda en <strong>~90 interacciones/mes</strong> → tramo <strong>gratis / US$50</strong>. Presupuesto anual estimado: <strong>US$0–600</strong>.
+        <img src="https://bc.finneg.com/uploads/default/original/3X/b/f/bf21bbb2026b10c377a76523f444fcd8ea7f7a1e.png" alt="Descripción de la imagen" width="" height="300">
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <h2>Roadmap</h2>
+    <div class="card">
+      <div class="phase">
+        <div class="lbl">Hecho</div>
+        <div>
+          <div style="font-weight:700">Catálogo + integración de lectura</div>
+          <p style="margin:4px 0">Taxonomía ISP, 2.710 artículos importados y vinculados, imágenes, ABM, explorador de Teamplace, temas claro/oscuro.</p>
+          <div class="badges"><span class="pill now">✓ Operativo</span></div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="lbl">Fase 0</div>
+        <div>
+          <div style="font-weight:700">Config de Teamplace (prerrequisito)</div>
+          <p style="margin:4px 0">Obtener del administrador funcional: <span class="mono">TransaccionSubtipoID</span>, <span class="mono">Tipo</span>, <span class="mono">TalonarioID</span>, <span class="mono">EmpresaID</span> para ajuste de inventario y movimiento entre depósitos.</p>
+          <div class="badges"><span class="pill block">Depende del cliente</span></div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="lbl">Fase 1</div>
+        <div>
+          <div style="font-weight:700">Registro de movimientos (gratis)</div>
+          <p style="margin:4px 0">Sincronizar depósitos, pantalla de movimientos (ingreso/egreso/ajuste/transferencia) con <strong>escaneo de código de barras</strong>, y lectura de stock en vivo a demanda.</p>
+          <div class="badges"><span class="pill now">Listo para arrancar</span> <span class="pill">Sin costo</span></div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="lbl">Fase 2</div>
+        <div>
+          <div style="font-weight:700">Empuje a Teamplace</div>
+          <p style="margin:4px 0">Cierre diario: cálculo del neto, POST de ajuste con idempotencia y validación, seguimiento de estado de sincronización (pendiente/ok/error) y relectura de control.</p>
+          <div class="badges"><span class="pill">Necesita Fase 0</span></div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="lbl">Futuro</div>
+        <div>
+          <div style="font-weight:700">Mejoras</div>
+          <p style="margin:4px 0">Depurar los 754 “a revisar”, de-duplicar variantes Nacional/Importado, sync programado, y otros módulos de actividad de la empresa.</p>
+          <div class="badges"><span class="pill">Backlog</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proximos">
+    <h2>Próximos pasos</h2>
+    <div class="grid2">
+      <div class="callout" style="margin:6px 0"><strong>De su lado.</strong> Conseguir con el administrador de Teamplace la config de la <strong>Fase 0</strong> (subtipo de transacción, talonario, empresa). Es lo único que bloquea el empuje real.</div>
+      <div class="callout good" style="margin:6px 0"><strong>De nuestro lado.</strong> Arrancar ya la <strong>Fase 1</strong> (todo gratis): depósitos, registro de movimientos con lector de barcode y stock en vivo a demanda.</div>
+    </div>
+  </section>
+
+  <hr />
+  <footer>
+    <p><strong>CentralSM</strong> — Propuesta del Sistema. Documento de trabajo, Julio 2026.</p>
+    <p>Referencias: documentación de la API de Teamplace/Finnegans (productos y stock) · política de uso de APIs de Finnegans · análisis de costos (<a href="/analisis-costos-finnegans.html">/analisis-costos-finnegans.html</a>). Valores en USD sin impuestos; estimaciones sujetas a los supuestos de uso.</p>
+  </footer>
+</div>
+</body>
+</html>

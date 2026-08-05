@@ -1,0 +1,270 @@
+// CentralSM — esquema de base de datos
+// Documentación: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Operadores / usuarios del sistema interno.
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  nombre    String
+  rol       Rol      @default(OPERADOR)
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+enum Rol {
+  ADMIN
+  OPERADOR
+  LECTOR
+}
+
+/// Categoría del catálogo. Es un árbol auto-referenciado: las "Categorías Macro"
+/// son las raíces (parentId = null) y cada nivel aporta un `segmento` al SKU.
+/// Ej.: Macro "IR" -> sub "1" -> sub "ADS" arma el código "#IR-1-ADS".
+model Categoria {
+  id          String  @id @default(cuid())
+  nombre      String
+  descripcion String?
+  /// Fragmento que esta capa aporta al SKU (ej: "IR", "1", "ADS").
+  segmento    String
+  /// SKU completo acumulado desde la raíz, con "#" (ej: "#IR-1-ADS"). Único.
+  codigoSku   String  @unique
+  parentId    String?
+  imagenUrl   String?
+  orden       Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent    Categoria?  @relation("CategoriaArbol", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Categoria[] @relation("CategoriaArbol")
+  productos Producto[]
+
+  // El fragmento debe ser único entre hermanos. (Para las raíces, la unicidad
+  // real la garantiza codigoSku, ya que Postgres trata los NULL como distintos.)
+  @@unique([parentId, segmento])
+  @@index([parentId])
+}
+
+/// Artículo del catálogo (hoja). Vive dentro de una categoría y recibe un
+/// correlativo de 4 dígitos para formar su SKU (ej: "#IR-1-ADS-0001").
+model Producto {
+  id                 String         @id @default(cuid())
+  categoriaId        String
+  /// Correlativo dentro de la categoría (1, 2, 3...). Se formatea a 4 dígitos.
+  secuencia          Int
+  codigoSku          String         @unique
+  nombre             String
+  descripcion        String?
+  imagenUrl          String?
+  estado             EstadoProducto @default(ACTIVO)
+  cantidadStock      Decimal        @default(0) @db.Decimal(18, 4)
+  /// Total de stock del snapshot anterior (para el delta día a día del cron).
+  cantidadStockAnterior Decimal     @default(0) @db.Decimal(18, 4)
+  unidadStock        String         @default("UNI")
+  lugar              String?
+  fechaUltimoIngreso DateTime?
+
+  /// Marcado por el cron cuando el producto apareció por primera vez.
+  esNuevo      Boolean   @default(false)
+  primeraVezAt DateTime?
+
+  // Integración Teamplace — `teamplaceCodigo` es la llave del vínculo con el
+  // maestro de productos de Teamplace (su `Codigo`). Único y opcional (los
+  // artículos creados a mano no lo tienen). Para los productos dados de alta
+  // desde CentralSM, este es el "Código" con el que se crean en Finnegans Go.
+  teamplaceCodigo String?   @unique
+  teamplaceSyncAt DateTime?
+
+  // ─── Campos del maestro de Finnegans ────────────────────────────────────
+  // Espejan 1:1 el formulario "Nuevo - Productos" de Finnegans Go (pestaña
+  // General). Se usan para dar de alta el producto allá vía el bot Playwright.
+  finnegansTipo       String   @default("Otros")
+  finnegansPeso       Decimal  @default(0) @db.Decimal(18, 4)
+  finnegansVolumen    Decimal  @default(0) @db.Decimal(18, 4)
+  finnegansRubro      String?
+  finnegansMarca      String?
+  finnegansFamilia    String?
+  finnegansSubFamilia String?
+  finnegansActivo     Boolean  @default(true)
+  esStockeable        Boolean  @default(false)
+  seVende             Boolean  @default(false)
+  seCompra            Boolean  @default(false)
+  manejaRetenciones   Boolean  @default(false)
+
+  // ─── Estado del push hacia Finnegans Go (bot Playwright) ────────────────
+  // Los ~3200 productos que vinieron del pull quedan en NO_APLICA (no hay que
+  // empujarlos); solo los creados desde CentralSM arrancan en PENDIENTE.
+  finnegansPushEstado EstadoPushFinnegans @default(NO_APLICA)
+  finnegansPushAt     DateTime?
+  finnegansPushError  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categoria   Categoria          @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+  stock       StockDeposito[]
+  historial   HistorialStock[]
+  snapshots   SnapshotStock[]
+  pushJobs    FinnegansPushJob[]
+
+  @@unique([categoriaId, secuencia])
+  @@index([categoriaId])
+  @@index([nombre])
+  @@index([finnegansPushEstado])
+}
+
+enum EstadoPushFinnegans {
+  /// Vino del pull de Teamplace: ya existe allá, no hay nada que empujar.
+  NO_APLICA
+  PENDIENTE
+  EN_PROCESO
+  SINCRONIZADO
+  ERROR
+}
+
+/// Una corrida del bot Playwright que empuja un producto a Finnegans Go.
+/// Sirve de bitácora (reintentos, error, salida del runner) y para que la UI
+/// haga polling del estado mientras el navegador trabaja.
+model FinnegansPushJob {
+  id         String              @id @default(cuid())
+  productoId String
+  estado     EstadoPushFinnegans @default(PENDIENTE)
+  intento    Int                 @default(1)
+  error      String?
+  /// Salida (stdout/stderr) del runner, recortada.
+  log        String?
+  startedAt  DateTime?
+  finishedAt DateTime?
+  createdAt  DateTime            @default(now())
+
+  producto Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+
+  @@index([productoId])
+  @@index([estado])
+  @@index([createdAt])
+}
+
+enum EstadoProducto {
+  ACTIVO
+  INACTIVO
+}
+
+/// Bitácora de cada corrida de sincronización diaria (cron o manual).
+model SyncRun {
+  id                 String   @id @default(cuid())
+  ejecutadoAt        DateTime @default(now())
+  tipo               TipoSync @default(CRON)
+  ok                 Boolean  @default(true)
+  error              String?
+  duracionMs         Int?
+  // Métricas del delta calculado en la corrida
+  productosNuevos    Int      @default(0)
+  productosConCambio Int      @default(0)
+  unidadesAlta       Decimal  @default(0) @db.Decimal(18, 4)
+  unidadesBaja       Decimal  @default(0) @db.Decimal(18, 4)
+  stockRegistros     Int      @default(0)
+  depositos          Int      @default(0)
+
+  historial HistorialStock[]
+  snapshots SnapshotStock[]
+
+  @@index([ejecutadoAt])
+}
+
+enum TipoSync {
+  CRON
+  MANUAL
+}
+
+/// Histórico de cambios de stock detectados por cada corrida del cron, al
+/// DETALLE por (producto, depósito). Guarda TODOS los movimientos (deltas) para
+/// consultar por fecha, por depósito, y agregar entradas/salidas por tipo.
+model HistorialStock {
+  id         String   @id @default(cuid())
+  syncRunId  String
+  fecha      DateTime
+  productoId String
+  depositoId String
+  antes      Decimal  @db.Decimal(18, 4)
+  ahora      Decimal  @db.Decimal(18, 4)
+  delta      Decimal  @db.Decimal(18, 4)
+
+  syncRun  SyncRun  @relation(fields: [syncRunId], references: [id], onDelete: Cascade)
+  producto Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  deposito Deposito @relation(fields: [depositoId], references: [id], onDelete: Cascade)
+
+  @@index([fecha])
+  @@index([productoId])
+  @@index([depositoId])
+}
+
+/// Depósito físico/lógico. `codigo` espeja el depósito en Teamplace.
+model Deposito {
+  id        String   @id @default(cuid())
+  codigo    String   @unique
+  nombre    String
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stock     StockDeposito[]
+  historial HistorialStock[]
+  snapshots SnapshotStock[]
+}
+
+/// Existencias de un producto en un depósito (modelo de reconciliación diaria).
+/// `cantidadTeamplace` = Stock_1 (último snapshot traído del reporte de Teamplace).
+/// `cantidad`          = Stock_F (stock de trabajo local = Stock_1 ± movimientos del día).
+/// La diferencia (cantidad - cantidadTeamplace) es el neto a empujar al cierre.
+model StockDeposito {
+  id                String   @id @default(cuid())
+  productoId        String
+  depositoId        String
+  cantidad          Decimal  @default(0) @db.Decimal(18, 4)
+  cantidadTeamplace Decimal  @default(0) @db.Decimal(18, 4)
+  snapshotAt        DateTime?
+  stockMinimo       Decimal? @db.Decimal(18, 4)
+  stockMaximo       Decimal? @db.Decimal(18, 4)
+  puntoReposicion   Decimal? @db.Decimal(18, 4)
+  updatedAt         DateTime @updatedAt
+
+  producto Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  deposito Deposito @relation(fields: [depositoId], references: [id], onDelete: Cascade)
+
+  @@unique([productoId, depositoId])
+  @@index([depositoId])
+}
+
+/// Serie temporal de NIVELES para investigación operativa: el snapshot completo
+/// de cada corrida (una fila por (producto, depósito) con stock, aunque no haya
+/// cambiado). A diferencia de HistorialStock (solo deltas), permite leer el
+/// nivel absoluto de cualquier día sin integrar deltas hacia atrás.
+/// ~4.300 filas/día ≈ 1,6 M filas/año: barato para lo que vale.
+model SnapshotStock {
+  id              String   @id @default(cuid())
+  syncRunId       String
+  fecha           DateTime
+  productoId      String
+  depositoId      String
+  cantidad        Decimal  @db.Decimal(18, 4)
+  puntoReposicion Decimal? @db.Decimal(18, 4)
+
+  syncRun  SyncRun  @relation(fields: [syncRunId], references: [id], onDelete: Cascade)
+  producto Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  deposito Deposito @relation(fields: [depositoId], references: [id], onDelete: Cascade)
+
+  @@index([fecha])
+  @@index([productoId, fecha])
+  @@index([depositoId, fecha])
+}
