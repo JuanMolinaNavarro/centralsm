@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Package, PackagePlus, Warehouse, ArrowLeftRight, Cloud } from "lucide-react";
+import { LayoutDashboard, Package, Warehouse, ArrowLeftRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +19,8 @@ const modulos = [
   },
   {
     titulo: "Catálogo",
-    descripcion: "Categorías, subcategorías y artículos con SKU por capas.",
+    descripcion:
+      "Categorías, artículos con SKU por capas y altas con carga automática en Finnegans Go.",
     icono: Package,
     href: "/catalogo",
   },
@@ -34,18 +35,6 @@ const modulos = [
     descripcion: "Histórico de entradas y salidas detectadas por el sync.",
     icono: ArrowLeftRight,
     href: "/dashboard/movimientos",
-  },
-  {
-    titulo: "Productos",
-    descripcion: "Altas locales y su carga automática en Finnegans Go.",
-    icono: PackagePlus,
-    href: "/productos",
-  },
-  {
-    titulo: "Teamplace",
-    descripcion: "Explorar productos y stock desde la API de Finnegans.",
-    icono: Cloud,
-    href: "/teamplace",
   },
 ];
 

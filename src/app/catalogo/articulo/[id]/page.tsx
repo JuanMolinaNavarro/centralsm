@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Sparkles } from "lucide-react";
+import { ClipboardList, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -73,7 +75,15 @@ export default async function ArticuloPage({
             </div>
           </div>
         </div>
-        <ArticuloDetailActions
+        <div className="flex flex-col items-end gap-2">
+          <Button
+            render={<Link href={`/catalogo/articulo/${producto.id}/ficha`} />}
+            nativeButton={false}
+            variant="outline"
+          >
+            <ClipboardList className="size-4" /> Ficha operativa
+          </Button>
+          <ArticuloDetailActions
           categoriaSku={producto.categoria.codigoSku}
           producto={{
             id: producto.id,
@@ -86,7 +96,8 @@ export default async function ArticuloPage({
             lugar: producto.lugar,
             imagenUrl: producto.imagenUrl,
           }}
-        />
+          />
+        </div>
       </div>
 
       <Separator className="my-8" />

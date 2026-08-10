@@ -12,6 +12,7 @@ import {
 import { getProductosConPush } from "@/lib/productos";
 import { fechaHoraAR } from "@/lib/fecha";
 import { ReintentarPush } from "@/components/productos/reintentar-push";
+import { CatalogoTabs } from "@/components/catalogo/catalogo-tabs";
 
 export const dynamic = "force-dynamic";
 
@@ -37,13 +38,16 @@ export default async function ProductosPage() {
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Productos</h1>
-          <p className="text-sm text-muted-foreground">
-            Altas hechas desde CentralSM y su estado de carga en Finnegans Go.
-          </p>
+        <div className="flex flex-col gap-3">
+          <CatalogoTabs activa="altas" />
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-semibold tracking-tight">Altas Finnegans</h1>
+            <p className="text-sm text-muted-foreground">
+              Altas hechas desde CentralSM y su estado de carga en Finnegans Go.
+            </p>
+          </div>
         </div>
-        <Button render={<Link href="/productos/nuevo" />} nativeButton={false}>
+        <Button render={<Link href="/catalogo/altas/nuevo" />} nativeButton={false}>
           Nuevo producto
         </Button>
       </div>

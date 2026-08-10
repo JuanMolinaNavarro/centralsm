@@ -29,14 +29,8 @@ export function SiteHeader() {
           <Button variant="ghost" size="sm" render={<Link href="/catalogo" />} nativeButton={false}>
             Catálogo
           </Button>
-          <Button variant="ghost" size="sm" render={<Link href="/productos" />} nativeButton={false}>
-            Productos
-          </Button>
           <Button variant="ghost" size="sm" render={<Link href="/depositos" />} nativeButton={false}>
             Depósitos
-          </Button>
-          <Button variant="ghost" size="sm" render={<Link href="/teamplace" />} nativeButton={false}>
-            Teamplace
           </Button>
           <Button variant="ghost" size="sm" render={<Link href="/" />} nativeButton={false}>
             <Home className="size-4" /> Inicio

@@ -1,0 +1,14 @@
+{
+  "name": "centralsm-worker",
+  "private": true,
+  "description": "Dependencias mínimas del worker de altas Finnegans (ver Dockerfile.worker). Versiones espejo del package.json raíz — mantener en sincronía.",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2",
+    "pg": "^8.21.0",
+    "playwright": "1.61.1",
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.4"
+  }
+}

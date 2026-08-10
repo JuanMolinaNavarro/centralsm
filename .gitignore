@@ -55,3 +55,6 @@ next-env.d.ts
 /scripts/playwright/selectores-descubiertos.*
 /playwright-report
 /.playwright-mcp
+
+# Export del kardex de Finnegans (regenerable desde el xlsx; 50 MB)
+scripts/kardex-*.jsonl

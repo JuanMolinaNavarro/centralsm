@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { TIPOS } from "@/lib/finnegans-producto";
-import { crearProductoYEmpujar } from "@/app/productos/actions";
+import { crearProductoYEmpujar } from "@/app/catalogo/altas/actions";
 import { usePushStatus, PushStatus } from "./push-status";
 
 type Categoria = { id: string; nombre: string; codigoSku: string };

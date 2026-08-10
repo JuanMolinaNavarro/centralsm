@@ -3,6 +3,7 @@ import {
   ArrowDown,
   ArrowUp,
   Clock,
+  History,
   Package,
   Sparkles,
   TrendingUp,
@@ -19,12 +20,16 @@ import {
 } from "@/components/ui/table";
 import {
   getResumen,
-  getUltimaSync,
   getProductosNuevos,
   getCambiosStock,
   getSyncRuns,
+  getSyncRunById,
+  getCambiosDeRun,
+  getNuevosDeRun,
+  getTotalesDeRun,
 } from "@/lib/dashboard";
 import { fechaHoraAR } from "@/lib/fecha";
+import { RunSelector } from "@/components/dashboard/run-selector";
 
 export const dynamic = "force-dynamic";
 
@@ -58,29 +63,79 @@ function StatCard({
   );
 }
 
-export default async function DashboardPage() {
-  const [resumen, ultima, nuevos, cambios, runs] = await Promise.all([
-    getResumen(),
-    getUltimaSync(),
-    getProductosNuevos(),
-    getCambiosStock(),
-    getSyncRuns(8),
-  ]);
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ run?: string }>;
+}) {
+  const { run: runId } = await searchParams;
+
+  const runs = await getSyncRuns(30);
+  // Vista histórica: el dashboard tal como quedó después de esa corrida.
+  const runSeleccionada = runId
+    ? (runs.find((r) => r.id === runId) ?? (await getSyncRunById(runId)))
+    : null;
+  const historico = runSeleccionada != null;
+
+  const ultima = runSeleccionada ?? runs[0] ?? null;
+
+  const [resumen, nuevos, cambios, totalesRun] = historico
+    ? await Promise.all([
+        null,
+        getNuevosDeRun(runSeleccionada),
+        getCambiosDeRun(runSeleccionada.id),
+        getTotalesDeRun(runSeleccionada.id),
+      ])
+    : [...(await Promise.all([getResumen(), getProductosNuevos(), getCambiosStock()])), null];
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6">
+      {/* Selector de fecha / corrida */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight">
+            {historico ? `Corrida del ${fecha(runSeleccionada.ejecutadoAt)}` : "Estado actual"}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {historico
+              ? "Datos tal como quedaron después de esa sincronización."
+              : "Resumen de la última sincronización con Teamplace."}
+          </p>
+        </div>
+        <RunSelector
+          runs={runs.map((r) => ({
+            id: r.id,
+            etiqueta: `${fecha(r.ejecutadoAt)}${r.ok ? "" : " · con error"}`,
+          }))}
+          actual={runSeleccionada?.id}
+        />
+      </div>
+
+      {historico && (
+        <div className="flex items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm">
+          <History className="size-4 shrink-0 text-primary" />
+          <p>
+            Estás viendo una corrida anterior.{" "}
+            <Link href="/dashboard" className="font-medium underline underline-offset-2">
+              Volver a la actual
+            </Link>
+            .
+          </p>
+        </div>
+      )}
+
       {/* KPIs */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          label="Última sincronización"
+          label={historico ? "Corrida seleccionada" : "Última sincronización"}
           value={ultima ? fecha(ultima.ejecutadoAt) : "—"}
           sub={ultima ? `${ultima.tipo} · ${ultima.ok ? "OK" : "con error"}` : "sin corridas aún"}
           icon={Clock}
         />
         <StatCard
           label="Productos nuevos"
-          value={nf(resumen.nuevos)}
-          sub="en la última corrida"
+          value={nf(historico ? runSeleccionada.productosNuevos : (resumen?.nuevos ?? 0))}
+          sub={historico ? "en esa corrida" : "en la última corrida"}
           icon={Sparkles}
         />
         <StatCard
@@ -93,12 +148,21 @@ export default async function DashboardPage() {
           }
           icon={TrendingUp}
         />
-        <StatCard
-          label="Productos totales"
-          value={nf(resumen.totalProductos)}
-          sub={`${nf(resumen.conStock)} con stock`}
-          icon={Package}
-        />
+        {historico ? (
+          <StatCard
+            label="Stock del día"
+            value={nf(totalesRun?.unidades ?? 0)}
+            sub={`${nf(totalesRun?.productos ?? 0)} productos · ${nf(totalesRun?.conStock ?? 0)} con stock`}
+            icon={Package}
+          />
+        ) : (
+          <StatCard
+            label="Productos totales"
+            value={nf(resumen?.totalProductos ?? 0)}
+            sub={`${nf(resumen?.conStock ?? 0)} con stock`}
+            icon={Package}
+          />
+        )}
       </div>
 
       {/* Productos nuevos */}
@@ -107,7 +171,11 @@ export default async function DashboardPage() {
           <CardTitle className="flex items-center gap-2 text-base">
             <Sparkles className="size-4 text-primary" /> Productos nuevos
           </CardTitle>
-          <CardDescription>Aparecieron en Teamplace en la última sincronización.</CardDescription>
+          <CardDescription>
+            {historico
+              ? "Aparecieron en Teamplace en esa sincronización."
+              : "Aparecieron en Teamplace en la última sincronización."}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {nuevos.length === 0 ? (
@@ -156,12 +224,16 @@ export default async function DashboardPage() {
         <CardHeader>
           <CardTitle className="text-base">Cambios de stock</CardTitle>
           <CardDescription>
-            Diferencia respecto del snapshot anterior (día a día).
+            {historico
+              ? "Movimientos detectados por esa corrida (sumados entre depósitos)."
+              : "Diferencia respecto del snapshot anterior (día a día)."}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {cambios.length === 0 ? (
-            <p className="py-4 text-sm text-muted-foreground">Sin cambios desde la corrida anterior.</p>
+            <p className="py-4 text-sm text-muted-foreground">
+              {historico ? "Esa corrida no detectó cambios." : "Sin cambios desde la corrida anterior."}
+            </p>
           ) : (
             <div className="overflow-hidden rounded-lg border">
               <Table>
@@ -212,7 +284,10 @@ export default async function DashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Historial de sincronizaciones</CardTitle>
-          <CardDescription>El cron corre todos los días a las 2 AM (hora Argentina).</CardDescription>
+          <CardDescription>
+            El cron corre todos los días a las 2 AM (hora Argentina). Hacé clic en una fecha para
+            ver el dashboard de ese día.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto rounded-lg border">
@@ -230,8 +305,15 @@ export default async function DashboardPage() {
               </TableHeader>
               <TableBody>
                 {runs.map((r) => (
-                  <TableRow key={r.id}>
-                    <TableCell className="whitespace-nowrap">{fecha(r.ejecutadoAt)}</TableCell>
+                  <TableRow key={r.id} className={r.id === runSeleccionada?.id ? "bg-muted/50" : undefined}>
+                    <TableCell className="whitespace-nowrap">
+                      <Link
+                        href={`/dashboard?run=${r.id}`}
+                        className="underline-offset-2 hover:underline"
+                      >
+                        {fecha(r.ejecutadoAt)}
+                      </Link>
+                    </TableCell>
                     <TableCell>
                       <Badge variant="outline">{r.tipo}</Badge>
                     </TableCell>

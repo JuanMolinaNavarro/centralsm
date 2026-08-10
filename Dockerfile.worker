@@ -1,31 +1,36 @@
 # syntax=docker/dockerfile:1
 
 # Imagen autocontenida del microservicio worker de Finnegans (worker/README.md).
-# No monta el código por volumen: todo lo que necesita va adentro. Es la imagen
-# que se despliega en Kubernetes (k8s/worker/deployment.yaml).
 #
-# Base oficial de Playwright: Node 22 + Chromium + libs del sistema ya resueltas
-# (evita el `playwright install --with-deps` sobre slim, lento y frágil).
-# ⚠️ El tag DEBE coincidir con la versión exacta de `playwright` en package.json
-#    (por eso está fijada en "1.61.1", sin ^): browsers y librería van de la mano.
-FROM mcr.microsoft.com/playwright:v1.61.1-noble
+# Versión SLIM (~1,5 GB vs 4,9 GB de la anterior): base node:22-slim + SOLO
+# Chromium vía `playwright install --with-deps chromium`, y solo las
+# dependencias que el worker usa de verdad (worker/package.json, no el
+# package.json raíz que arrastra Next/React/Tailwind). Motivo: el servidor de
+# producción tiene 19 GB de disco compartidos con otro sistema.
+#
+# ⚠️ La versión de `playwright` en worker/package.json DEBE coincidir con la
+#    del package.json raíz (1.61.1 exacta): browsers y librería van de la mano.
+
+FROM node:22-slim
 
 WORKDIR /app
 
-# Dependencias (capa cacheada mientras no cambien package.json/lockfile).
-# - npm install (no ci): el lockfile se genera en Windows y no registra las
-#   deps opcionales solo-Linux (mismo motivo que el Dockerfile principal).
-# - Instala también devDependencies A PROPÓSITO: tsx, playwright, dotenv y
-#   prisma son devDeps pero el worker las necesita en runtime.
-# - --ignore-scripts evita el postinstall de playwright: los browsers ya vienen
-#   en la imagen (en $PLAYWRIGHT_BROWSERS_PATH).
-COPY package.json package-lock.json ./
+# openssl/ca-certificates para los engines de Prisma.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends openssl ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
+# Browsers fuera de node_modules para que sobrevivan a reinstalls.
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+# Dependencias mínimas del worker (capa cacheada mientras no cambie el json).
+COPY worker/package.json ./package.json
 RUN --mount=type=cache,target=/root/.npm \
-  npm config set fetch-retries 5 \
-  && npm config set fetch-retry-mintimeout 20000 \
-  && npm config set fetch-retry-maxtimeout 120000 \
-  && npm config set fetch-timeout 600000 \
-  && npm install --ignore-scripts --no-audit --no-fund
+  npm install --no-audit --no-fund
+
+# Chromium + librerías de sistema que necesita (solo chromium, no ff/webkit).
+RUN npx playwright install --with-deps chromium \
+  && rm -rf /var/lib/apt/lists/*
 
 # Solo el código que el worker usa: el bot de Playwright y el loop de polling.
 COPY prisma.config.ts tsconfig.json ./
@@ -33,21 +38,21 @@ COPY prisma ./prisma
 COPY scripts/playwright ./scripts/playwright
 COPY worker ./worker
 
-# Cliente Prisma: src/generated está dockerignoreado, se genera acá
-# (sale a /app/src/generated/prisma, como en dev).
+# Cliente Prisma (sale a /app/src/generated/prisma, como espera el código).
 RUN npx prisma generate
 
 # Estado efímero del bot: sesión cacheada y capturas de errores. Se apunta a
-# /data para montarlo como volumen (compose) o emptyDir (k8s); perderlo solo
-# cuesta un re-login automático.
+# /data para montarlo como volumen; perderlo solo cuesta un re-login automático.
 ENV FINNEGANS_STATE_PATH=/data/.auth/finnegans-state.json \
     FINNEGANS_RESULTADOS_DIR=/data/resultados \
     FINNEGANS_PUSH_HEADLESS=true
-RUN mkdir -p /data/.auth /data/resultados && chown -R pwuser:pwuser /data
 
-# pwuser viene en la imagen de Playwright; correr Chromium como root es mala idea.
+# Correr Chromium como root es mala idea; usuario propio + permisos de /data.
+RUN useradd -m pwuser \
+  && mkdir -p /data/.auth /data/resultados \
+  && chown -R pwuser:pwuser /data /ms-playwright
 USER pwuser
 
 # tsx directo (sin npx en el medio): el proceso queda de PID 1 y recibe el
-# SIGTERM de Docker/Kubernetes, del que depende el apagado prolijo del worker.
+# SIGTERM de Docker, del que depende el apagado prolijo del worker.
 CMD ["node_modules/.bin/tsx", "worker/index.ts"]

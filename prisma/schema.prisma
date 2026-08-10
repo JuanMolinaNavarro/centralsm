@@ -109,6 +109,35 @@ model Producto {
   finnegansPushAt     DateTime?
   finnegansPushError  String?
 
+  // ─── Ficha de investigación operativa ────────────────────────────────────
+  // Campos del maestro que alimentan el cálculo de política de compra y
+  // reposición (pestaña "Derivado" de la ficha). Ver src/lib/ficha.ts.
+  /// 1 frena el servicio · 2 retrasa · 3 no afecta.
+  criticidad        Int?
+  /// Si pertenece a un kit (ej. "Instalación FTTH"), su demanda es derivada.
+  kitNombre         String?
+  /// Unidades que consume cada trabajo del kit, como mínimo.
+  kitCantidad       Decimal?    @db.Decimal(18, 4)
+  /// Artículo inactivo al que este reemplaza: las series de consumo se empalman.
+  predecesorId      String?
+  /// Intercambiables sin cambiar el servicio (texto libre).
+  sustitutos        String?
+  origen            OrigenArticulo?
+  estadoItem        EstadoItem  @default(NUEVO)
+  requiereAutoelevador Boolean  @default(false)
+  /// Baterías, precintos, químicos. Null si no vence.
+  vidaUtilMeses     Int?
+  /// Ya comprado y viniendo; evita comprar dos veces.
+  enTransito        Decimal     @default(0) @db.Decimal(18, 4)
+  /// Trabajos proyectados por mes, para la demanda derivada del kit.
+  instalacionesMes  Int?
+  /// Qué pregunta contesta el costo unitario (para el ABC se usa reposición).
+  tipoCosto         TipoCosto   @default(REPOSICION)
+  /// Entidades habilitadas a operar el artículo.
+  entidades         String?
+  /// Proveedor cuyas condiciones (presentación, lote, precio) usa el cálculo.
+  proveedorSeleccionadoId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -118,10 +147,164 @@ model Producto {
   snapshots   SnapshotStock[]
   pushJobs    FinnegansPushJob[]
 
+  predecesor Producto?  @relation("ArticuloPredecesor", fields: [predecesorId], references: [id], onDelete: SetNull)
+  sucesores  Producto[] @relation("ArticuloPredecesor")
+
+  proveedorSeleccionado ProveedorArticulo?  @relation("ProveedorSeleccionado", fields: [proveedorSeleccionadoId], references: [id], onDelete: SetNull)
+  proveedores           ProveedorArticulo[]
+  movimientos           MovimientoArticulo[]
+  leadTimes             LeadTimeRegistro[]
+
   @@unique([categoriaId, secuencia])
   @@index([categoriaId])
   @@index([nombre])
   @@index([finnegansPushEstado])
+}
+
+enum OrigenArticulo {
+  NACIONAL
+  IMPORTADO
+}
+
+enum EstadoItem {
+  NUEVO
+  RECORTE
+  RECUPERADO
+}
+
+enum TipoCosto {
+  /// Cuánto costaría volver a comprarlo hoy. El que usan el ABC y la sugerencia.
+  REPOSICION
+  /// El precio de la última orden pagada. Para auditar contra factura.
+  ULTIMA_COMPRA
+  /// Promedio de compras pesado por cantidad. Valoriza el stock existente.
+  PROMEDIO_PONDERADO
+  /// Valor fijo de administración. Para presupuestar, no para el ABC.
+  ESTANDAR
+}
+
+/// Proveedor de un artículo con su presentación y condiciones de compra.
+/// El mismo artículo puede venir en presentaciones distintas por proveedor;
+/// la selección (Producto.proveedorSeleccionadoId) es la que usa el cálculo.
+model ProveedorArticulo {
+  id            String  @id @default(cuid())
+  productoId    String
+  nombre        String
+  /// Cómo lo vende: caja, bolsa, bobina.
+  unidadCompra  String  @default("unidad")
+  /// Multiplicador: 1 unidad de compra = N unidades base. Caja x 100 → 100.
+  factorCompra  Decimal @default(1) @db.Decimal(18, 4)
+  /// Cómo sale del depósito hacia la operación.
+  unidadConsumo String  @default("unidad")
+  /// Multiplicador: 1 unidad de consumo = N unidades base.
+  factorConsumo Decimal @default(1) @db.Decimal(18, 4)
+  /// En unidad base. La sugerencia q nunca baja de esto.
+  loteMinimo    Decimal @default(0) @db.Decimal(18, 4)
+  /// El escalón por encima del mínimo, en unidad base.
+  multiplo      Decimal @default(1) @db.Decimal(18, 4)
+  orden         Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  producto        Producto          @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  precios         PrecioProveedor[]
+  seleccionadoPor Producto[]        @relation("ProveedorSeleccionado")
+
+  @@index([productoId])
+}
+
+/// Punto de la serie de precios de un proveedor (USD por unidad base).
+/// El último precio del proveedor seleccionado es el costo unitario vigente.
+model PrecioProveedor {
+  id          String   @id @default(cuid())
+  proveedorId String
+  fecha       DateTime
+  precioUsd   Decimal  @db.Decimal(18, 4)
+
+  proveedor ProveedorArticulo @relation(fields: [proveedorId], references: [id], onDelete: Cascade)
+
+  @@index([proveedorId, fecha])
+}
+
+/// Movimiento de la ficha operativa, clasificado por tipo. Solo los CONSUMO
+/// entran en la serie de demanda; el resto mueve stock pero no es demanda
+/// (este es el campo que no existe en Finnegans).
+model MovimientoArticulo {
+  id         String         @id @default(cuid())
+  productoId String
+  fecha      DateTime
+  tipo       TipoMovimiento
+  /// Solo aplica a CONSUMO; separa la demanda pronosticable de la que distorsiona.
+  demanda    TipoDemanda    @default(NA)
+  /// En unidad base.
+  solicitado Decimal        @default(0) @db.Decimal(18, 4)
+  /// En unidad base. La serie suma lo ENTREGADO.
+  entregado  Decimal        @default(0) @db.Decimal(18, 4)
+  destino    String?
+  /// N° de pedido/vale/remito. Enlaza salidas a proyecto con sus reingresos.
+  pedido     String?
+  /// Depósito de Finnegans donde impactó el movimiento (import del kardex).
+  deposito   String?
+  /// Empresa-sucursal del grupo a la que pertenece el movimiento.
+  empresa    String?
+  /// Documento del ERP que lo originó (ej: "REMVTA - 37007", "MIS - 8925").
+  documento  String?
+  /// null = cargado a mano en CentralSM; "KARDEX" = importado del informe de
+  /// Ingresos y Egresos de Finnegans (el import borra y recarga esta fuente).
+  fuente     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  producto Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+
+  @@index([productoId, fecha])
+  @@index([tipo])
+  @@index([fuente])
+}
+
+enum TipoMovimiento {
+  /// Salida real hacia instalación/servicio/venta. El único que es demanda.
+  CONSUMO
+  /// Cambio de depósito o sucursal (incluye remitos entre empresas del grupo).
+  TRANSFERENCIA
+  /// Material que vuelve al depósito. Excluida.
+  DEVOLUCION
+  /// Corrección por conteo físico. Excluida.
+  AJUSTE
+  /// Entrada por recepción de orden de compra (o producción). Excluida.
+  RECEPCION_COMPRA
+  /// Salida por devolución al proveedor. Excluida.
+  DEVOLUCION_COMPRA
+  /// Sale para un proyecto eventual con retorno esperado ("en calle").
+  SALIDA_PROYECTO
+  /// La vuelta (total o parcial) de una salida a proyecto, por el mismo pedido.
+  REINGRESO_PROYECTO
+}
+
+enum TipoDemanda {
+  /// Demanda normal del día a día: la única que sirve para pronosticar.
+  RECURRENTE
+  /// Pico puntual de un proyecto planificado; se aparta para no inflar el promedio.
+  OBRA
+  /// Pedido fuera de ciclo: marca dónde falló el stock.
+  URGENTE
+  /// No aplica (movimientos que no son consumo).
+  NA
+}
+
+/// Lead time real de una recepción de orden de compra (días entre emisión y
+/// recepción). El promedio y el desvío alimentan el stock de seguridad.
+model LeadTimeRegistro {
+  id         String   @id @default(cuid())
+  productoId String
+  dias       Int
+  fecha      DateTime @default(now())
+
+  producto Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+
+  @@index([productoId])
 }
 
 enum EstadoPushFinnegans {

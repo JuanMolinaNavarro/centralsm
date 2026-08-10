@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -234,9 +235,9 @@ export function ArticuloFormDialog({
                   <p className="text-xs text-muted-foreground">
                     Un bot de Playwright lo dará de alta en Finnegans Go al guardar. ¿Necesitás
                     rubro, marca o familia?{" "}
-                    <a href="/productos/nuevo" className="underline underline-offset-2">
+                    <Link href="/catalogo/altas/nuevo" className="underline underline-offset-2">
                       Usá el formulario completo
-                    </a>
+                    </Link>
                     .
                   </p>
                 </div>

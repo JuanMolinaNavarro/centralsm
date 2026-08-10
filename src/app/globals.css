@@ -49,6 +49,7 @@
 }
 
 :root {
+  color-scheme: light;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -84,6 +85,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -117,6 +119,24 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Paleta categórica para los gráficos de la ficha operativa (orden fijo,
+   validada para visión con daltonismo en claro y oscuro; los tokens --chart-*
+   del tema son grises y no sirven para distinguir series). */
+:root {
+  --serie-1: #2a78d6;
+  --serie-2: #eb6834;
+  --serie-3: #1baf7a;
+  --serie-4: #eda100;
+  --serie-5: #e87ba4;
+}
+.dark {
+  --serie-1: #3987e5;
+  --serie-2: #d95926;
+  --serie-3: #199e70;
+  --serie-4: #c98500;
+  --serie-5: #d55181;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -129,5 +149,11 @@
   }
   h1, h2, h3, h4 {
     @apply font-heading tracking-tight;
+  }
+  /* El popup de los <select> nativos lo pinta el sistema operativo; sin colores
+     explícitos las opciones heredan el texto del tema y quedan ilegibles. */
+  select option {
+    background-color: var(--popover);
+    color: var(--popover-foreground);
   }
 }

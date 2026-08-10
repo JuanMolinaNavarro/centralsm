@@ -82,7 +82,7 @@ export async function crearProductoYEmpujar(
 
     const jobId = await lanzarPushFinnegans(creado.id);
 
-    revalidatePath("/productos");
+    revalidatePath("/catalogo/altas");
     revalidatePath(`/catalogo/${data.categoriaId}`);
     return { ok: true, productoId: creado.id, jobId };
   } catch (error) {
@@ -104,7 +104,7 @@ export async function reintentarPush(
       return { ok: false, error: "El producto no tiene código de Finnegans." };
     }
     const jobId = await lanzarPushFinnegans(producto.id);
-    revalidatePath("/productos");
+    revalidatePath("/catalogo/altas");
     return { ok: true, jobId };
   } catch (error) {
     return { ok: false, error: mensajeError(error) };

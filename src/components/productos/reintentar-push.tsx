@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, RotateCw } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { reintentarPush } from "@/app/productos/actions";
+import { reintentarPush } from "@/app/catalogo/altas/actions";
 
 /** Relanza el bot de Playwright para un producto que quedó en ERROR. */
 export function ReintentarPush({ productoId }: { productoId: string }) {

@@ -231,7 +231,7 @@ export async function crearProducto(input: z.input<typeof productoSchema>): Prom
     const jobId = data.pushFinnegans ? await lanzarPushFinnegans(creado.id) : undefined;
 
     revalidatePath(`/catalogo/${data.categoriaId}`);
-    if (jobId) revalidatePath("/productos");
+    if (jobId) revalidatePath("/catalogo/altas");
     return { ok: true, id: creado.id, jobId };
   } catch (error) {
     return { ok: false, error: mensajeError(error) };

@@ -26,13 +26,14 @@ services:
       timeout: 3s
       retries: 10
 
-  # Migraciones como paso previo (one-shot). Usa la imagen del worker porque ya
-  # trae prisma CLI + schema; la imagen standalone de la app no los incluye.
+  # Migraciones como paso previo (one-shot). Usa la imagen del cron porque ya
+  # trae prisma CLI + schema y pesa 1,7 GB (la del worker pesa ~5 GB; la
+  # standalone de la app no incluye prisma CLI).
   migrate:
     build:
       context: .
-      dockerfile: Dockerfile.worker
-    image: centralsm-worker:prod
+      target: dev
+    image: centralsm-cron:prod
     container_name: centralsm-migrate
     restart: "no"
     command: ["npx", "prisma", "migrate", "deploy"]

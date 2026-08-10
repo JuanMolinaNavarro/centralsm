@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowDownUp, Boxes, Cloud, Home, LayoutDashboard, Warehouse } from "lucide-react";
+import { ArrowDownUp, Boxes, Home, LayoutDashboard, Warehouse } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -25,7 +25,6 @@ const NAV = [
   { href: "/dashboard/movimientos", label: "Movimientos", icon: ArrowDownUp },
   { href: "/catalogo", label: "Catálogo", icon: Boxes },
   { href: "/depositos", label: "Depósitos", icon: Warehouse },
-  { href: "/teamplace", label: "Teamplace", icon: Cloud },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

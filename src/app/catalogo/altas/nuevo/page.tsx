@@ -10,8 +10,8 @@ export default async function NuevoProductoPage() {
   return (
     <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-10">
       <div className="flex flex-col gap-1">
-        <Link href="/productos" className="w-fit text-sm text-muted-foreground hover:underline">
-          ← Productos
+        <Link href="/catalogo/altas" className="w-fit text-sm text-muted-foreground hover:underline">
+          ← Altas Finnegans
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight">Nuevo producto</h1>
         <p className="text-sm text-muted-foreground">

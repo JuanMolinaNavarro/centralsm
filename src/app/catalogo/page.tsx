@@ -1,6 +1,7 @@
 import { getMacroCategorias } from "@/lib/catalogo";
 import { CategoriaCard } from "@/components/catalogo/categoria-card";
 import { NuevaCategoria } from "@/components/catalogo/nueva-categoria";
+import { CatalogoTabs } from "@/components/catalogo/catalogo-tabs";
 
 export const dynamic = "force-dynamic";
 
@@ -10,11 +11,14 @@ export default async function CatalogoPage() {
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
       <div className="mb-8 flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Categorías Macro</h1>
-          <p className="text-sm text-muted-foreground">
-            Catálogo de productos del depósito. Cada capa construye el SKU.
-          </p>
+        <div className="flex flex-col gap-3">
+          <CatalogoTabs activa="categorias" />
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">Categorías Macro</h1>
+            <p className="text-sm text-muted-foreground">
+              Catálogo de productos del depósito. Cada capa construye el SKU.
+            </p>
+          </div>
         </div>
         <NuevaCategoria esMacro />
       </div>
