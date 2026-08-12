@@ -21,6 +21,24 @@ export default async function CategoriaPage({
 
   const crumbs = await getBreadcrumbs(id);
 
+  const conStock = categoria.productos.filter((p) => Number(p.cantidadStock) > 0);
+  const sinStock = categoria.productos.filter((p) => Number(p.cantidadStock) <= 0);
+
+  const aCardData = (p: (typeof categoria.productos)[number]) => ({
+    id: p.id,
+    categoriaId: categoria.id,
+    categoriaSku: categoria.codigoSku,
+    nombre: p.nombre,
+    descripcion: p.descripcion,
+    codigoSku: p.codigoSku,
+    estado: p.estado,
+    cantidadStock: Number(p.cantidadStock.toString()),
+    unidadStock: p.unidadStock,
+    lugar: p.lugar,
+    imagenUrl: p.imagenUrl,
+    esNuevo: p.esNuevo,
+  });
+
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
       <Breadcrumbs items={crumbs} />
@@ -77,30 +95,25 @@ export default async function CategoriaPage({
       </section>
 
       <section>
-        <h2 className="mb-4 text-lg font-medium">Artículos</h2>
+        <h2 className="mb-4 text-lg font-medium">Artículos con stock</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {categoria.productos.map((p) => (
-            <ArticuloCard
-              key={p.id}
-              producto={{
-                id: p.id,
-                categoriaId: categoria.id,
-                categoriaSku: categoria.codigoSku,
-                nombre: p.nombre,
-                descripcion: p.descripcion,
-                codigoSku: p.codigoSku,
-                estado: p.estado,
-                cantidadStock: Number(p.cantidadStock.toString()),
-                unidadStock: p.unidadStock,
-                lugar: p.lugar,
-                imagenUrl: p.imagenUrl,
-                esNuevo: p.esNuevo,
-              }}
-            />
+          {conStock.map((p) => (
+            <ArticuloCard key={p.id} producto={aCardData(p)} />
           ))}
           <NuevoArticulo categoriaId={categoria.id} categoriaSku={categoria.codigoSku} tile />
         </div>
       </section>
+
+      {sinStock.length > 0 && (
+        <section className="mt-10">
+          <h2 className="mb-4 text-lg font-medium">Artículos sin stock</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {sinStock.map((p) => (
+              <ArticuloCard key={p.id} producto={aCardData(p)} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

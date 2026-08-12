@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FileText, Package, Pencil, Sparkles, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArticuloFormDialog } from "@/components/catalogo/articulo-form-dialog";
@@ -27,10 +28,16 @@ export type ArticuloCardData = {
 export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const sinStock = producto.cantidadStock <= 0;
 
   return (
     <>
-      <div className="group relative flex flex-col overflow-hidden rounded-xl border bg-card transition-colors hover:border-foreground/20">
+      <div
+        className={cn(
+          "group relative flex flex-col overflow-hidden rounded-xl border bg-card transition-colors hover:border-foreground/20",
+          sinStock && "opacity-60 grayscale hover:opacity-100 hover:grayscale-0",
+        )}
+      >
         <Link href={`/catalogo/articulo/${producto.id}`} className="flex flex-1 flex-col">
           <div className="flex aspect-[16/7] items-center justify-center bg-muted">
             {producto.imagenUrl ? (
@@ -54,9 +61,13 @@ export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
               <Badge variant="secondary" className="font-mono">
                 {producto.codigoSku}
               </Badge>
-              <Badge variant={producto.estado === "ACTIVO" ? "default" : "outline"}>
-                {producto.estado === "ACTIVO" ? "Activo" : "Inactivo"}
-              </Badge>
+              {sinStock ? (
+                <Badge variant="outline">Sin stock</Badge>
+              ) : (
+                <Badge variant={producto.estado === "ACTIVO" ? "default" : "outline"}>
+                  {producto.estado === "ACTIVO" ? "Activo" : "Inactivo"}
+                </Badge>
+              )}
               <span className="text-xs text-muted-foreground">
                 {producto.cantidadStock} {producto.unidadStock}
               </span>

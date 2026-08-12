@@ -11,7 +11,7 @@ export async function getMacroCategorias() {
 
 /** Una categoría con su padre, subcategorías y artículos. */
 export async function getCategoria(id: string) {
-  return prisma.categoria.findUnique({
+  const categoria = await prisma.categoria.findUnique({
     where: { id },
     include: {
       parent: true,
@@ -22,6 +22,16 @@ export async function getCategoria(id: string) {
       productos: { orderBy: { secuencia: "asc" } },
     },
   });
+  if (!categoria) return null;
+
+  // Los artículos sin stock (≤ 0) van al final, manteniendo el orden por secuencia.
+  categoria.productos.sort((a, b) => {
+    const sinStockA = Number(a.cantidadStock) <= 0 ? 1 : 0;
+    const sinStockB = Number(b.cantidadStock) <= 0 ? 1 : 0;
+    return sinStockA - sinStockB || a.secuencia - b.secuencia;
+  });
+
+  return categoria;
 }
 
 /** Un artículo con su categoría. */
