@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { buildCategoriaSku, buildProductoSku, normalizarSegmento } from "@/lib/sku";
 import { deleteImageByUrl } from "@/lib/uploads";
 import { lanzarPushFinnegans } from "@/lib/finnegans-push";
+import { getCategoriasPlanas, type CategoriaPlana } from "@/lib/catalogo";
 
 export type ActionResult =
   | { ok: true; id?: string; jobId?: string }
@@ -266,6 +267,166 @@ export async function actualizarProducto(
   } catch (error) {
     return { ok: false, error: mensajeError(error) };
   }
+}
+
+// ------------------------------------------------- Clasificación manual
+
+export type MoverResult =
+  | {
+      ok: true;
+      movidos: number;
+      destino: { id: string; nombre: string; codigoSku: string };
+      /** Estado previo por artículo, para poder deshacer la movida. */
+      anterior: { id: string; categoriaId: string }[];
+    }
+  | { ok: false; error: string };
+
+/**
+ * Mueve uno o varios artículos a otra categoría, regenerando `secuencia` y
+ * `codigoSku` en el destino (correlativo max+1). Los que ya están en el
+ * destino se ignoran. Es la única forma de recategorizar desde la UI.
+ */
+export async function moverProductos(ids: string[], categoriaId: string): Promise<MoverResult> {
+  try {
+    const unicos = Array.from(new Set(ids.filter(Boolean)));
+    if (unicos.length === 0) return { ok: false, error: "No seleccionaste ningún artículo." };
+    if (unicos.length > 500) return { ok: false, error: "Movés de a 500 artículos como máximo." };
+
+    const destino = await prisma.categoria.findUnique({
+      where: { id: categoriaId },
+      select: { id: true, nombre: true, codigoSku: true },
+    });
+    if (!destino) return { ok: false, error: "La categoría destino no existe." };
+
+    const productos = await prisma.producto.findMany({
+      where: { id: { in: unicos } },
+      select: { id: true, categoriaId: true, secuencia: true, codigoSku: true },
+    });
+    if (productos.length === 0) return { ok: false, error: "Los artículos ya no existen." };
+
+    const aMover = productos.filter((p) => p.categoriaId !== destino.id);
+    const anterior = aMover.map((p) => ({ id: p.id, categoriaId: p.categoriaId }));
+    const origenes = Array.from(new Set(aMover.map((p) => p.categoriaId)));
+
+    if (aMover.length > 0) {
+      await prisma.$transaction(
+        async (tx) => {
+          const ultimo = await tx.producto.findFirst({
+            where: { categoriaId: destino.id },
+            orderBy: { secuencia: "desc" },
+            select: { secuencia: true },
+          });
+          let secuencia = ultimo?.secuencia ?? 0;
+
+          // Dos pasadas: primero un SKU temporal para no chocar con el índice
+          // único de codigoSku si algún destino reutiliza un correlativo.
+          for (const p of aMover) {
+            await tx.producto.update({ where: { id: p.id }, data: { codigoSku: `TMP-${p.id}` } });
+          }
+          for (const p of aMover) {
+            secuencia += 1;
+            await tx.producto.update({
+              where: { id: p.id },
+              data: {
+                categoriaId: destino.id,
+                secuencia,
+                codigoSku: buildProductoSku(destino.codigoSku, secuencia),
+                clasificadoAt: new Date(),
+              },
+            });
+          }
+        },
+        { timeout: 60_000, maxWait: 10_000 },
+      );
+    }
+
+    revalidatePath("/catalogo");
+    revalidatePath("/catalogo/clasificar");
+    revalidatePath(`/catalogo/${destino.id}`);
+    for (const o of origenes) revalidatePath(`/catalogo/${o}`);
+    for (const p of aMover) revalidatePath(`/catalogo/articulo/${p.id}`);
+
+    return { ok: true, movidos: aMover.length, destino, anterior };
+  } catch (error) {
+    return { ok: false, error: mensajeError(error) };
+  }
+}
+
+/**
+ * Deshace una movida: devuelve cada artículo a la categoría donde estaba.
+ * (El correlativo se regenera; el SKU anterior no se recupera exactamente.)
+ */
+export async function deshacerMovida(
+  anterior: { id: string; categoriaId: string }[],
+): Promise<ActionResult> {
+  const porCategoria = new Map<string, string[]>();
+  for (const a of anterior) {
+    const arr = porCategoria.get(a.categoriaId) ?? [];
+    arr.push(a.id);
+    porCategoria.set(a.categoriaId, arr);
+  }
+  for (const [categoriaId, ids] of porCategoria) {
+    const res = await moverProductos(ids, categoriaId);
+    if (!res.ok) return res;
+  }
+  return { ok: true };
+}
+
+// ------------------------------------------------- Verificación de categorías
+
+/**
+ * Marca (o re-marca) una categoría como verificada a mano. `verificadaPor` es
+ * texto libre hasta que exista un sistema de usuarios.
+ */
+export async function verificarCategoria(id: string, verificadaPor: string): Promise<ActionResult> {
+  try {
+    const nombre = verificadaPor.trim();
+    if (!nombre) return { ok: false, error: "Indicá quién verifica la categoría." };
+    if (nombre.length > 80) return { ok: false, error: "El nombre es demasiado largo." };
+
+    const cat = await prisma.categoria.findUnique({ where: { id }, select: { id: true, parentId: true } });
+    if (!cat) return { ok: false, error: "La categoría no existe." };
+
+    await prisma.categoria.update({
+      where: { id },
+      data: { verificadaAt: new Date(), verificadaPor: nombre },
+    });
+
+    revalidarCategoria(cat.id, cat.parentId);
+    return { ok: true, id };
+  } catch (error) {
+    return { ok: false, error: mensajeError(error) };
+  }
+}
+
+/** Quita la marca de verificación de una categoría. */
+export async function quitarVerificacionCategoria(id: string): Promise<ActionResult> {
+  try {
+    const cat = await prisma.categoria.findUnique({ where: { id }, select: { id: true, parentId: true } });
+    if (!cat) return { ok: false, error: "La categoría no existe." };
+
+    await prisma.categoria.update({
+      where: { id },
+      data: { verificadaAt: null, verificadaPor: null },
+    });
+
+    revalidarCategoria(cat.id, cat.parentId);
+    return { ok: true, id };
+  } catch (error) {
+    return { ok: false, error: mensajeError(error) };
+  }
+}
+
+function revalidarCategoria(id: string, parentId: string | null) {
+  revalidatePath("/catalogo");
+  revalidatePath("/catalogo/clasificar");
+  revalidatePath(`/catalogo/${id}`);
+  if (parentId) revalidatePath(`/catalogo/${parentId}`);
+}
+
+/** Lista plana de categorías para el selector (carga bajo demanda desde el cliente). */
+export async function listarCategoriasPlanas(): Promise<CategoriaPlana[]> {
+  return getCategoriasPlanas();
 }
 
 export async function eliminarProducto(id: string): Promise<ActionResult> {

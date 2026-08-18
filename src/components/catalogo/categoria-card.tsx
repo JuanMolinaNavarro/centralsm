@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CategoriaFormDialog } from "@/components/catalogo/categoria-form-dialog";
 import { ConfirmDialog } from "@/components/catalogo/confirm-dialog";
+import { VerificacionBadge } from "@/components/catalogo/verificacion-badge";
 import { eliminarCategoria } from "@/app/catalogo/actions";
+import type { Verificacion } from "@/lib/verificacion-tipos";
 
 export type CategoriaCardData = {
   id: string;
@@ -19,6 +21,7 @@ export type CategoriaCardData = {
   childrenCount: number;
   productosCount: number;
   parentSku: string | null;
+  verificacion?: Verificacion;
 };
 
 export function CategoriaCard({ categoria }: { categoria: CategoriaCardData }) {
@@ -49,6 +52,7 @@ export function CategoriaCard({ categoria }: { categoria: CategoriaCardData }) {
               <Badge variant="secondary" className="font-mono">
                 {categoria.codigoSku}
               </Badge>
+              {categoria.verificacion && <VerificacionBadge verificacion={categoria.verificacion} compact />}
               {categoria.childrenCount > 0 && (
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <FolderTree className="size-3.5" /> {categoria.childrenCount}

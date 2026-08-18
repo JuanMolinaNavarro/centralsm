@@ -1,5 +1,8 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowRightLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { getCategoria, getBreadcrumbs } from "@/lib/catalogo";
 import { Breadcrumbs } from "@/components/catalogo/breadcrumbs";
@@ -7,6 +10,8 @@ import { CategoriaCard } from "@/components/catalogo/categoria-card";
 import { ArticuloCard } from "@/components/catalogo/articulo-card";
 import { NuevaCategoria } from "@/components/catalogo/nueva-categoria";
 import { NuevoArticulo } from "@/components/catalogo/nuevo-articulo";
+import { VerificacionBadge } from "@/components/catalogo/verificacion-badge";
+import { VerificarCategoriaButton } from "@/components/catalogo/verificar-categoria-button";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +26,7 @@ export default async function CategoriaPage({
 
   const crumbs = await getBreadcrumbs(id);
 
+  const verificadaAt = categoria.verificacion.verificadaAt;
   const conStock = categoria.productos.filter((p) => Number(p.cantidadStock) > 0);
   const sinStock = categoria.productos.filter((p) => Number(p.cantidadStock) <= 0);
 
@@ -37,6 +43,7 @@ export default async function CategoriaPage({
     lugar: p.lugar,
     imagenUrl: p.imagenUrl,
     esNuevo: p.esNuevo,
+    postVerificacion: !!verificadaAt && p.clasificadoAt > verificadaAt,
   });
 
   return (
@@ -58,12 +65,30 @@ export default async function CategoriaPage({
             {categoria.descripcion && (
               <p className="max-w-2xl text-sm text-muted-foreground">{categoria.descripcion}</p>
             )}
-            <Badge variant="secondary" className="w-fit font-mono">
-              {categoria.codigoSku}
-            </Badge>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="secondary" className="w-fit font-mono">
+                {categoria.codigoSku}
+              </Badge>
+              <VerificacionBadge verificacion={categoria.verificacion} mostrarVacio />
+            </div>
           </div>
         </div>
-        <div className="flex shrink-0 gap-2">
+        <div className="flex shrink-0 flex-wrap gap-2">
+          <VerificarCategoriaButton
+            categoriaId={categoria.id}
+            categoriaNombre={categoria.nombre}
+            verificacion={categoria.verificacion}
+          />
+          {categoria.productos.length > 0 && (
+            <Button
+              variant="outline"
+              render={<Link href={`/catalogo/clasificar?cat=${categoria.id}`} />}
+              nativeButton={false}
+              title="Buscar, seleccionar y mover artículos de esta categoría"
+            >
+              <ArrowRightLeft className="size-4" /> Reclasificar
+            </Button>
+          )}
           <NuevaCategoria parentId={categoria.id} parentSku={categoria.codigoSku} />
           <NuevoArticulo categoriaId={categoria.id} categoriaSku={categoria.codigoSku} />
         </div>
@@ -87,6 +112,7 @@ export default async function CategoriaPage({
                 childrenCount: c._count.children,
                 productosCount: c._count.productos,
                 parentSku: categoria.codigoSku,
+                verificacion: c.verificacion,
               }}
             />
           ))}

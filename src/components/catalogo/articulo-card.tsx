@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FileText, Package, Pencil, Sparkles, Trash2 } from "lucide-react";
+import { ArrowRightLeft, BadgeAlert, FileText, Package, Pencil, Sparkles, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArticuloFormDialog } from "@/components/catalogo/articulo-form-dialog";
 import { ConfirmDialog } from "@/components/catalogo/confirm-dialog";
+import { MoverArticulosDialog } from "@/components/catalogo/mover-articulos-dialog";
 import { eliminarProducto } from "@/app/catalogo/actions";
 
 export type ArticuloCardData = {
@@ -23,10 +24,13 @@ export type ArticuloCardData = {
   lugar: string | null;
   imagenUrl: string | null;
   esNuevo?: boolean;
+  /** Se asignó a la categoría después de la última verificación de ésta. */
+  postVerificacion?: boolean;
 };
 
 export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
   const [editOpen, setEditOpen] = useState(false);
+  const [moverOpen, setMoverOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const sinStock = producto.cantidadStock <= 0;
 
@@ -49,6 +53,15 @@ export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
             {producto.esNuevo && (
               <Badge className="absolute top-2 left-2 gap-1">
                 <Sparkles className="size-3" /> Nuevo
+              </Badge>
+            )}
+            {producto.postVerificacion && (
+              <Badge
+                variant="outline"
+                className="absolute bottom-2 left-2 gap-1 border-amber-500/50 bg-background/90 text-amber-700 dark:text-amber-400"
+                title="Asignado a esta categoría después de la última verificación"
+              >
+                <BadgeAlert className="size-3" /> Nuevo desde verificación
               </Badge>
             )}
           </div>
@@ -76,6 +89,15 @@ export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
         </Link>
 
         <div className="absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+          <Button
+            size="icon-sm"
+            variant="secondary"
+            onClick={() => setMoverOpen(true)}
+            aria-label="Mover de categoría"
+            title="Mover de categoría"
+          >
+            <ArrowRightLeft className="size-3.5" />
+          </Button>
           <Button
             size="icon-sm"
             variant="secondary"
@@ -111,6 +133,13 @@ export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
           lugar: producto.lugar,
           imagenUrl: producto.imagenUrl,
         }}
+      />
+      <MoverArticulosDialog
+        open={moverOpen}
+        onOpenChange={setMoverOpen}
+        ids={[producto.id]}
+        actualesIds={[producto.categoriaId]}
+        etiqueta={`«${producto.nombre}»`}
       />
       <ConfirmDialog
         open={deleteOpen}

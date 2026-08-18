@@ -37,6 +37,8 @@ type Props = {
   parentSku?: string | null;
   categoria?: CategoriaData;
   esMacro?: boolean;
+  /** Se llama con el id de la categoría recién creada (solo en modo create). */
+  onCreated?: (id: string) => void;
 };
 
 export function CategoriaFormDialog({
@@ -47,6 +49,7 @@ export function CategoriaFormDialog({
   parentSku = null,
   categoria,
   esMacro = false,
+  onCreated,
 }: Props) {
   const [nombre, setNombre] = useState("");
   const [segmento, setSegmento] = useState("");
@@ -83,6 +86,7 @@ export function CategoriaFormDialog({
       if (res.ok) {
         toast.success(mode === "create" ? "Categoría creada" : "Categoría actualizada");
         onOpenChange(false);
+        if (mode === "create" && res.id) onCreated?.(res.id);
       } else {
         toast.error(res.error);
       }

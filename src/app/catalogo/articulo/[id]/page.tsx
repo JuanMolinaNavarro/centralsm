@@ -75,28 +75,27 @@ export default async function ArticuloPage({
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+          <ArticuloDetailActions
+            categoriaSku={producto.categoria.codigoSku}
+            producto={{
+              id: producto.id,
+              categoriaId: producto.categoriaId,
+              nombre: producto.nombre,
+              descripcion: producto.descripcion,
+              estado: producto.estado,
+              cantidadStock: cantidad,
+              unidadStock: producto.unidadStock,
+              lugar: producto.lugar,
+              imagenUrl: producto.imagenUrl,
+            }}
+          />
           <Button
             render={<Link href={`/catalogo/articulo/${producto.id}/ficha`} />}
             nativeButton={false}
-            variant="outline"
           >
             <ClipboardList className="size-4" /> Ficha operativa
           </Button>
-          <ArticuloDetailActions
-          categoriaSku={producto.categoria.codigoSku}
-          producto={{
-            id: producto.id,
-            categoriaId: producto.categoriaId,
-            nombre: producto.nombre,
-            descripcion: producto.descripcion,
-            estado: producto.estado,
-            cantidadStock: cantidad,
-            unidadStock: producto.unidadStock,
-            lugar: producto.lugar,
-            imagenUrl: producto.imagenUrl,
-          }}
-          />
         </div>
       </div>
 

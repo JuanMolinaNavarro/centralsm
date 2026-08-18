@@ -43,6 +43,13 @@ model Categoria {
   imagenUrl   String?
   orden       Int     @default(0)
 
+  /// Última verificación manual (null = nunca verificada). Si después entran
+  /// artículos (Producto.clasificadoAt > verificadaAt) queda "con cambios".
+  verificadaAt  DateTime?
+  /// Quién la verificó. Texto libre por ahora; cuando haya usuarios, agregar la
+  /// FK y usar este campo como cache de display.
+  verificadaPor String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -78,6 +85,10 @@ model Producto {
   /// Marcado por el cron cuando el producto apareció por primera vez.
   esNuevo      Boolean   @default(false)
   primeraVezAt DateTime?
+
+  /// Última vez que se le asignó categoría (alta o movida manual). Sirve para
+  /// detectar cambios posteriores a la verificación de la categoría.
+  clasificadoAt DateTime @default(now())
 
   // Integración Teamplace — `teamplaceCodigo` es la llave del vínculo con el
   // maestro de productos de Teamplace (su `Codigo`). Único y opcional (los
@@ -157,6 +168,7 @@ model Producto {
 
   @@unique([categoriaId, secuencia])
   @@index([categoriaId])
+  @@index([categoriaId, clasificadoAt])
   @@index([nombre])
   @@index([finnegansPushEstado])
 }
