@@ -1,18 +1,44 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, ListChecks } from "lucide-react";
-import { contarPendientes, getMacroCategorias } from "@/lib/catalogo";
+import {
+  buscarArticulosPorTexto,
+  contarPendientes,
+  getCategoriasPlanas,
+  getMacroCategorias,
+} from "@/lib/catalogo";
 import { Button } from "@/components/ui/button";
+import { ArticuloCard } from "@/components/catalogo/articulo-card";
+import { BuscadorCatalogo } from "@/components/catalogo/buscador-catalogo";
 import { CategoriaCard } from "@/components/catalogo/categoria-card";
 import { NuevaCategoria } from "@/components/catalogo/nueva-categoria";
 import { CatalogoTabs } from "@/components/catalogo/catalogo-tabs";
 
 export const dynamic = "force-dynamic";
 
-export default async function CatalogoPage() {
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+function uno(v: string | string[] | undefined): string {
+  return Array.isArray(v) ? (v[0] ?? "") : (v ?? "");
+}
+
+export default async function CatalogoPage({ searchParams }: { searchParams: SearchParams }) {
+  const sp = await searchParams;
+  const q = uno(sp.q).trim();
+  const pagina = Number.parseInt(uno(sp.pagina), 10) || 1;
+
   const [{ categorias, verificadas, totalCategorias }, pendientes] = await Promise.all([
     getMacroCategorias(),
     contarPendientes(),
   ]);
+
+  // Con texto en el buscador, los resultados reemplazan al árbol de categorías.
+  const busqueda = q ? await buscarArticulosPorTexto(q, { pagina }) : null;
+  const rutas = busqueda
+    ? new Map(
+        (await getCategoriasPlanas()).map((c) => [c.id, [...c.ruta, c.nombre].join(" › ")]),
+      )
+    : null;
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
@@ -20,21 +46,69 @@ export default async function CatalogoPage() {
         <div className="flex flex-col gap-3">
           <CatalogoTabs activa="categorias" />
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Categorías Macro</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              {busqueda ? "Búsqueda de artículos" : "Categorías Macro"}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              Catálogo de productos del depósito. Cada capa construye el SKU.
+              {busqueda
+                ? "Buscá por SKU, nombre o características. Vaciá el buscador para volver al árbol."
+                : "Catálogo de productos del depósito. Cada capa construye el SKU."}
             </p>
-            <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-              <BadgeCheck className="size-3.5 text-emerald-600 dark:text-emerald-400" />
-              {verificadas.toLocaleString("es-AR")} de {totalCategorias.toLocaleString("es-AR")} categorías
-              verificadas
-            </p>
+            {!busqueda && (
+              <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <BadgeCheck className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+                {verificadas.toLocaleString("es-AR")} de {totalCategorias.toLocaleString("es-AR")}{" "}
+                categorías verificadas
+              </p>
+            )}
           </div>
         </div>
-        <NuevaCategoria esMacro />
+        {!busqueda && <NuevaCategoria esMacro />}
       </div>
 
-      {pendientes > 0 && (
+      <Suspense fallback={null}>
+        <BuscadorCatalogo
+          q={q}
+          resultados={
+            busqueda
+              ? {
+                  total: busqueda.total,
+                  pagina: busqueda.pagina,
+                  paginas: busqueda.paginas,
+                  tamano: busqueda.tamano,
+                  truncado: busqueda.truncado,
+                }
+              : null
+          }
+        >
+          {busqueda && busqueda.items.length > 0 && (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {busqueda.items.map((p) => (
+                <ArticuloCard
+                  key={p.id}
+                  producto={{
+                    id: p.id,
+                    categoriaId: p.categoriaId,
+                    categoriaSku: p.categoriaSku,
+                    nombre: p.nombre,
+                    descripcion: p.descripcion,
+                    codigoSku: p.codigoSku,
+                    estado: p.estado,
+                    cantidadStock: p.cantidadStock,
+                    unidadStock: p.unidadStock,
+                    lugar: p.lugar,
+                    imagenUrl: p.imagenUrl,
+                    esNuevo: p.esNuevo,
+                    rutaCategoria: rutas?.get(p.categoriaId) ?? p.categoriaNombre,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </BuscadorCatalogo>
+      </Suspense>
+
+      {!busqueda && pendientes > 0 && (
         <div className="mb-6 flex flex-col gap-3 rounded-lg border border-amber-500/40 bg-amber-500/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3 text-sm">
             <ListChecks className="size-5 shrink-0 text-amber-600 dark:text-amber-400" />
@@ -50,6 +124,7 @@ export default async function CatalogoPage() {
         </div>
       )}
 
+      {!busqueda && (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categorias.map((c) => (
           <CategoriaCard
@@ -70,6 +145,7 @@ export default async function CatalogoPage() {
         ))}
         <NuevaCategoria esMacro tile />
       </div>
+      )}
     </main>
   );
 }

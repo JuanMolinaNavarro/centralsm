@@ -24,19 +24,27 @@ docker save centralsm-app:prod | gzip > /tmp/centralsm-app.tar.gz
 docker save centralsm-cron:prod | gzip > /tmp/centralsm-cron.tar.gz
 ls -lh /tmp/centralsm-*.tar.gz
 
-echo "== 3/5 Subiendo imágenes y código =="
+echo "== 3/5 Subiendo imágenes =="
 scp -P $PUERTO /tmp/centralsm-app.tar.gz /tmp/centralsm-cron.tar.gz "$HOST:/tmp/"
-# Código del repo (el commit actual) para mantener compose/prisma al día.
-git archive --format=tar.gz HEAD -o /tmp/centralsm-src.tar.gz
-scp -P $PUERTO /tmp/centralsm-src.tar.gz "$HOST:/tmp/"
 
-echo "== 4/5 Cargando y levantando en el servidor =="
+# El código (compose, prisma, scripts) se actualiza con git en el servidor, al
+# mismo commit que se está desplegando. Antes se extraía un tar encima del repo
+# y eso dejaba el working tree "modificado" (CRLF + archivos sueltos) y rompía
+# el `git pull`. El commit tiene que estar pusheado a origin.
+COMMIT=$(git rev-parse HEAD)
+if ! git branch -r --contains "$COMMIT" | grep -q "origin/"; then
+  echo "ERROR: el commit $COMMIT no está en origin. Hacé git push antes de deployar." >&2
+  exit 1
+fi
+
+echo "== 4/5 Actualizando código ($COMMIT), cargando imágenes y levantando =="
 $SSH "set -e
   cd $DESTINO
-  tar xzf /tmp/centralsm-src.tar.gz
+  git fetch origin
+  git reset --hard $COMMIT
   docker load < /tmp/centralsm-app.tar.gz
   docker load < /tmp/centralsm-cron.tar.gz
-  rm -f /tmp/centralsm-app.tar.gz /tmp/centralsm-cron.tar.gz /tmp/centralsm-src.tar.gz
+  rm -f /tmp/centralsm-app.tar.gz /tmp/centralsm-cron.tar.gz
   docker compose -f docker-compose.prod.yml up -d --no-build db migrate app cron worker backup
   docker image prune -f
   df -h / | tail -1"

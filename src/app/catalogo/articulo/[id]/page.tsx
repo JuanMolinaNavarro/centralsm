@@ -12,10 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getProducto, getBreadcrumbs, getStockProducto } from "@/lib/catalogo";
+import {
+  getProducto,
+  getBreadcrumbs,
+  getStockProducto,
+  getCaracteristicasProducto,
+} from "@/lib/catalogo";
 import { fechaHoraAR, fechaHoraLargaAR } from "@/lib/fecha";
 import { Breadcrumbs } from "@/components/catalogo/breadcrumbs";
 import { ArticuloDetailActions } from "@/components/catalogo/articulo-detail-actions";
+import { CaracteristicasArticulo } from "@/components/catalogo/caracteristicas-articulo";
 
 export const dynamic = "force-dynamic";
 
@@ -40,7 +46,10 @@ export default async function ArticuloPage({
   const crumbs = await getBreadcrumbs(producto.categoriaId);
   const cantidad = Number(producto.cantidadStock.toString());
 
-  const stock = await getStockProducto(id);
+  const [stock, caracteristicas] = await Promise.all([
+    getStockProducto(id),
+    getCaracteristicasProducto(id),
+  ]);
   const stockTotal = stock.reduce((acc, s) => acc + Number(s.cantidad.toString()), 0);
   const snapshotAt = stock[0]?.snapshotAt ?? null;
 
@@ -114,6 +123,10 @@ export default async function ArticuloPage({
         <Prop label="Creado">{fechaHoraLargaAR(producto.createdAt)}</Prop>
         {producto.descripcion && <Prop label="Descripción">{producto.descripcion}</Prop>}
       </div>
+
+      <Separator className="my-8" />
+
+      <CaracteristicasArticulo productoId={producto.id} caracteristicas={caracteristicas} />
 
       <Separator className="my-8" />
 

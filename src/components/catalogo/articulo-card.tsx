@@ -26,6 +26,8 @@ export type ArticuloCardData = {
   esNuevo?: boolean;
   /** Se asignó a la categoría después de la última verificación de ésta. */
   postVerificacion?: boolean;
+  /** Ruta de la categoría ("Macro › Sub › Hoja"). La usan los resultados de búsqueda. */
+  rutaCategoria?: string;
 };
 
 export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
@@ -70,6 +72,11 @@ export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
               <FileText className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
               <h3 className="font-medium leading-tight">{producto.nombre}</h3>
             </div>
+            {producto.rutaCategoria && (
+              <p className="truncate text-xs text-muted-foreground" title={producto.rutaCategoria}>
+                {producto.rutaCategoria}
+              </p>
+            )}
             <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">
               <Badge variant="secondary" className="font-mono">
                 {producto.codigoSku}

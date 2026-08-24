@@ -165,12 +165,55 @@ model Producto {
   proveedores           ProveedorArticulo[]
   movimientos           MovimientoArticulo[]
   leadTimes             LeadTimeRegistro[]
+  caracteristicas       CaracteristicaProducto[]
 
   @@unique([categoriaId, secuencia])
   @@index([categoriaId])
   @@index([categoriaId, clasificadoAt])
   @@index([nombre])
   @@index([finnegansPushEstado])
+}
+
+/// Tipo de característica del catálogo ("Potencia", "Frecuencia", "Conector").
+/// Los crea el usuario a mano desde la ficha del artículo; son transversales a
+/// todas las categorías (un mismo tipo se reusa en cualquier artículo).
+model TipoCaracteristica {
+  id String @id @default(cuid())
+  /// Nombre visible, tal como lo escribió el usuario ("Potencia").
+  nombre String
+  /// Nombre normalizado (sin acentos ni separadores). Evita "Potencia"/"potencia".
+  nombreClave String @unique
+  /// Unidad sugerida al cargar el valor ("W", "GHz"). Se busca pegada al valor.
+  unidad      String?
+  descripcion String?
+  orden       Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  valores CaracteristicaProducto[]
+
+  @@index([orden, nombre])
+}
+
+/// Valor de una característica para un artículo ("Potencia" -> "3 W").
+/// El valor es texto libre: la búsqueda lo normaliza en la consulta.
+model CaracteristicaProducto {
+  id         String @id @default(cuid())
+  productoId String
+  tipoId     String
+  valor      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  producto Producto           @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  tipo     TipoCaracteristica @relation(fields: [tipoId], references: [id], onDelete: Cascade)
+
+  /// Un solo valor por tipo y artículo (si hace falta más de uno, va separado por comas).
+  @@unique([productoId, tipoId])
+  @@index([productoId])
+  @@index([tipoId])
 }
 
 enum OrigenArticulo {

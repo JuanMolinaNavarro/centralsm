@@ -6,7 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { buildCategoriaSku, buildProductoSku, normalizarSegmento } from "@/lib/sku";
 import { deleteImageByUrl } from "@/lib/uploads";
 import { lanzarPushFinnegans } from "@/lib/finnegans-push";
-import { getCategoriasPlanas, type CategoriaPlana } from "@/lib/catalogo";
+import { getCategoriasPlanas, getTiposCaracteristica, type CategoriaPlana } from "@/lib/catalogo";
+import { normalizarBusqueda } from "@/lib/busqueda";
+import type { TipoCaracteristicaPlano } from "@/lib/caracteristicas-tipos";
 
 export type ActionResult =
   | { ok: true; id?: string; jobId?: string }
@@ -436,6 +438,141 @@ export async function eliminarProducto(id: string): Promise<ActionResult> {
     await prisma.producto.delete({ where: { id } });
     await deleteImageByUrl(prod.imagenUrl);
     revalidatePath(`/catalogo/${prod.categoriaId}`);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: mensajeError(error) };
+  }
+}
+
+// ------------------------------------------------------------ Características
+
+const tipoCaracteristicaSchema = z.object({
+  nombre: z.string().trim().min(1, "El nombre es obligatorio.").max(60),
+  unidad: z.string().trim().max(20).optional().nullable(),
+  descripcion: z.string().trim().max(200).optional().nullable(),
+});
+
+const caracteristicaSchema = z.object({
+  productoId: z.string().min(1),
+  tipoId: z.string().min(1),
+  valor: z.string().trim().min(1, "El valor es obligatorio.").max(200),
+});
+
+/** Revalida todo lo que muestra características o las usa para buscar. */
+async function revalidarCaracteristicas(productoId?: string) {
+  revalidatePath("/catalogo");
+  revalidatePath("/catalogo/clasificar");
+  if (!productoId) return;
+  const prod = await prisma.producto.findUnique({
+    where: { id: productoId },
+    select: { categoriaId: true },
+  });
+  revalidatePath(`/catalogo/articulo/${productoId}`);
+  if (prod) revalidatePath(`/catalogo/${prod.categoriaId}`);
+}
+
+/** Crea un tipo de característica ("Potencia", con unidad "W"). */
+export async function crearTipoCaracteristica(
+  input: z.input<typeof tipoCaracteristicaSchema>,
+): Promise<ActionResult> {
+  try {
+    const data = tipoCaracteristicaSchema.parse(input);
+    const nombreClave = normalizarBusqueda(data.nombre);
+    if (!nombreClave) return { ok: false, error: "El nombre necesita al menos una letra o número." };
+
+    const ultimo = await prisma.tipoCaracteristica.findFirst({
+      orderBy: { orden: "desc" },
+      select: { orden: true },
+    });
+
+    const tipo = await prisma.tipoCaracteristica.create({
+      data: {
+        nombre: data.nombre,
+        nombreClave,
+        unidad: data.unidad || null,
+        descripcion: data.descripcion || null,
+        orden: (ultimo?.orden ?? 0) + 1,
+      },
+    });
+
+    await revalidarCaracteristicas();
+    return { ok: true, id: tipo.id };
+  } catch (error) {
+    return { ok: false, error: mensajeError(error) };
+  }
+}
+
+/** Renombra un tipo de característica o cambia su unidad. */
+export async function actualizarTipoCaracteristica(
+  id: string,
+  input: z.input<typeof tipoCaracteristicaSchema>,
+): Promise<ActionResult> {
+  try {
+    const data = tipoCaracteristicaSchema.parse(input);
+    const nombreClave = normalizarBusqueda(data.nombre);
+    if (!nombreClave) return { ok: false, error: "El nombre necesita al menos una letra o número." };
+
+    await prisma.tipoCaracteristica.update({
+      where: { id },
+      data: {
+        nombre: data.nombre,
+        nombreClave,
+        unidad: data.unidad || null,
+        descripcion: data.descripcion || null,
+      },
+    });
+
+    await revalidarCaracteristicas();
+    return { ok: true, id };
+  } catch (error) {
+    return { ok: false, error: mensajeError(error) };
+  }
+}
+
+/** Elimina un tipo y, en cascada, los valores cargados en los artículos. */
+export async function eliminarTipoCaracteristica(id: string): Promise<ActionResult> {
+  try {
+    await prisma.tipoCaracteristica.delete({ where: { id } });
+    await revalidarCaracteristicas();
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: mensajeError(error) };
+  }
+}
+
+/** Tipos de característica para el selector (carga bajo demanda desde el cliente). */
+export async function listarTiposCaracteristica(): Promise<TipoCaracteristicaPlano[]> {
+  return getTiposCaracteristica();
+}
+
+/** Carga o pisa el valor de una característica en un artículo. */
+export async function guardarCaracteristica(
+  input: z.input<typeof caracteristicaSchema>,
+): Promise<ActionResult> {
+  try {
+    const data = caracteristicaSchema.parse(input);
+
+    const fila = await prisma.caracteristicaProducto.upsert({
+      where: { productoId_tipoId: { productoId: data.productoId, tipoId: data.tipoId } },
+      create: { productoId: data.productoId, tipoId: data.tipoId, valor: data.valor },
+      update: { valor: data.valor },
+    });
+
+    await revalidarCaracteristicas(data.productoId);
+    return { ok: true, id: fila.id };
+  } catch (error) {
+    return { ok: false, error: mensajeError(error) };
+  }
+}
+
+/** Saca una característica de un artículo (no toca el tipo). */
+export async function eliminarCaracteristica(id: string): Promise<ActionResult> {
+  try {
+    const fila = await prisma.caracteristicaProducto.delete({
+      where: { id },
+      select: { productoId: true },
+    });
+    await revalidarCaracteristicas(fila.productoId);
     return { ok: true };
   } catch (error) {
     return { ok: false, error: mensajeError(error) };

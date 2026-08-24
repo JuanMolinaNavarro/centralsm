@@ -1,12 +1,19 @@
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   SKU_PENDIENTES,
   type ArticuloClasificable,
+  type ArticuloResultado,
   type CategoriaPlana,
 } from "@/lib/catalogo-tipos";
+import { tokensBusqueda } from "@/lib/busqueda";
+import type {
+  CaracteristicaProductoVista,
+  TipoCaracteristicaPlano,
+} from "@/lib/caracteristicas-tipos";
 import { derivarVerificacion, SIN_VERIFICAR, type Verificacion } from "@/lib/verificacion-tipos";
 
-export { SKU_PENDIENTES, type ArticuloClasificable, type CategoriaPlana };
+export { SKU_PENDIENTES, type ArticuloClasificable, type ArticuloResultado, type CategoriaPlana };
 
 // ------------------------------------------------------------- Verificación
 
@@ -170,10 +177,180 @@ export function idsDelSubarbol(categorias: CategoriaPlana[], raizId: string): st
   return out;
 }
 
+// -------------------------------------------------------------- Búsqueda
+
+/**
+ * Columnas que necesitan tanto la mesa de clasificación como el buscador.
+ * `lugar` y `esNuevo` solo los usa el buscador (los pide la card del catálogo).
+ */
+const SELECT_ARTICULO = {
+  id: true,
+  nombre: true,
+  descripcion: true,
+  codigoSku: true,
+  teamplaceCodigo: true,
+  cantidadStock: true,
+  unidadStock: true,
+  estado: true,
+  imagenUrl: true,
+  lugar: true,
+  esNuevo: true,
+  categoriaId: true,
+  categoria: { select: { nombre: true, codigoSku: true } },
+} as const;
+
+type FilaArticulo = {
+  id: string;
+  nombre: string;
+  descripcion: string | null;
+  codigoSku: string;
+  teamplaceCodigo: string | null;
+  cantidadStock: { toString(): string };
+  unidadStock: string;
+  estado: "ACTIVO" | "INACTIVO";
+  imagenUrl: string | null;
+  lugar: string | null;
+  esNuevo: boolean;
+  categoriaId: string;
+  categoria: { nombre: string; codigoSku: string };
+};
+
+function aArticuloResultado(r: FilaArticulo): ArticuloResultado {
+  return {
+    id: r.id,
+    nombre: r.nombre,
+    descripcion: r.descripcion,
+    codigoSku: r.codigoSku,
+    teamplaceCodigo: r.teamplaceCodigo,
+    cantidadStock: Number(r.cantidadStock.toString()),
+    unidadStock: r.unidadStock,
+    estado: r.estado,
+    imagenUrl: r.imagenUrl,
+    lugar: r.lugar,
+    esNuevo: r.esNuevo,
+    categoriaId: r.categoriaId,
+    categoriaNombre: r.categoria.nombre,
+    categoriaSku: r.categoria.codigoSku,
+  };
+}
+
+/** Tope de ids que devuelve la búsqueda por texto (evita un IN gigante). */
+export const LIMITE_BUSQUEDA = 2000;
+
+/** Artículos donde TODOS los tokens aparecen en algún campo buscable. */
+async function idsQueContienen(tokens: string[], limite: number): Promise<string[]> {
+  const condiciones = tokens.map((t) => {
+    const patron = `%${t}%`;
+    return Prisma.sql`(
+      centralsm_norm(p."nombre") LIKE ${patron}
+      OR centralsm_norm(p."codigoSku") LIKE ${patron}
+      OR centralsm_norm(coalesce(p."teamplaceCodigo", '')) LIKE ${patron}
+      OR EXISTS (
+        SELECT 1 FROM "CaracteristicaProducto" cp
+        JOIN "TipoCaracteristica" tc ON tc.id = cp."tipoId"
+        WHERE cp."productoId" = p.id
+          AND (
+            centralsm_norm(cp."valor") LIKE ${patron}
+            OR centralsm_norm(cp."valor" || coalesce(tc."unidad", '')) LIKE ${patron}
+            OR centralsm_norm(tc."nombre") LIKE ${patron}
+          )
+      )
+    )`;
+  });
+
+  const filas = await prisma.$queryRaw<{ id: string }[]>`
+    SELECT p.id FROM "Producto" p
+    WHERE ${Prisma.join(condiciones, " AND ")}
+    ORDER BY p."nombre" ASC
+    LIMIT ${limite}
+  `;
+  return filas.map((f) => f.id);
+}
+
+/**
+ * Ids de los artículos que matchean el texto libre, buscando en el nombre, el
+ * SKU, el código Teamplace y las características (valor, valor+unidad y nombre
+ * del tipo).
+ *
+ * Compara todo normalizado (`centralsm_norm` en SQL, `normalizarBusqueda` en TS),
+ * así "3 W" encuentra "3W", "3 w" y "3-W", y también el caso de un valor "3" con
+ * unidad "W".
+ *
+ * Dos pasadas: primero la consulta entera pegada como una sola frase ("3 W" ->
+ * "3w"), que es lo que la gente quiere decir al escribir una medida; si eso no
+ * da nada, se cae al AND palabra por palabra ("antena 3w"). La frase siempre es
+ * un subconjunto del AND, así que la primera pasada solo afina, nunca pierde
+ * resultados relevantes.
+ *
+ * Devuelve `null` cuando no hay nada que buscar (no confundir con `[]`, que es
+ * "se buscó y no hubo resultados").
+ */
+export async function buscarIdsPorTexto(
+  q: string | undefined,
+  limite = LIMITE_BUSQUEDA,
+): Promise<string[] | null> {
+  const tokens = tokensBusqueda(q ?? "");
+  if (!tokens.length) return null;
+
+  if (tokens.length > 1) {
+    const comoFrase = await idsQueContienen([tokens.join("")], limite);
+    if (comoFrase.length) return comoFrase;
+  }
+
+  return idsQueContienen(tokens, limite);
+}
+
+export const TAMANO_PAGINA_BUSQUEDA = 24;
+
+/**
+ * Búsqueda paginada de artículos por texto libre, para el buscador del catálogo.
+ * `truncado` avisa que se alcanzó el tope de `LIMITE_BUSQUEDA` coincidencias.
+ */
+export async function buscarArticulosPorTexto(
+  q: string,
+  opciones: { pagina?: number; tamano?: number } = {},
+) {
+  const tamano = Math.min(Math.max(opciones.tamano ?? TAMANO_PAGINA_BUSQUEDA, 6), 120);
+  const paginaPedida = Math.max(opciones.pagina ?? 1, 1);
+
+  const ids = await buscarIdsPorTexto(q);
+  if (!ids || ids.length === 0) {
+    return {
+      items: [] as ArticuloResultado[],
+      total: 0,
+      pagina: 1,
+      paginas: 1,
+      tamano,
+      truncado: false,
+    };
+  }
+
+  const total = ids.length;
+  const paginas = Math.max(1, Math.ceil(total / tamano));
+  const pagina = Math.min(paginaPedida, paginas);
+
+  const rows = await prisma.producto.findMany({
+    where: { id: { in: ids } },
+    orderBy: [{ nombre: "asc" }, { codigoSku: "asc" }],
+    skip: (pagina - 1) * tamano,
+    take: tamano,
+    select: SELECT_ARTICULO,
+  });
+
+  return {
+    items: rows.map(aArticuloResultado),
+    total,
+    pagina,
+    paginas,
+    tamano,
+    truncado: total >= LIMITE_BUSQUEDA,
+  };
+}
+
 // ------------------------------------------------------- Clasificador manual
 
 export type FiltroClasificador = {
-  /** Texto libre: cada palabra debe aparecer en nombre, SKU o código Teamplace. */
+  /** Texto libre: cada palabra debe aparecer en nombre, SKU, código Teamplace o características. */
   q?: string;
   /** "pendientes" (subárbol #REV), "todas" o el id de una categoría (incluye subárbol). */
   cat?: string;
@@ -209,16 +386,10 @@ export async function buscarArticulosParaClasificar(
 
   if (filtro.soloStock) where.cantidadStock = { gt: 0 };
 
-  const tokens = (filtro.q ?? "").trim().split(/\s+/).filter(Boolean);
-  if (tokens.length) {
-    where.AND = tokens.map((t) => ({
-      OR: [
-        { nombre: { contains: t, mode: "insensitive" } },
-        { codigoSku: { contains: t, mode: "insensitive" } },
-        { teamplaceCodigo: { contains: t, mode: "insensitive" } },
-      ],
-    }));
-  }
+  // La búsqueda por texto (normalizada, incluye características) se resuelve
+  // aparte y entra acá como un filtro por id, sin tocar el resto de los filtros.
+  const idsPorTexto = await buscarIdsPorTexto(filtro.q);
+  if (idsPorTexto) where.id = { in: idsPorTexto };
 
   const orderBy =
     filtro.orden === "stock"
@@ -236,35 +407,10 @@ export async function buscarArticulosParaClasificar(
     orderBy,
     skip: (pagina - 1) * tamano,
     take: tamano,
-    select: {
-      id: true,
-      nombre: true,
-      descripcion: true,
-      codigoSku: true,
-      teamplaceCodigo: true,
-      cantidadStock: true,
-      unidadStock: true,
-      estado: true,
-      imagenUrl: true,
-      categoriaId: true,
-      categoria: { select: { nombre: true, codigoSku: true } },
-    },
+    select: SELECT_ARTICULO,
   });
 
-  const items: ArticuloClasificable[] = rows.map((r) => ({
-    id: r.id,
-    nombre: r.nombre,
-    descripcion: r.descripcion,
-    codigoSku: r.codigoSku,
-    teamplaceCodigo: r.teamplaceCodigo,
-    cantidadStock: Number(r.cantidadStock.toString()),
-    unidadStock: r.unidadStock,
-    estado: r.estado,
-    imagenUrl: r.imagenUrl,
-    categoriaId: r.categoriaId,
-    categoriaNombre: r.categoria.nombre,
-    categoriaSku: r.categoria.codigoSku,
-  }));
+  const items: ArticuloClasificable[] = rows.map(aArticuloResultado);
 
   return { items, total, pagina, paginas, tamano };
 }
@@ -295,4 +441,52 @@ export async function getBreadcrumbs(categoriaId: string): Promise<Crumb[]> {
     actual = cat.parentId;
   }
   return crumbs;
+}
+
+// ----------------------------------------------------------- Características
+
+/** Características cargadas en un artículo, en el orden en que se muestran. */
+export async function getCaracteristicasProducto(
+  productoId: string,
+): Promise<CaracteristicaProductoVista[]> {
+  const filas = await prisma.caracteristicaProducto.findMany({
+    where: { productoId },
+    orderBy: [{ tipo: { orden: "asc" } }, { tipo: { nombre: "asc" } }],
+    select: {
+      id: true,
+      tipoId: true,
+      valor: true,
+      tipo: { select: { nombre: true, unidad: true } },
+    },
+  });
+  return filas.map((f) => ({
+    id: f.id,
+    tipoId: f.tipoId,
+    tipoNombre: f.tipo.nombre,
+    unidad: f.tipo.unidad,
+    valor: f.valor,
+  }));
+}
+
+/** Todos los tipos de característica, con cuántos artículos usan cada uno. */
+export async function getTiposCaracteristica(): Promise<TipoCaracteristicaPlano[]> {
+  const filas = await prisma.tipoCaracteristica.findMany({
+    orderBy: [{ orden: "asc" }, { nombre: "asc" }],
+    select: {
+      id: true,
+      nombre: true,
+      unidad: true,
+      descripcion: true,
+      orden: true,
+      _count: { select: { valores: true } },
+    },
+  });
+  return filas.map((f) => ({
+    id: f.id,
+    nombre: f.nombre,
+    unidad: f.unidad,
+    descripcion: f.descripcion,
+    orden: f.orden,
+    usos: f._count.valores,
+  }));
 }

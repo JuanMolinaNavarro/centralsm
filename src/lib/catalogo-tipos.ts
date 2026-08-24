@@ -39,3 +39,9 @@ export type ArticuloClasificable = {
 export function esSkuPendiente(categoriaSku: string): boolean {
   return categoriaSku === SKU_PENDIENTES || categoriaSku.startsWith(`${SKU_PENDIENTES}-`);
 }
+
+/** Un artículo tal como lo muestra el buscador del catálogo (card completa). */
+export type ArticuloResultado = ArticuloClasificable & {
+  lugar: string | null;
+  esNuevo: boolean;
+};

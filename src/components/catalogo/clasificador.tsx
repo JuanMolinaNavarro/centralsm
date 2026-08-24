@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   ArrowRightLeft,
   ChevronLeft,
@@ -26,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CategoriaPicker } from "@/components/catalogo/categoria-picker";
+import { useBusquedaUrl } from "@/components/catalogo/use-busqueda-url";
 import { MoverArticulosDialog } from "@/components/catalogo/mover-articulos-dialog";
 import { esSkuPendiente, type ArticuloClasificable, type CategoriaPlana } from "@/lib/catalogo-tipos";
 
@@ -54,50 +54,12 @@ const ORDENES: { value: FiltroUI["orden"]; label: string }[] = [
 ];
 
 export function Clasificador({ items, total, pagina, paginas, tamano, filtro, categorias, pendientes }: Props) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [navegando, startTransition] = useTransition();
+  const { q, setQ, navegar, navegando } = useBusquedaUrl(filtro.q);
 
-  const [q, setQ] = useState(filtro.q);
-  const [prevFiltroQ, setPrevFiltroQ] = useState(filtro.q);
   const [seleccion, setSeleccion] = useState<Map<string, { categoriaId: string }>>(new Map());
   const [moverIds, setMoverIds] = useState<string[] | null>(null);
   const [filtroCatOpen, setFiltroCatOpen] = useState(false);
   const ultimoClick = useRef<number | null>(null);
-  const [ultimoQEnviado, setUltimoQEnviado] = useState(filtro.q);
-
-  // Sincronizar el input solo si el filtro cambia desde afuera (back/forward),
-  // no cuando es el eco de lo que acabamos de escribir (evita pisar el tipeo).
-  if (filtro.q !== prevFiltroQ) {
-    setPrevFiltroQ(filtro.q);
-    if (filtro.q !== ultimoQEnviado) setQ(filtro.q);
-  }
-
-  function navegar(cambios: Partial<Record<"q" | "cat" | "stock" | "orden" | "pagina", string | null>>) {
-    const params = new URLSearchParams(searchParams.toString());
-    for (const [k, v] of Object.entries(cambios)) {
-      if (v === null || v === "" || v === undefined) params.delete(k);
-      else params.set(k, v);
-    }
-    // Cualquier cambio de filtro vuelve a la primera página.
-    if (!("pagina" in cambios)) params.delete("pagina");
-    const qs = params.toString();
-    startTransition(() => {
-      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-    });
-  }
-
-  // Búsqueda con debounce.
-  useEffect(() => {
-    if (q === filtro.q) return;
-    const t = window.setTimeout(() => {
-      setUltimoQEnviado(q.trim());
-      navegar({ q: q.trim() || null });
-    }, 300);
-    return () => window.clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q]);
 
   const idsPagina = useMemo(() => items.map((i) => i.id), [items]);
   const seleccionadosEnPagina = idsPagina.filter((id) => seleccion.has(id)).length;
@@ -157,7 +119,7 @@ export function Clasificador({ items, total, pagina, paginas, tamano, filtro, ca
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Buscar por nombre, SKU o código Teamplace… (varias palabras = todas deben aparecer)"
+              placeholder="Buscar por nombre, SKU, código Teamplace o características…"
               className="h-9 pl-8 pr-8"
               autoComplete="off"
               aria-label="Buscar artículos"
