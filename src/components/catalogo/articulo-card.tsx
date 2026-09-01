@@ -10,6 +10,7 @@ import { ArticuloFormDialog } from "@/components/catalogo/articulo-form-dialog";
 import { ConfirmDialog } from "@/components/catalogo/confirm-dialog";
 import { MoverArticulosDialog } from "@/components/catalogo/mover-articulos-dialog";
 import { eliminarProducto } from "@/app/catalogo/actions";
+import type { CaracteristicaCardVista } from "@/lib/caracteristicas-tipos";
 
 export type ArticuloCardData = {
   id: string;
@@ -28,7 +29,16 @@ export type ArticuloCardData = {
   postVerificacion?: boolean;
   /** Ruta de la categoría ("Macro › Sub › Hoja"). La usan los resultados de búsqueda. */
   rutaCategoria?: string;
+  /** Características con valor cargado; la card muestra hasta 3 y resume el resto. */
+  caracteristicas?: CaracteristicaCardVista[];
 };
+
+/** Cuántas características se muestran como badge antes del «+N». */
+const MAX_CARACTERISTICAS_CARD = 3;
+
+function textoCaracteristica(c: CaracteristicaCardVista): string {
+  return `${c.nombre}: ${c.valor}${c.unidad ? ` ${c.unidad}` : ""}`;
+}
 
 export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
   const [editOpen, setEditOpen] = useState(false);
@@ -76,6 +86,32 @@ export function ArticuloCard({ producto }: { producto: ArticuloCardData }) {
               <p className="truncate text-xs text-muted-foreground" title={producto.rutaCategoria}>
                 {producto.rutaCategoria}
               </p>
+            )}
+            {producto.caracteristicas && producto.caracteristicas.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {producto.caracteristicas.slice(0, MAX_CARACTERISTICAS_CARD).map((c) => (
+                  <Badge
+                    key={c.nombre}
+                    variant="outline"
+                    className="max-w-full font-normal text-muted-foreground"
+                    title={textoCaracteristica(c)}
+                  >
+                    <span className="truncate">{textoCaracteristica(c)}</span>
+                  </Badge>
+                ))}
+                {producto.caracteristicas.length > MAX_CARACTERISTICAS_CARD && (
+                  <Badge
+                    variant="outline"
+                    className="font-normal text-muted-foreground"
+                    title={producto.caracteristicas
+                      .slice(MAX_CARACTERISTICAS_CARD)
+                      .map(textoCaracteristica)
+                      .join(" · ")}
+                  >
+                    +{producto.caracteristicas.length - MAX_CARACTERISTICAS_CARD}
+                  </Badge>
+                )}
+              </div>
             )}
             <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">
               <Badge variant="secondary" className="font-mono">

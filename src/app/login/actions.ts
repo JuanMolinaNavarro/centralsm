@@ -24,8 +24,3 @@ export async function login(_prev: { error?: string } | null, formData: FormData
   // Solo rutas internas (evita open redirect).
   redirect(next.startsWith("/") && !next.startsWith("//") ? next : "/");
 }
-
-export async function logout() {
-  (await cookies()).delete(SESSION_COOKIE);
-  redirect("/login");
-}

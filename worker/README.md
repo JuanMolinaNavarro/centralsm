@@ -62,13 +62,13 @@ npx tsx scripts/playwright/push-producto.ts <jobId>
 
 ## Ciclo de vida y fallos
 
-- **SIGTERM/SIGINT** (docker stop, `kubectl rollout restart`): si está idle sale
-  al instante; si hay un job en curso lo termina y recién ahí sale. En k8s,
-  `terminationGracePeriodSeconds` debe dar margen (usamos 180 s).
+- **SIGTERM/SIGINT** (docker stop / restart): si está idle sale al instante;
+  si hay un job en curso lo termina y recién ahí sale (dar margen con
+  `stop_grace_period` si el default de 10 s queda corto).
 - **Huérfanos**: al arrancar, todo job `EN_PROCESO` viene de una corrida que
   murió → se marca `ERROR` con aviso. **No** se reintenta automático: el alta
   pudo haberse completado en Finnegans y reintentarla duplicaría el producto.
-  El reintento es el botón "Reintentar" en `/productos`, previa verificación.
+  El reintento es el botón "Reintentar" en `/catalogo/altas`, previa verificación.
 - **Timeout**: además del timeout duro del worker, la UI (`getPushJob`) marca
   `ERROR` a los 10 min a un job que nadie atendió (worker caído).
 

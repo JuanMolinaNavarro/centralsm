@@ -44,6 +44,11 @@ export default async function CategoriaPage({
     imagenUrl: p.imagenUrl,
     esNuevo: p.esNuevo,
     postVerificacion: !!verificadaAt && p.clasificadoAt > verificadaAt,
+    caracteristicas: p.caracteristicas.map((c) => ({
+      nombre: c.tipo.nombre,
+      valor: c.valor,
+      unidad: c.tipo.unidad,
+    })),
   });
 
   return (

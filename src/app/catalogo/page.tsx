@@ -100,6 +100,7 @@ export default async function CatalogoPage({ searchParams }: { searchParams: Sea
                     imagenUrl: p.imagenUrl,
                     esNuevo: p.esNuevo,
                     rutaCategoria: rutas?.get(p.categoriaId) ?? p.categoriaNombre,
+                    caracteristicas: p.caracteristicas,
                   }}
                 />
               ))}

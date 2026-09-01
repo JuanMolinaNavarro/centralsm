@@ -12,7 +12,7 @@ import { procesarJob, reclamarJob } from "../scripts/playwright/push-producto";
 // tabla por polling, así que no necesita saber que esto existe.
 //
 // Correr local:  npm run worker   (DATABASE_URL apuntando a localhost:5433)
-// En contenedor: servicio `worker` de docker-compose / Deployment de k8s.
+// En contenedor: servicio `worker` de docker-compose.
 
 const POLL_MS = Number(process.env.WORKER_POLL_MS ?? 4000);
 const JOB_TIMEOUT_MS = Number(process.env.WORKER_JOB_TIMEOUT_MS ?? 5 * 60 * 1000);
@@ -22,10 +22,9 @@ const prisma = new PrismaClient({
 });
 
 // ─────────────────────────────────────────────────────── apagado prolijo ──
-// SIGTERM es lo que manda Docker/Kubernetes al parar el contenedor (compose
-// stop, kubectl rollout restart...). Si estamos idle salimos ya; si hay un job
-// en curso lo terminamos y recién ahí salimos. El terminationGracePeriodSeconds
-// del Deployment tiene que dar margen para eso.
+// SIGTERM es lo que manda Docker al parar el contenedor (compose stop /
+// restart). Si estamos idle salimos ya; si hay un job en curso lo terminamos
+// y recién ahí salimos (el stop_grace_period tiene que dar margen para eso).
 
 let apagando = false;
 let despertar: (() => void) | null = null;
@@ -58,10 +57,10 @@ process.on("SIGINT", () => pedirApagado("SIGINT"));
 
 /**
  * Jobs EN_PROCESO al arrancar son de una corrida anterior que murió (deploy,
- * crash, pod reprogramado). Los marcamos ERROR en vez de re-encolarlos: el
- * alta pudo haberse completado en Finnegans antes de morir el proceso, y
+ * crash, contenedor reiniciado). Los marcamos ERROR en vez de re-encolarlos:
+ * el alta pudo haberse completado en Finnegans antes de morir el proceso, y
  * reintentarla a ciegas crearía un producto duplicado. El reintento es manual
- * (botón "Reintentar" en /productos), previa verificación en Finnegans.
+ * (botón "Reintentar" en /catalogo/altas), previa verificación en Finnegans.
  */
 async function recuperarHuerfanos() {
   const huerfanos = await prisma.finnegansPushJob.findMany({

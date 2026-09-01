@@ -9,6 +9,47 @@ import { buildCategoriaSku, buildProductoSku } from "./sku";
 // productos nuevos. Los usan los scripts y el cron.
 // ---------------------------------------------------------------------------
 
+/**
+ * Asegura el árbol de categorías de la taxonomía sin pisar la curaduría
+ * manual: las que existen se usan tal cual (no se les toca nombre/descripcion)
+ * y las que faltan se crean solo si no tienen lápida en CategoriaEliminada (el
+ * usuario las borró a propósito). #REV se asegura siempre: es el fallback del
+ * clasificador. Devuelve el mapa codigoSku → id de las categorías vigentes.
+ */
+export async function asegurarTaxonomia(prisma: PrismaClient): Promise<Map<string, string>> {
+  const tumbas = new Set(
+    (await prisma.categoriaEliminada.findMany({ select: { codigoSku: true } })).map(
+      (t) => t.codigoSku,
+    ),
+  );
+  const revSku = buildCategoriaSku(null, "REV");
+  const catIdBySku = new Map<string, string>();
+  for (const [i, macro] of TAXONOMIA.entries()) {
+    const macroSku = buildCategoriaSku(null, macro.frag);
+    let m = await prisma.categoria.findUnique({ where: { codigoSku: macroSku } });
+    if (!m) {
+      // Macro eliminada: se saltea con sus familias (no tendrían parent).
+      if (tumbas.has(macroSku) && macroSku !== revSku) continue;
+      m = await prisma.categoria.create({
+        data: { segmento: macro.frag, codigoSku: macroSku, nombre: macro.nombre, descripcion: macro.descripcion ?? null, orden: i },
+      });
+    }
+    catIdBySku.set(macroSku, m.id);
+    for (const [j, fam] of macro.familias.entries()) {
+      const famSku = buildCategoriaSku(macroSku, fam.frag);
+      let f = await prisma.categoria.findUnique({ where: { codigoSku: famSku } });
+      if (!f) {
+        if (tumbas.has(famSku)) continue;
+        f = await prisma.categoria.create({
+          data: { parentId: m.id, segmento: fam.frag, codigoSku: famSku, nombre: fam.nombre, orden: j },
+        });
+      }
+      catIdBySku.set(famSku, f.id);
+    }
+  }
+  return catIdBySku;
+}
+
 /** Sincroniza el maestro de productos (GRATIS). Devuelve códigos nuevos. */
 export async function syncProductos(
   prisma: PrismaClient,
@@ -16,26 +57,9 @@ export async function syncProductos(
 ): Promise<{ creados: number; actualizados: number; nuevosCodigos: string[] }> {
   if (opts.fresh) await prisma.categoria.deleteMany({});
 
-  // 1) Asegurar el árbol de categorías (idempotente por codigoSku).
-  const catIdBySku = new Map<string, string>();
-  for (const [i, macro] of TAXONOMIA.entries()) {
-    const macroSku = buildCategoriaSku(null, macro.frag);
-    const m = await prisma.categoria.upsert({
-      where: { codigoSku: macroSku },
-      update: { nombre: macro.nombre, descripcion: macro.descripcion ?? null },
-      create: { segmento: macro.frag, codigoSku: macroSku, nombre: macro.nombre, descripcion: macro.descripcion ?? null, orden: i },
-    });
-    catIdBySku.set(macroSku, m.id);
-    for (const [j, fam] of macro.familias.entries()) {
-      const famSku = buildCategoriaSku(macroSku, fam.frag);
-      const f = await prisma.categoria.upsert({
-        where: { codigoSku: famSku },
-        update: { nombre: fam.nombre },
-        create: { parentId: m.id, segmento: fam.frag, codigoSku: famSku, nombre: fam.nombre, orden: j },
-      });
-      catIdBySku.set(famSku, f.id);
-    }
-  }
+  // 1) Asegurar el árbol de categorías (respetando las eliminadas a propósito).
+  const revSku = buildCategoriaSku(null, "REV");
+  const catIdBySku = await asegurarTaxonomia(prisma);
 
   // 2) Traer productos activos (sin duplicar código).
   const raw = await listarProductos();
@@ -72,9 +96,11 @@ export async function syncProductos(
 
     const catSku =
       cls.tipo === "REV"
-        ? buildCategoriaSku(null, "REV")
+        ? revSku
         : buildCategoriaSku(buildCategoriaSku(null, cls.macroFrag!), cls.famFrag!);
-    const categoriaId = catIdBySku.get(catSku)!;
+    // Si la categoría destino fue eliminada por el usuario, el producto cae en
+    // #REV para clasificar a mano.
+    const categoriaId = catIdBySku.get(catSku) ?? catIdBySku.get(revSku)!;
 
     const yaId = idByCodigo.get(p.codigo);
     if (yaId) {

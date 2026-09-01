@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// Probe liviana para healthchecks (compose/k8s): app viva + DB alcanzable.
+// Probe liviana para healthchecks (compose): app viva + DB alcanzable.
 // Pública a propósito (ver src/proxy.ts): no expone datos.
 export async function GET() {
   try {

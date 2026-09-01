@@ -76,6 +76,10 @@ export async function crearCategoria(input: z.input<typeof categoriaSchema>): Pr
       },
     });
 
+    // Recrear a mano una categoría eliminada la revive: se levanta la lápida
+    // para que el sync pueda volver a considerarla si algún día falta.
+    await prisma.categoriaEliminada.deleteMany({ where: { codigoSku } });
+
     revalidatePath("/catalogo");
     if (data.parentId) revalidatePath(`/catalogo/${data.parentId}`);
     return { ok: true, id: creada.id };
@@ -155,6 +159,15 @@ export async function eliminarCategoria(id: string): Promise<ActionResult> {
     // Juntar imágenes del subárbol para borrarlas del disco.
     const imagenes = await imagenesDelSubarbol(id);
 
+    // Lápidas para el subárbol entero (la cascada también borra las hijas):
+    // el sync diario no vuelve a sembrar las categorías de la taxonomía que
+    // figuren acá. Crear a mano una con el mismo SKU la revive.
+    const tumbas = await categoriasDelSubarbol(id);
+    await prisma.categoriaEliminada.createMany({
+      data: tumbas,
+      skipDuplicates: true,
+    });
+
     await prisma.categoria.delete({ where: { id } }); // cascada en DB
 
     for (const url of imagenes) await deleteImageByUrl(url);
@@ -165,6 +178,20 @@ export async function eliminarCategoria(id: string): Promise<ActionResult> {
   } catch (error) {
     return { ok: false, error: mensajeError(error) };
   }
+}
+
+// codigoSku + nombre de una categoría y todas sus descendientes (para las lápidas).
+async function categoriasDelSubarbol(
+  categoriaId: string,
+): Promise<{ codigoSku: string; nombre: string }[]> {
+  const cat = await prisma.categoria.findUnique({
+    where: { id: categoriaId },
+    select: { codigoSku: true, nombre: true, children: { select: { id: true } } },
+  });
+  if (!cat) return [];
+  const filas = [{ codigoSku: cat.codigoSku, nombre: cat.nombre }];
+  for (const h of cat.children) filas.push(...(await categoriasDelSubarbol(h.id)));
+  return filas;
 }
 
 async function imagenesDelSubarbol(categoriaId: string): Promise<string[]> {
@@ -287,6 +314,8 @@ export type MoverResult =
  * Mueve uno o varios artículos a otra categoría, regenerando `secuencia` y
  * `codigoSku` en el destino (correlativo max+1). Los que ya están en el
  * destino se ignoran. Es la única forma de recategorizar desde la UI.
+ * Las características viajan con el artículo pero sus tipos NO se agregan a la
+ * familia destino: en la ficha quedan como «fuera de familia».
  */
 export async function moverProductos(ids: string[], categoriaId: string): Promise<MoverResult> {
   try {
@@ -455,10 +484,15 @@ const tipoCaracteristicaSchema = z.object({
 const caracteristicaSchema = z.object({
   productoId: z.string().min(1),
   tipoId: z.string().min(1),
-  valor: z.string().trim().min(1, "El valor es obligatorio.").max(200),
+  // "" permitido: borra el valor del artículo pero deja el tipo en la familia.
+  valor: z.string().trim().max(200),
 });
 
-/** Revalida todo lo que muestra características o las usa para buscar. */
+/**
+ * Revalida todo lo que muestra características o las usa para buscar. Las
+ * fichas de los hermanos de la familia no se revalidan una por una: todas las
+ * páginas del catálogo son `force-dynamic`, así que se re-renderizan solas.
+ */
 async function revalidarCaracteristicas(productoId?: string) {
   revalidatePath("/catalogo");
   revalidatePath("/catalogo/clasificar");
@@ -545,27 +579,66 @@ export async function listarTiposCaracteristica(): Promise<TipoCaracteristicaPla
   return getTiposCaracteristica();
 }
 
-/** Carga o pisa el valor de una característica en un artículo. */
+/**
+ * Carga o pisa el valor de una característica en un artículo, y de paso asocia
+ * el tipo a la familia (la categoría actual del producto): los hermanos pasan a
+ * ver el tipo con valor opcional. Con valor vacío solo borra el valor del
+ * artículo (la fila queda vacía en la familia). Editar una huérfana también la
+ * incorpora a la familia actual.
+ */
 export async function guardarCaracteristica(
   input: z.input<typeof caracteristicaSchema>,
 ): Promise<ActionResult> {
   try {
     const data = caracteristicaSchema.parse(input);
 
-    const fila = await prisma.caracteristicaProducto.upsert({
-      where: { productoId_tipoId: { productoId: data.productoId, tipoId: data.tipoId } },
-      create: { productoId: data.productoId, tipoId: data.tipoId, valor: data.valor },
-      update: { valor: data.valor },
+    const producto = await prisma.producto.findUnique({
+      where: { id: data.productoId },
+      select: { categoriaId: true },
+    });
+    if (!producto) return { ok: false, error: "El artículo no existe." };
+
+    const fila = await prisma.$transaction(async (tx) => {
+      const yaEnFamilia = await tx.caracteristicaFamilia.findUnique({
+        where: { categoriaId_tipoId: { categoriaId: producto.categoriaId, tipoId: data.tipoId } },
+        select: { id: true },
+      });
+      if (!yaEnFamilia) {
+        const ultimo = await tx.caracteristicaFamilia.findFirst({
+          where: { categoriaId: producto.categoriaId },
+          orderBy: { orden: "desc" },
+          select: { orden: true },
+        });
+        await tx.caracteristicaFamilia.create({
+          data: {
+            categoriaId: producto.categoriaId,
+            tipoId: data.tipoId,
+            orden: (ultimo?.orden ?? 0) + 1,
+          },
+        });
+      }
+
+      if (!data.valor) {
+        await tx.caracteristicaProducto.deleteMany({
+          where: { productoId: data.productoId, tipoId: data.tipoId },
+        });
+        return null;
+      }
+      return tx.caracteristicaProducto.upsert({
+        where: { productoId_tipoId: { productoId: data.productoId, tipoId: data.tipoId } },
+        create: { productoId: data.productoId, tipoId: data.tipoId, valor: data.valor },
+        update: { valor: data.valor },
+      });
     });
 
     await revalidarCaracteristicas(data.productoId);
-    return { ok: true, id: fila.id };
+    return fila ? { ok: true, id: fila.id } : { ok: true };
   } catch (error) {
     return { ok: false, error: mensajeError(error) };
   }
 }
 
-/** Saca una característica de un artículo (no toca el tipo). */
+/** Saca una característica de un artículo (no toca el tipo ni la familia). */
 export async function eliminarCaracteristica(id: string): Promise<ActionResult> {
   try {
     const fila = await prisma.caracteristicaProducto.delete({
@@ -573,6 +646,32 @@ export async function eliminarCaracteristica(id: string): Promise<ActionResult> 
       select: { productoId: true },
     });
     await revalidarCaracteristicas(fila.productoId);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: mensajeError(error) };
+  }
+}
+
+/**
+ * Quita un tipo de la familia de una categoría y BORRA los valores cargados en
+ * todos los artículos de esa categoría (destructivo: la UI pide confirmación
+ * mostrando cuántos valores se pierden).
+ */
+export async function quitarTipoDeFamilia(
+  categoriaId: string,
+  tipoId: string,
+): Promise<ActionResult> {
+  try {
+    await prisma.$transaction([
+      prisma.caracteristicaProducto.deleteMany({
+        where: { tipoId, producto: { categoriaId } },
+      }),
+      prisma.caracteristicaFamilia.deleteMany({ where: { categoriaId, tipoId } }),
+    ]);
+
+    revalidatePath("/catalogo");
+    revalidatePath("/catalogo/clasificar");
+    revalidatePath(`/catalogo/${categoriaId}`);
     return { ok: true };
   } catch (error) {
     return { ok: false, error: mensajeError(error) };

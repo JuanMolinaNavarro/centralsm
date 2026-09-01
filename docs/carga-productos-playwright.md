@@ -66,8 +66,7 @@ Los scripts corren con `tsx`, igual que el resto del repo. Sumá estos atajos a 
   "scripts": {
     // ... los que ya tenés ...
     "fin:login":      "tsx scripts/playwright/finnegans-login.ts",
-    "fin:inspeccionar":"tsx scripts/playwright/inspeccionar.ts",
-    "fin:cargar-ui":  "tsx scripts/playwright/cargar-productos-ui.ts"
+    "fin:inspeccionar":"tsx scripts/playwright/inspeccionar.ts"
   }
 }
 ```
@@ -80,7 +79,7 @@ Agregá a tu `.env` (y documentá los nombres en `.env.example`, **sin** valores
 
 ```dotenv
 # Login del portal web de Finnegans (solo para la vía Playwright / UI)
-FINNEGANS_USER=impuestos@multireg.com.ar
+FINNEGANS_USER=usuario@empresa.com.ar
 FINNEGANS_PASSWORD=********
 FINNEGANS_WORKSPACE=MULTIMEDIOS
 FINNEGANS_LANG=Español
@@ -231,23 +230,13 @@ await frame.getByRole('link', { name: 'Eliminar', exact: true }).first().waitFor
 
 ### 5.3. Correr el bot
 
-El bot ([`cargar-productos-ui.ts`](../scripts/playwright/cargar-productos-ui.ts)) navega al maestro,
-abre "Nuevo", completa por `tabindex` dentro del iframe y usa **"Guardar y nuevo"** para encadenar.
-Lee JSON o CSV, reutiliza la sesión, saca captura ante error y deja un reporte.
+El flujo vigente es el **worker** (`worker/index.ts` + [`push-producto.ts`](../scripts/playwright/push-producto.ts)):
+la app encola un `FinnegansPushJob` y el bot da de alta los productos **de a uno**, con el mismo
+mecanismo de iframe + `tabindex` descripto arriba.
 
-```bash
-# 1) instalar Playwright (una vez)  →  ver sección 1
-# 2) cargar credenciales en .env    →  ver sección 2
-
-# DRY-RUN: completa cada form y lo cierra SIN guardar (valida selectores sin crear datos)
-tsx scripts/playwright/cargar-productos-ui.ts scripts/playwright/productos.example.json --dry-run
-
-# Real: crea los productos
-tsx scripts/playwright/cargar-productos-ui.ts scripts/playwright/productos.example.csv
-tsx scripts/playwright/cargar-productos-ui.ts mis-productos.json --headless
-```
-
-Empezá **siempre con `--dry-run`** y 1–2 productos, mirando la ventana (sin `--headless`).
+> Existió un bot batch (`cargar-productos-ui.ts`, cargaba lotes desde JSON/CSV con `--dry-run` y
+> reporte); se eliminó del repo por falta de uso. Si alguna vez hace falta carga masiva, está en el
+> historial de git, o mejor: usar la importación por Excel de la sección 5.4.
 
 ### 5.4. Alternativa más robusta dentro de la UI: importación masiva por Excel
 
@@ -366,6 +355,9 @@ export function upsertProducto(p: ProductoVO) {
 
 ### 6.2. Script de carga masiva por API (desde CSV/JSON)
 
+> **Propuesta no implementada**: `scripts/teamplace-crear-productos.ts` no existe en el repo; el
+> código de abajo es el borrador para crearlo si algún día se opta por la vía API.
+
 ```ts
 // scripts/teamplace-crear-productos.ts
 import "dotenv/config";
@@ -399,7 +391,7 @@ function aProductoVO(row: { codigo: string; nombre: string; descripcion?: string
 }
 
 async function main() {
-  const path = process.argv[2] ?? "scripts/playwright/productos.example.json";
+  const path = process.argv[2] ?? "mis-productos.json";
   const rows: Array<{ codigo: string; nombre: string; descripcion?: string }> =
     JSON.parse(readFileSync(path, "utf8"));
 
@@ -425,7 +417,7 @@ main().catch((e) => {
 Correr:
 
 ```bash
-tsx scripts/teamplace-crear-productos.ts scripts/playwright/productos.example.json
+tsx scripts/teamplace-crear-productos.ts mis-productos.json
 ```
 
 > Los códigos referenciados (`UnidadCodigoStock1`, `MonedaCodigo`, `ProductoFamiliaCodigo`,
@@ -492,6 +484,5 @@ npm run teamplace:sync
 - [`scripts/playwright/config.ts`](../scripts/playwright/config.ts) — **el único archivo a editar**: selectores de tu instancia.
 - [`scripts/playwright/finnegans-login.ts`](../scripts/playwright/finnegans-login.ts) — login (selectores reales) + sesión persistida.
 - [`scripts/playwright/inspeccionar.ts`](../scripts/playwright/inspeccionar.ts) — descubre los selectores del alta post-login.
-- [`scripts/playwright/cargar-productos-ui.ts`](../scripts/playwright/cargar-productos-ui.ts) — el bot: carga por UI con reintentos y reporte.
-- [`scripts/playwright/productos.example.json`](../scripts/playwright/productos.example.json) · [`.csv`](../scripts/playwright/productos.example.csv) — datos de ejemplo.
+- [`scripts/playwright/push-producto.ts`](../scripts/playwright/push-producto.ts) — el bot vigente: alta de a uno, consumido por el worker.
 - [`docs/API-Teamplace-Finnegans.md`](./API-Teamplace-Finnegans.md) — referencia completa de la API (vía alternativa).

@@ -109,7 +109,8 @@ src/
     catalogo.ts                # consultas del catálogo
   generated/prisma/            # cliente de Prisma generado (no se commitea)
 prisma/
-  schema.prisma                # Categoria, Producto, Deposito, Stock, Movimiento, User
+  schema.prisma                # Categoria/Producto, stock (StockDeposito, HistorialStock,
+                               # SnapshotStock, SyncRun), características, ficha operativa, altas
   seed.ts                      # catálogo de ejemplo (árbol #IR)
 docs/
   API-Teamplace-Finnegans.md

@@ -9,9 +9,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-centralsm}
     ports:
       # Host 5433 -> contenedor 5432 (evita chocar con otro Postgres en 5432).
-      # Solo loopback: la DB no debe ser accesible desde la red. Ojo: los pods
-      # de k8s (host.docker.internal) dejan de llegar; si retomás ese entorno,
-      # volvé a "5433:5432" o dale a k8s su propio Postgres.
+      # Solo loopback: la DB no debe ser accesible desde la red.
       - "127.0.0.1:5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data

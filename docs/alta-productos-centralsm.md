@@ -8,9 +8,9 @@ Hay **dos puertas de entrada**, las dos disparan el mismo bot:
 | Dónde | Cuándo usarla |
 |-------|---------------|
 | **Catálogo → "Nuevo artículo"** → tildar *"Cargar también en Finnegans Go"* + Código | El alta de siempre; lo más rápido |
-| [**`/productos/nuevo`**](../src/app/productos/nuevo/page.tsx) | Cuando necesitás todos los campos (Tipo, Rubro, Marca, Familia, flags) |
+| [**`/catalogo/altas/nuevo`**](../src/app/catalogo/altas/nuevo/page.tsx) | Cuando necesitás todos los campos (Tipo, Rubro, Marca, Familia, flags) |
 
-- **Listado + estado:** [`/productos`](../src/app/productos/page.tsx)
+- **Listado + estado:** [`/catalogo/altas`](../src/app/catalogo/altas/page.tsx)
 - Detalle del flujo Playwright (rutas, iframe, `tabindex`): [`carga-productos-playwright.md`](./carga-productos-playwright.md) §5
 
 > ⚠️ El alta del catálogo **sin** tildar la opción sigue siendo local (queda en `NO_APLICA`) — no se
@@ -21,7 +21,7 @@ Hay **dos puertas de entrada**, las dos disparan el mismo bot:
 ## 1. Cómo funciona
 
 ```
-[Formulario /productos/nuevo]
+[Formulario /catalogo/altas/nuevo]
         │  server action crearProductoYEmpujar()
         ▼
 [1] Guarda el Producto en Postgres (SKU local + campos Finnegans)
@@ -138,7 +138,7 @@ docker compose up -d --force-recreate --renew-anon-volumes app
 | Archivo | Rol |
 |---------|-----|
 | [`src/lib/finnegans-producto.ts`](../src/lib/finnegans-producto.ts) | Esquema zod + mapa de campos (fuente única) |
-| [`src/app/productos/actions.ts`](../src/app/productos/actions.ts) | Server action: guarda + encola el job |
+| [`src/app/catalogo/altas/actions.ts`](../src/app/catalogo/altas/actions.ts) | Server action: guarda + encola el job |
 | [`src/lib/finnegans-push.ts`](../src/lib/finnegans-push.ts) | Encola el job (la cola es la tabla `FinnegansPushJob`) |
 | [`worker/index.ts`](../worker/index.ts) | Microservicio worker: polling de la cola, claim y ciclo de vida |
 | [`scripts/playwright/push-producto.ts`](../scripts/playwright/push-producto.ts) | Bot Playwright (1 producto); también corre a mano para debug |
@@ -172,7 +172,7 @@ docker compose up -d --force-recreate --renew-anon-volumes app
 
 | Síntoma | Causa probable | Solución |
 |---------|----------------|----------|
-| Cargué un producto y no pasó nada | Lo creaste desde el catálogo **sin** tildar "Cargar también en Finnegans Go" | Tildá la opción y completá el Código, o usá `/productos/nuevo` |
+| Cargué un producto y no pasó nada | Lo creaste desde el catálogo **sin** tildar "Cargar también en Finnegans Go" | Tildá la opción y completá el Código, o usá `/catalogo/altas/nuevo` |
 | `Cannot find module 'playwright'` en el contenedor | **Volumen anónimo obsoleto** (ver abajo) | `docker compose up -d --force-recreate --renew-anon-volumes worker` |
 | Queda en `PENDIENTE` y después da error | El worker no está corriendo | `docker compose ps worker` y `docker compose logs worker`; o probá el bot a mano: `npx tsx scripts/playwright/push-producto.ts <jobId>` |
 | `ERROR` con "El login no avanzó" | Credenciales/workspace mal en `.env` | Revisá `FINNEGANS_USER/PASSWORD/WORKSPACE` |

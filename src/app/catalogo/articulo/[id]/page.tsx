@@ -16,7 +16,7 @@ import {
   getProducto,
   getBreadcrumbs,
   getStockProducto,
-  getCaracteristicasProducto,
+  getCaracteristicasFicha,
 } from "@/lib/catalogo";
 import { fechaHoraAR, fechaHoraLargaAR } from "@/lib/fecha";
 import { Breadcrumbs } from "@/components/catalogo/breadcrumbs";
@@ -48,7 +48,7 @@ export default async function ArticuloPage({
 
   const [stock, caracteristicas] = await Promise.all([
     getStockProducto(id),
-    getCaracteristicasProducto(id),
+    getCaracteristicasFicha(id),
   ]);
   const stockTotal = stock.reduce((acc, s) => acc + Number(s.cantidad.toString()), 0);
   const snapshotAt = stock[0]?.snapshotAt ?? null;
@@ -126,7 +126,11 @@ export default async function ArticuloPage({
 
       <Separator className="my-8" />
 
-      <CaracteristicasArticulo productoId={producto.id} caracteristicas={caracteristicas} />
+      <CaracteristicasArticulo
+        productoId={producto.id}
+        categoriaId={producto.categoriaId}
+        caracteristicas={caracteristicas}
+      />
 
       <Separator className="my-8" />
 

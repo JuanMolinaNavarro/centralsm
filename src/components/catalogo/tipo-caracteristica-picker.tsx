@@ -26,14 +26,13 @@ import {
 import { normalizarBusqueda } from "@/lib/busqueda";
 import type { TipoCaracteristicaPlano } from "@/lib/caracteristicas-tipos";
 
-// Caché de la lista para no volver a pedirla en cada apertura.
-let cacheTipos: TipoCaracteristicaPlano[] | null = null;
-
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Tipos ya cargados en el artículo: se marcan y no se pueden elegir. */
+  /** Tipos ya visibles en la ficha (familia + huérfanas): se marcan y no se pueden elegir. */
   usadosIds?: string[];
+  /** Tipos que ya están en la familia (categoría) del artículo: se rotulan. */
+  familiaIds?: string[];
   onSelect: (tipo: TipoCaracteristicaPlano) => void | Promise<void>;
   pending?: boolean;
 };
@@ -48,6 +47,7 @@ export function TipoCaracteristicaPicker({
   open,
   onOpenChange,
   usadosIds,
+  familiaIds,
   onSelect,
   pending = false,
 }: Props) {
@@ -72,14 +72,16 @@ export function TipoCaracteristicaPicker({
     }
   }
 
-  const lista = listaLocal ?? cacheTipos;
+  // Sin caché entre aperturas: la lista se pide fresca cada vez (una caché a
+  // nivel de módulo mostraba tipos ya eliminados hasta recargar la página).
+  const lista = listaLocal;
   const usados = useMemo(() => new Set(usadosIds ?? []), [usadosIds]);
+  const familia = useMemo(() => new Set(familiaIds ?? []), [familiaIds]);
 
   function recargar(): Promise<TipoCaracteristicaPlano[]> {
     return new Promise((resolve) => {
       startCarga(async () => {
         const data = await listarTiposCaracteristica();
-        cacheTipos = data;
         setListaLocal(data);
         resolve(data);
       });
@@ -149,7 +151,8 @@ export function TipoCaracteristicaPicker({
             <DialogTitle>Elegir característica</DialogTitle>
             <DialogDescription>
               Buscá un tipo ya existente o creá uno nuevo. Los tipos se comparten entre todos los
-              artículos del catálogo.
+              artículos del catálogo; el que elijas queda asociado a la familia (categoría) de este
+              artículo.
             </DialogDescription>
           </DialogHeader>
 
@@ -219,11 +222,23 @@ export function TipoCaracteristicaPicker({
                       {t.unidad}
                     </Badge>
                   )}
+                  {familia.has(t.id) && (
+                    <span className="hidden shrink-0 text-xs text-muted-foreground sm:inline">
+                      En familia
+                    </span>
+                  )}
                   <span className="hidden text-xs text-muted-foreground tabular-nums sm:inline">
                     {t.usos} art.
                   </span>
                   {esUsado ? (
-                    <span className="flex w-14 items-center justify-center" title="Ya cargada en este artículo">
+                    <span
+                      className="flex w-14 items-center justify-center"
+                      title={
+                        familia.has(t.id)
+                          ? "Ya está en la familia de este artículo"
+                          : "Ya cargada en este artículo"
+                      }
+                    >
                       <Check className="size-4 text-muted-foreground" />
                     </span>
                   ) : (

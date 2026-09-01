@@ -61,6 +61,18 @@ model Categoria {
   // real la garantiza codigoSku, ya que Postgres trata los NULL como distintos.)
   @@unique([parentId, segmento])
   @@index([parentId])
+
+  caracteristicasFamilia CaracteristicaFamilia[]
+}
+
+/// Lápida de una categoría eliminada a propósito por el usuario: el sync diario
+/// no vuelve a sembrar las categorías de la taxonomía cuyo codigoSku figure acá.
+/// Crear a mano una categoría con el mismo codigoSku la revive (borra la lápida).
+model CategoriaEliminada {
+  id          String   @id @default(cuid())
+  codigoSku   String   @unique
+  nombre      String
+  eliminadaAt DateTime @default(now())
 }
 
 /// Artículo del catálogo (hoja). Vive dentro de una categoría y recibe un
@@ -191,9 +203,29 @@ model TipoCaracteristica {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  valores CaracteristicaProducto[]
+  valores  CaracteristicaProducto[]
+  familias CaracteristicaFamilia[]
 
   @@index([orden, nombre])
+}
+
+/// Tipo de característica asociado a una categoría ("familia"): todos los
+/// artículos hermanos de esa categoría comparten el set de tipos, con valor
+/// opcional por artículo. Se puebla al guardar una característica (el tipo se
+/// asocia a la categoría del producto); quitar el tipo de la familia borra
+/// también los valores cargados en los artículos de esa categoría.
+model CaracteristicaFamilia {
+  id          String   @id @default(cuid())
+  categoriaId String
+  tipoId      String
+  orden       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  categoria Categoria          @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+  tipo      TipoCaracteristica @relation(fields: [tipoId], references: [id], onDelete: Cascade)
+
+  @@unique([categoriaId, tipoId])
+  @@index([tipoId])
 }
 
 /// Valor de una característica para un artículo ("Potencia" -> "3 W").

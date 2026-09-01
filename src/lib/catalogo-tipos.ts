@@ -2,6 +2,7 @@
 // (Sin imports de Prisma: este módulo se puede usar desde componentes "use client".)
 
 import type { Verificacion } from "@/lib/verificacion-tipos";
+import type { CaracteristicaCardVista } from "@/lib/caracteristicas-tipos";
 
 /** SKU de la categoría raíz donde caen los artículos que el sync no pudo clasificar. */
 export const SKU_PENDIENTES = "#REV";
@@ -44,4 +45,6 @@ export function esSkuPendiente(categoriaSku: string): boolean {
 export type ArticuloResultado = ArticuloClasificable & {
   lugar: string | null;
   esNuevo: boolean;
+  /** Solo la carga el buscador (para las cards); el clasificador no la pide. */
+  caracteristicas?: CaracteristicaCardVista[];
 };

@@ -1,6 +1,6 @@
-# Bot de carga de productos por UI (Playwright)
+# Bot de alta de productos por UI (Playwright)
 
-Automatiza la carga de productos en **Finnegans Go** manejando el navegador (no la API).
+Automatiza el alta de productos en **Finnegans Go** manejando el navegador (no la API).
 El flujo está **verificado en vivo** (workspace `MULTIMEDIOS`, 2026-07-23): login, navegación al
 maestro de Productos y llenado del formulario de alta. Ver detalle en
 [`../../docs/carga-productos-playwright.md`](../../docs/carga-productos-playwright.md) §5.
@@ -8,6 +8,10 @@ maestro de Productos y llenado del formulario de alta. Ver detalle en
 > ¿Por qué por UI y no por API? La API (`POST /producto`) es más robusta y rápida. Este bot es para
 > cuando querés/necesitás hacerlo por la interfaz. El form de alta es un **JSP legacy en un iframe**
 > con campos sin `id`/`name` (se targetean por `tabindex`), así que es más frágil que la API.
+
+El consumidor real es el **worker** (`worker/index.ts`): la app encola `FinnegansPushJob` y el worker
+procesa los jobs de a uno con `push-producto.ts`. (Existió un bot batch `cargar-productos-ui.ts`
+para cargar lotes desde JSON/CSV; se eliminó por falta de uso — está en el historial de git.)
 
 ## Instalación (una vez)
 
@@ -19,7 +23,7 @@ npx playwright install chromium
 `.env` (ya gitigneado):
 
 ```dotenv
-FINNEGANS_USER=impuestos@multireg.com.ar
+FINNEGANS_USER=usuario@empresa.com.ar
 FINNEGANS_PASSWORD=********
 FINNEGANS_WORKSPACE=MULTIMEDIOS
 FINNEGANS_LANG=Español
@@ -34,16 +38,12 @@ FINNEGANS_LANG=Español
 # Probar solo el login (abre el navegador y guarda la sesión)
 tsx scripts/playwright/finnegans-login.ts
 
-# DRY-RUN: completa cada form y lo cierra SIN guardar (valida sin crear datos)
-tsx scripts/playwright/cargar-productos-ui.ts scripts/playwright/productos.example.json --dry-run
+# Procesar un job puntual de la cola sin levantar el worker (debe estar PENDIENTE)
+tsx scripts/playwright/push-producto.ts <jobId>
 
-# Real: crea los productos
-tsx scripts/playwright/cargar-productos-ui.ts scripts/playwright/productos.example.csv
-tsx scripts/playwright/cargar-productos-ui.ts mis-productos.json --headless
+# El loop completo es el worker:
+npm run worker
 ```
-
-**Empezá siempre con `--dry-run` y 1–2 productos, sin `--headless`**, para ver qué hace. El guardado
-real (`Guardar y nuevo`) no lo probé contra tu ERP productivo: validalo en la primera corrida.
 
 ## Qué hace el bot
 
@@ -51,13 +51,7 @@ real (`Guardar y nuevo`) no lo probé contra tu ERP productivo: validalo en la p
 - Navega directo a `PRODUCTOS_VIEW_URL` (el maestro), abre **Nuevo** dentro del iframe.
 - Completa **Código** (`tabindex 0`) y **Nombre** (`tabindex 2`) — el mínimo real (Tipo ya es "Otros").
   Campos opcionales (peso, volumen, y los F4: rubro/marca/familia…) si vienen en el dato.
-- Encadena con **"Guardar y nuevo"**; ante error saca captura y sigue con el resto.
-- Reporte final en `resultados/resultado-<timestamp>.json`.
-
-## Formato de entrada (JSON o CSV)
-
-Mínimo: `codigo` y `nombre`. Opcionales: `descripcion`, `tipo`, `peso`, `volumen`, `rubro`, `marca`,
-`familia`, `subfamilia`. Ver [`productos.example.json`](./productos.example.json) / [`.csv`](./productos.example.csv).
+- Ante error saca captura en `resultados/` y marca el job `ERROR`.
 
 ## Archivos
 
@@ -65,9 +59,8 @@ Mínimo: `codigo` y `nombre`. Opcionales: `descripcion`, `tipo`, `peso`, `volume
 |---------|--------|
 | `config.ts` | URLs + mapa de campos por `tabindex` (**verificado**) + textos de botones |
 | `finnegans-login.ts` | Login (selectores verificados) + sesión persistida |
-| `cargar-productos-ui.ts` | El bot: alta por form dentro del iframe, con reporte |
-| `inspeccionar.ts` | Fallback: si Finnegans cambia el form, re-descubre selectores |
-| `productos.example.json` / `.csv` | Datos de ejemplo |
+| `push-producto.ts` | El bot vigente: procesa un `FinnegansPushJob` (lo importa el worker) |
+| `inspeccionar.ts` / `inspeccionar-form.ts` | Fallback: si Finnegans cambia el form, re-descubren selectores |
 
 ## Si Finnegans cambia el formulario
 

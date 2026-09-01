@@ -7,7 +7,6 @@ Dockerfile
 Dockerfile.worker
 .dockerignore
 docker-compose*.yml
-k8s
 .env
 .env.*
 !.env.example

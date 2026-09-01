@@ -8,7 +8,8 @@ import {
 } from "@/lib/catalogo-tipos";
 import { tokensBusqueda } from "@/lib/busqueda";
 import type {
-  CaracteristicaProductoVista,
+  CaracteristicaCardVista,
+  CaracteristicaFichaVista,
   TipoCaracteristicaPlano,
 } from "@/lib/caracteristicas-tipos";
 import { derivarVerificacion, SIN_VERIFICAR, type Verificacion } from "@/lib/verificacion-tipos";
@@ -70,7 +71,15 @@ export async function getCategoria(id: string) {
           orderBy: [{ orden: "asc" }, { createdAt: "asc" }],
           include: { _count: { select: { children: true, productos: true } } },
         },
-        productos: { orderBy: { secuencia: "asc" } },
+        productos: {
+          orderBy: { secuencia: "asc" },
+          include: {
+            caracteristicas: {
+              orderBy: [{ tipo: { orden: "asc" } }, { tipo: { nombre: "asc" } }],
+              select: { valor: true, tipo: { select: { nombre: true, unidad: true } } },
+            },
+          },
+        },
       },
     }),
     getVerificacionPorCategoria(),
@@ -337,8 +346,15 @@ export async function buscarArticulosPorTexto(
     select: SELECT_ARTICULO,
   });
 
+  // Solo para la página de resultados (≤ tamano filas): las cards muestran
+  // las características, que además son parte de lo que matchea la búsqueda.
+  const caracts = await getCaracteristicasCardPorProducto(rows.map((r) => r.id));
+
   return {
-    items: rows.map(aArticuloResultado),
+    items: rows.map((r) => ({
+      ...aArticuloResultado(r),
+      caracteristicas: caracts.get(r.id) ?? [],
+    })),
     total,
     pagina,
     paginas,
@@ -445,27 +461,98 @@ export async function getBreadcrumbs(categoriaId: string): Promise<Crumb[]> {
 
 // ----------------------------------------------------------- Características
 
-/** Características cargadas en un artículo, en el orden en que se muestran. */
-export async function getCaracteristicasProducto(
+/**
+ * Filas de la sección Características de la ficha: el set de tipos de la
+ * familia (la categoría del artículo) con el valor propio si lo hay (LEFT
+ * JOIN), más las características huérfanas (valores del artículo cuyo tipo no
+ * está en la familia, p. ej. porque se lo movió de categoría) al final.
+ */
+export async function getCaracteristicasFicha(
   productoId: string,
-): Promise<CaracteristicaProductoVista[]> {
-  const filas = await prisma.caracteristicaProducto.findMany({
-    where: { productoId },
-    orderBy: [{ tipo: { orden: "asc" } }, { tipo: { nombre: "asc" } }],
-    select: {
-      id: true,
-      tipoId: true,
-      valor: true,
-      tipo: { select: { nombre: true, unidad: true } },
-    },
+): Promise<CaracteristicaFichaVista[]> {
+  const producto = await prisma.producto.findUnique({
+    where: { id: productoId },
+    select: { categoriaId: true },
   });
-  return filas.map((f) => ({
-    id: f.id,
-    tipoId: f.tipoId,
-    tipoNombre: f.tipo.nombre,
-    unidad: f.tipo.unidad,
-    valor: f.valor,
-  }));
+  if (!producto) return [];
+
+  const [familia, valores, conteos] = await Promise.all([
+    prisma.caracteristicaFamilia.findMany({
+      where: { categoriaId: producto.categoriaId },
+      orderBy: [{ orden: "asc" }, { createdAt: "asc" }],
+      select: { tipoId: true, tipo: { select: { nombre: true, unidad: true } } },
+    }),
+    prisma.caracteristicaProducto.findMany({
+      where: { productoId },
+      orderBy: [{ tipo: { orden: "asc" } }, { tipo: { nombre: "asc" } }],
+      select: {
+        id: true,
+        tipoId: true,
+        valor: true,
+        tipo: { select: { nombre: true, unidad: true } },
+      },
+    }),
+    // Cuántos artículos de la familia tienen valor por tipo (para el confirm
+    // destructivo de «quitar de la familia»).
+    prisma.caracteristicaProducto.groupBy({
+      by: ["tipoId"],
+      where: { producto: { categoriaId: producto.categoriaId } },
+      _count: { _all: true },
+    }),
+  ]);
+
+  const valorPorTipo = new Map(valores.map((v) => [v.tipoId, v]));
+  const conteoPorTipo = new Map(conteos.map((c) => [c.tipoId, c._count._all]));
+
+  const filas: CaracteristicaFichaVista[] = familia.map((f) => {
+    const v = valorPorTipo.get(f.tipoId);
+    return {
+      id: v?.id ?? null,
+      tipoId: f.tipoId,
+      tipoNombre: f.tipo.nombre,
+      unidad: f.tipo.unidad,
+      valor: v?.valor ?? "",
+      enFamilia: true,
+      valoresEnFamilia: conteoPorTipo.get(f.tipoId) ?? 0,
+    };
+  });
+
+  const tiposDeFamilia = new Set(familia.map((f) => f.tipoId));
+  for (const v of valores) {
+    if (tiposDeFamilia.has(v.tipoId)) continue;
+    filas.push({
+      id: v.id,
+      tipoId: v.tipoId,
+      tipoNombre: v.tipo.nombre,
+      unidad: v.tipo.unidad,
+      valor: v.valor,
+      enFamilia: false,
+      valoresEnFamilia: 0,
+    });
+  }
+  return filas;
+}
+
+/**
+ * Características con valor real de un lote de artículos, para las cards del
+ * catálogo (las filas vacías de familia no aparecen: no existen como valor).
+ */
+export async function getCaracteristicasCardPorProducto(
+  productoIds: string[],
+): Promise<Map<string, CaracteristicaCardVista[]>> {
+  const out = new Map<string, CaracteristicaCardVista[]>();
+  if (!productoIds.length) return out;
+  const filas = await prisma.caracteristicaProducto.findMany({
+    where: { productoId: { in: productoIds } },
+    orderBy: [{ tipo: { orden: "asc" } }, { tipo: { nombre: "asc" } }],
+    select: { productoId: true, valor: true, tipo: { select: { nombre: true, unidad: true } } },
+  });
+  for (const f of filas) {
+    const arr = out.get(f.productoId) ?? [];
+    arr.push({ nombre: f.tipo.nombre, valor: f.valor, unidad: f.tipo.unidad });
+    out.set(f.productoId, arr);
+  }
+  return out;
 }
 
 /** Todos los tipos de característica, con cuántos artículos usan cada uno. */
