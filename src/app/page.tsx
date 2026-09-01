@@ -45,7 +45,7 @@ export default function Home() {
         <div className="mb-10 flex flex-col gap-3">
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-semibold tracking-tight">CentralSM</h1>
-            <Badge variant="secondary">v0.1.0</Badge>
+            <Badge variant="secondary">v1.0</Badge>
           </div>
           <p className="max-w-2xl text-muted-foreground">
             Plataforma de centralización de stock management y actividades de la
